@@ -1,0 +1,148 @@
+{
+   "commands": {
+      "READ_ALL_HEADERS": {
+         "text": "read all headers",
+         "variations": [
+            "read headers",
+            "read all the headers"
+         ]
+      },
+      "READ_ALL_LINKS": {
+         "text": "read all links",
+         "variations": [
+            "read links",
+            "read all the links"
+         ]
+      },
+      "READ_LEVEL_HEADERS": {
+         "text": "read all h",
+         "variations": [
+            "read h",
+            "read all the h"
+         ],
+         "levels": [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six"
+         ]
+      },
+      "READ_MAIN": {
+         "text": "read main content",
+         "variations": [
+            "read the main",
+            "read the main content"
+         ]
+      },
+      "SEARCH_MAIN": {
+         "text": "search main content",
+         "variations": [
+            "search the main",
+            "search the main content",
+            "find main content",
+            "find the main",
+            "find the main content"
+         ]
+      },
+      "READ_AGAIN": {
+         "text": "read element again",
+         "variations": [
+            "read the current element again",
+            "read again"
+         ]
+      },
+      "READ_PREVIOUS": {
+         "text": "read previous element",
+         "variations": [
+            "read previous"
+         ]
+      },
+      "READ_NEXT": {
+         "text": "read next element",
+         "variations": [
+            "read next"
+         ]
+      },
+      "READ_PAGE_TITLE": {
+         "text": "read page title",
+         "variations": [
+            "read title",
+            "read the title of the page",
+            "read document title"
+         ]
+      },
+      "READ_LINKS_IN_ELEMENT": {
+         "text": "read links inside",
+         "variations": [
+            "read links contained",
+            "read links contained in",
+            "read all links inside",
+            "read all links contained",
+            "read all links contained in"
+         ]
+      },
+      "GO_TO_PREVIOUS_PAGE": {
+         "text": "previous page",
+         "variations": [
+            "go to previous page"
+         ]
+      },
+      "GO_TO_NEXT_PAGE": {
+         "text": "next page",
+         "variations": [
+            "go to next page"
+         ]
+      },
+      "READ_PAGE_SUMMARY": {
+         "text": "read page summary",
+         "variations": [
+            "summarize page",
+            "summarize the page"
+         ]
+      },
+      "GO_TO_HOMEPAGE": {
+         "text": "homepage",
+         "variations": [
+            "go to homepage"
+         ]
+      },
+      "GO_TO_LINK": {
+         "text": "go to link",
+         "variations": [
+            "follow link",
+            "go",
+            "go there"
+         ]
+      }
+   },
+   "elements": {
+      "MAIN": {
+         "selector": "main",
+         "variations": [
+            "main"
+         ]
+      },
+      "NAV": {
+         "selector": "nav",
+         "variations": [
+            "nav",
+            "navigation",
+            "menu"
+         ]
+      },
+      "HEADER": {
+         "selector": "header",
+         "variations": [
+            "header"
+         ]
+      },
+      "FOOTER": {
+         "selector": "footer",
+         "variations": [
+            "footer"
+         ]
+      }
+   }
+}

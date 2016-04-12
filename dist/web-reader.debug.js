@@ -1,0 +1,1988 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.WebReader = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports={
+   "commands": {
+      "READ_ALL_HEADERS": {
+         "text": "read all headers",
+         "variations": [
+            "read headers",
+            "read all the headers"
+         ]
+      },
+      "READ_ALL_LINKS": {
+         "text": "read all links",
+         "variations": [
+            "read links",
+            "read all the links"
+         ]
+      },
+      "READ_LEVEL_HEADERS": {
+         "text": "read all h",
+         "variations": [
+            "read h",
+            "read all the h"
+         ],
+         "levels": [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six"
+         ]
+      },
+      "READ_MAIN": {
+         "text": "read main content",
+         "variations": [
+            "read the main",
+            "read the main content"
+         ]
+      },
+      "SEARCH_MAIN": {
+         "text": "search main content",
+         "variations": [
+            "search the main",
+            "search the main content",
+            "find main content",
+            "find the main",
+            "find the main content"
+         ]
+      },
+      "READ_AGAIN": {
+         "text": "read element again",
+         "variations": [
+            "read the current element again",
+            "read again"
+         ]
+      },
+      "READ_PREVIOUS": {
+         "text": "read previous element",
+         "variations": [
+            "read previous"
+         ]
+      },
+      "READ_NEXT": {
+         "text": "read next element",
+         "variations": [
+            "read next"
+         ]
+      },
+      "READ_PAGE_TITLE": {
+         "text": "read page title",
+         "variations": [
+            "read title",
+            "read the title of the page",
+            "read document title"
+         ]
+      },
+      "READ_LINKS_IN_ELEMENT": {
+         "text": "read links inside",
+         "variations": [
+            "read links contained",
+            "read links contained in",
+            "read all links inside",
+            "read all links contained",
+            "read all links contained in"
+         ]
+      },
+      "GO_TO_PREVIOUS_PAGE": {
+         "text": "previous page",
+         "variations": [
+            "go to previous page"
+         ]
+      },
+      "GO_TO_NEXT_PAGE": {
+         "text": "next page",
+         "variations": [
+            "go to next page"
+         ]
+      },
+      "READ_PAGE_SUMMARY": {
+         "text": "read page summary",
+         "variations": [
+            "summarize page",
+            "summarize the page"
+         ]
+      },
+      "GO_TO_HOMEPAGE": {
+         "text": "homepage",
+         "variations": [
+            "go to homepage"
+         ]
+      },
+      "GO_TO_LINK": {
+         "text": "go to link",
+         "variations": [
+            "follow link",
+            "go",
+            "go there"
+         ]
+      }
+   },
+   "elements": {
+      "MAIN": {
+         "selector": "main",
+         "variations": [
+            "main"
+         ]
+      },
+      "NAV": {
+         "selector": "nav",
+         "variations": [
+            "nav",
+            "navigation",
+            "menu"
+         ]
+      },
+      "HEADER": {
+         "selector": "header",
+         "variations": [
+            "header"
+         ]
+      },
+      "FOOTER": {
+         "selector": "footer",
+         "variations": [
+            "footer"
+         ]
+      }
+   }
+}
+},{}],2:[function(require,module,exports){
+function DamerauLevenshtein (prices, damerau) {
+    // 'prices' customisation of the edit costs by passing an
+    // object with optional 'insert', 'remove', 'substitute', and
+    // 'transpose' keys, corresponding to either a constant
+    // number, or a function that returns the cost. The default
+    // cost for each operation is 1. The price functions take
+    // relevant character(s) as arguments, should return numbers,
+    // and have the following form:
+    //
+    // insert: function (inserted) { return NUMBER; }
+    //
+    // remove: function (removed) { return NUMBER; }
+    //
+    // substitute: function (from, to) { return NUMBER; }
+    //
+    // transpose: function (backward, forward) { return NUMBER; }
+    //
+    // The damerau flag allows us to turn off transposition and
+    // only do plain Levenshtein distance.
+
+    if (damerau !== false) damerau = true;
+    if (!prices) prices = {};
+    var insert, remove, substitute, transpose;
+
+    switch (typeof prices.insert) {
+    case 'function': insert = prices.insert; break;
+    case 'number': insert = function (c) { return prices.insert; }; break;
+    default: insert = function (c) { return 1; }; break; }
+
+    switch (typeof prices.remove) {
+    case 'function': remove = prices.remove; break;
+    case 'number': remove = function (c) { return prices.remove; }; break;
+    default: remove = function (c) { return 1; }; break; }
+
+    switch (typeof prices.substitute) {
+    case 'function': substitute = prices.substitute; break;
+    case 'number':
+        substitute = function (from, to) { return prices.substitute; };
+        break;
+    default: substitute = function (from, to) { return 1; }; break; }
+
+    switch (typeof prices.transpose) {
+    case 'function': transpose = prices.transpose; break;
+    case 'number':
+        transpose = function (backward, forward) { return prices.transpose; };
+        break;
+    default: transpose = function (backward, forward) { return 1; }; break; }
+
+    function distance(down, across) {
+        // http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+        var ds = [];
+        if ( down === across ) {
+            return 0;
+        } else {
+            down = down.split(''); down.unshift(null);
+            across = across.split(''); across.unshift(null);
+            down.forEach(function (d, i) {
+                if (!ds[i]) ds[i] = [];
+                across.forEach(function (a, j) {
+                    if (i === 0 && j === 0) ds[i][j] = 0;
+                    // Empty down (i == 0) -> across[1..j] by inserting
+                    else if (i === 0) ds[i][j] = ds[i][j-1] + insert(a);
+                    // Down -> empty across (j == 0) by deleting
+                    else if (j === 0) ds[i][j] = ds[i-1][j] + remove(d);
+                    else {
+                        // Find the least costly operation that turns
+                        // the prefix down[1..i] into the prefix
+                        // across[1..j] using already calculated costs
+                        // for getting to shorter matches.
+                        ds[i][j] = Math.min(
+                            // Cost of editing down[1..i-1] to
+                            // across[1..j] plus cost of deleting
+                            // down[i] to get to down[1..i-1].
+                            ds[i-1][j] + remove(d),
+                            // Cost of editing down[1..i] to
+                            // across[1..j-1] plus cost of inserting
+                            // across[j] to get to across[1..j].
+                            ds[i][j-1] + insert(a),
+                            // Cost of editing down[1..i-1] to
+                            // across[1..j-1] plus cost of
+                            // substituting down[i] (d) with across[j]
+                            // (a) to get to across[1..j].
+                            ds[i-1][j-1] + (d === a ? 0 : substitute(d, a))
+                        );
+                        // Can we match the last two letters of down
+                        // with across by transposing them? Cost of
+                        // getting from down[i-2] to across[j-2] plus
+                        // cost of moving down[i-1] forward and
+                        // down[i] backward to match across[j-1..j].
+                        if (damerau
+                            && i > 1 && j > 1
+                            && down[i-1] === a && d === across[j-1]) {
+                            ds[i][j] = Math.min(
+                                ds[i][j],
+                                ds[i-2][j-2] + (d === a ? 0 : transpose(d, down[i-1]))
+                            );
+                        };
+                    };
+                });
+            });
+            return ds[down.length-1][across.length-1];
+        };
+    };
+    return distance;
+};
+
+module.exports = DamerauLevenshtein;
+
+},{}],3:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['exports', 'damerau-levenshtein'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(exports, require('damerau-levenshtein'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod.exports, global.damerauLevenshtein);
+      global.WebReader = mod.exports;
+   }
+})(this, function (exports, _damerauLevenshtein) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+   exports.recognizeCommand = recognizeCommand;
+
+   var _damerauLevenshtein2 = _interopRequireDefault(_damerauLevenshtein);
+
+   function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+         default: obj
+      };
+   }
+
+   var translation = null;
+
+   /**
+    * Finds the closest match of a string using the Damerau-Levenshtein algorithm
+    *
+    * @param {(string|string[])} string The string or the strings to test
+    * @param {string} target The string to test against
+    *
+    * @return {Object}
+    */
+   function findCloserMatch(string, target) {
+      if (!Array.isArray(string)) {
+         string = [string];
+      }
+
+      var damerauLevenshtein = (0, _damerauLevenshtein2.default)(); // jshint ignore:line
+      var minDistance = Number.POSITIVE_INFINITY;
+      var i = void 0;
+
+      for (i = 0; i < string.length; i++) {
+         var distance = damerauLevenshtein(string[i], target);
+
+         console.debug('The distance between "' + string[i] + '" and "' + target + '" is ' + distance);
+
+         // If a perfect match is found, exit immediately
+         if (distance === 0) {
+            minDistance = distance;
+            break;
+         } else if (distance < minDistance) {
+            minDistance = distance;
+         }
+      }
+
+      return {
+         index: i === string.length ? -1 : i,
+         distance: minDistance
+      };
+   }
+
+   /**
+    * Extracts the heading level contained in the string provided.
+    * If a perfect match is not found, the Damerau-Levenshtein algorithm
+    * is used to find the closest match.
+    *
+    * @param {string} recognizedText The string to analyze
+    *
+    * @return {Object}
+    */
+   function extractHeaderLevel(recognizedText) {
+      var headingLevels = translation.commands.READ_LEVEL_HEADERS.levels;
+      var data = {};
+
+      for (var i = 0; i < headingLevels.length; i++) {
+         var regexp = new RegExp('(^|\\b)(' + (i + 1) + '|h' + (i + 1) + '|' + headingLevels[i] + ')(\\b|$)', 'i');
+
+         if (regexp.test(recognizedText)) {
+            data.level = i + 1;
+            break;
+         }
+      }
+
+      // If the header level has not been found yet,
+      // let's try a more heuristic strategy
+      if (!data.level) {
+         var closerMatchIndex = findCloserMatch(headingLevels, recognizedText).index;
+
+         data.level = closerMatchIndex === -1 ? -1 : closerMatchIndex + 1;
+      }
+
+      return data;
+   }
+
+   function findElementInText(recognizedText) {
+      var elements = translation.elements;
+      var foundElement = null;
+
+      for (var key in elements) {
+         var variations = elements[key].variations.join('|');
+         var regexp = new RegExp('(^|\\b)(' + variations + ')(\\b|$)', 'i');
+
+         if (regexp.test(recognizedText)) {
+            foundElement = document.querySelector(elements[key].selector);
+            break;
+         }
+      }
+
+      return foundElement;
+   }
+   /**
+    *
+    * @return {Object}
+    */
+   function extractElementFromText(recognizedText) {
+      var foundElement = findElementInText(recognizedText);
+
+      if (foundElement) {
+         return {
+            element: foundElement
+         };
+      }
+
+      // Collects the closer match for each element.
+      var closerMatches = [];
+      var elements = translation.elements;
+
+      // If the element has not been found yet,
+      // let's try a more heuristic strategy
+      for (var key in elements) {
+         var variations = elements[key].variations;
+         var closerMatchIndex = findCloserMatch(variations, recognizedText);
+
+         if (closerMatchIndex !== -1) {
+            closerMatches.push(variations[closerMatchIndex]);
+         }
+      }
+
+      // Find the closest match among the closest match
+      return findCloserMatch(closerMatches, recognizedText);
+   }
+
+   /**
+    * Extracts relevant data from a string, based on the recognized command
+    *
+    * @param {string} command The recognized command
+    * @param {string} recognizedText The string from which the data are extracted
+    *
+    * @return {Object}
+    */
+   function extractData(command, recognizedText) {
+      var data = {};
+
+      if (command === 'READ_LEVEL_HEADERS') {
+         console.debug('Extracting header level from text');
+         data = extractHeaderLevel(recognizedText);
+      } else if (command === 'READ_LINKS_IN_ELEMENT') {
+         console.debug('Extracting element from text');
+         data = extractElementFromText(recognizedText);
+      }
+
+      return data;
+   }
+
+   /**
+    * Detects the action to perform and extracts any relevant data
+    * based on the string provided
+    *
+    * @param {string} recognizedText The string to analyze
+    * @param {Object} currentTranslation The object containing the translation of the application
+    *
+    * @return {Object}
+    */
+
+
+   function recognizeCommand(recognizedText, currentTranslation) {
+      var minDistance = Number.POSITIVE_INFINITY;
+      var commands = currentTranslation.commands;
+      var foundCommand = void 0;
+
+      translation = currentTranslation;
+      recognizedText = recognizedText.toLocaleLowerCase();
+
+      console.debug('Command recognition started');
+
+      for (var command in commands) {
+         var closerMatch = findCloserMatch([commands[command].text].concat(commands[command].variations), recognizedText);
+
+         if (closerMatch.distance < minDistance) {
+            foundCommand = Object.assign({
+               command: command
+            }, extractData(command, recognizedText));
+
+            if (closerMatch.distance === 0) {
+               break;
+            } else {
+               minDistance = closerMatch.distance;
+            }
+         }
+      }
+
+      console.debug('Command recognition ended. Found command "' + commands[foundCommand.command].text + '"');
+      console.debug('Extrapolated data:', foundCommand);
+
+      return foundCommand;
+   }
+});
+
+},{"damerau-levenshtein":2}],4:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define("WebReader", ["exports"], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (exports) {
+   "use strict";
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+   function getTitle() {
+      return document.title;
+   }
+
+   exports.getTitle = getTitle;
+});
+
+},{}],5:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports', './document', './headers', './links', './main'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports, require('./document'), require('./headers'), require('./links'), require('./main'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports, global.document, global.headers, global.links, global.main);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports, _document, _headers, _links, _main) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+
+   function highlightElement(element) {
+      if (!element instanceof HTMLElement) {
+         return;
+      }
+
+      element.innerHTML = '<mark>' + element.innerHTML + '</mark>';
+   }
+
+   function unhighlightElement(element) {
+      if (!element instanceof HTMLElement) {
+         return;
+      }
+
+      element.innerHTML = element.innerHTML.replace(/^<mark>/, '').replace(/<\/mark>$/, '');
+   }
+
+   exports.default = {
+      getHeaders: _headers.getHeaders,
+      getLinks: _links.getLinks,
+      getMain: _main.getMain,
+      getTitle: _document.getTitle,
+      highlightElement: highlightElement,
+      unhighlightElement: unhighlightElement
+   };
+   module.exports = exports['default'];
+});
+
+},{"./document":4,"./headers":6,"./links":7,"./main":8}],6:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['exports'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (exports) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+   /**
+    * Returns the level of a header (1 for an <code>h1</code>, 2 for an <code>h2</code>,
+    * and so on). If the element is not an header or it is not defined, zero is returned
+    *
+    * @param {HTMLElement} element
+    *
+    * @return {number}
+    */
+   function getHeaderLevel(element) {
+      if (!element || !element.nodeName || element.nodeName.toLowerCase().indexOf('h') !== 0) {
+         return 0;
+      }
+
+      return element.nodeName.charAt(1);
+   }
+
+   /**
+    * Returns all the headers of a page in a tree structure. Each element
+    * possesses two properties: element and subheadings. The former
+    * is an <code>HTMLElement</code> referencing the header, while the latter is an array
+    * containing all the subheadings of the header.
+    *
+    * @return {Object[]}
+    */
+   function createHeadingsStructure(headers) {
+      var tree = [];
+
+      (function recurse(headers, index, tree) {
+         if (headers.length === 0 || index.index === headers.length) {
+            return tree;
+         }
+
+         var headerLevel = getHeaderLevel(headers[index.index]);
+         var header = {
+            element: headers[index.index],
+            subheadings: []
+         };
+
+         if (tree.length === 0 || headerLevel === getHeaderLevel(tree[tree.length - 1].element)) {
+            tree.push(header);
+            index.index++;
+
+            return recurse(headers, index, tree);
+         }
+
+         if (headerLevel > getHeaderLevel(tree[tree.length - 1].element)) {
+            tree[tree.length - 1].subheadings = recurse(headers, index, []);
+         }
+
+         headerLevel = getHeaderLevel(headers[index.index]);
+
+         if (headerLevel === getHeaderLevel(tree[tree.length - 1].element)) {
+            return recurse(headers, index, tree);
+         } else {
+            return tree;
+         }
+      })(headers, { index: 0 }, tree);
+   }
+
+   /**
+    * Returns all the headers of a page
+    *
+    * @param {Object} [filters={}] An object used to filters the headers to return
+    * @param {number} [filters.level=0] An integer that specifies the level to retrieve
+    * @param {string} [filters.text=''] A text that must be contained in the header's text
+    *
+    * @return {HTMLElement[]}
+    */
+   function getHeaders() {
+      var filters = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+      var selector = void 0;
+
+      filters = Object.assign({
+         level: -1,
+         text: ''
+      }, filters);
+
+      if (filters.level === -1) {
+         selector = 'h1, h2, h3, h4, h5, h6';
+      } else {
+         selector = 'h' + filters.level;
+      }
+
+      var filterTextRegExp = new RegExp('(^|\\b)' + filters.text + '(\\b|$)', 'i');
+      var headers = Array.from(document.querySelectorAll(selector)).filter(function (header) {
+         return header.textContent.search(filterTextRegExp) >= 0;
+      });
+
+      return headers;
+   }
+
+   exports.createHeadingsStructure = createHeadingsStructure;
+   exports.getHeaders = getHeaders;
+});
+
+},{}],7:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['exports'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (exports) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+   function isScreenReaderVisible(element) {
+      return window.getComputedStyle(element).display !== 'none' && element.getAttribute('aria-hidden') !== 'true';
+   }
+
+   /**
+    * Returns all the links of a page.
+    *
+    * @param {Object} [filters={}] An object used to filters the links to return
+    * @param {(HTMLElement|HTMLDocument)} [filters.ancestor=document] The ancestor of the links to retrieve
+    *
+    * @return {HTMLElement[]}
+    */
+   function getLinks() {
+      var filters = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+      filters = Object.assign({
+         ancestor: document
+      }, filters);
+
+      var links = filters.ancestor.querySelectorAll('a');
+
+      return Array.from(links).filter(function (element) {
+         return isScreenReaderVisible(element);
+      });
+   }
+
+   exports.getLinks = getLinks;
+});
+
+},{}],8:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['exports'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (exports) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+   /**
+    * Returns the main element of a page.
+    *
+    * @return {HTMLElement}
+    */
+   function getMain() {
+      var main = document.querySelector('main') || document.querySelector('[role="main"]');
+
+      // If a main has not been found, let's use an heuristic to find
+      // a possible main content that has not been marked as such.
+      if (!main) {
+         var possibleMain = document.querySelectorAll('#main-content, .main-content, #main, .main');
+
+         // If only one element is found, it's highly possible
+         // that it's the true main content of the page.
+         if (possibleMain.length === 1) {
+            main = possibleMain[0];
+         }
+      }
+
+      return main;
+   }
+
+   exports.getMain = getMain;
+});
+
+},{}],9:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   var EventEmitter = function () {
+      function EventEmitter() {
+         _classCallCheck(this, EventEmitter);
+      }
+
+      _createClass(EventEmitter, null, [{
+         key: 'namespaceEvent',
+         value: function namespaceEvent(eventName) {
+            return EventEmitter.namespace + '.' + eventName;
+         }
+      }, {
+         key: 'fireEvent',
+         value: function fireEvent(eventName, element, properties) {
+            var customEvent = document.createEvent('Event');
+
+            customEvent.initEvent(eventName, true, true);
+
+            for (var property in properties) {
+               if (properties.hasOwnProperty(property)) {
+                  try {
+                     customEvent[property] = properties[property];
+                  } catch (ex) {
+                     console.debug('Properties ' + property + ' cannot be copied');
+                  }
+               }
+            }
+
+            element.dispatchEvent(customEvent);
+         }
+      }, {
+         key: 'namespace',
+         get: function get() {
+            return 'webreader';
+         }
+      }]);
+
+      return EventEmitter;
+   }();
+
+   exports.default = EventEmitter;
+   module.exports = exports['default'];
+});
+
+},{}],10:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define("WebReader", ["module", "exports"], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports) {
+   "use strict";
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   var Timer = function () {
+      function Timer() {
+         _classCallCheck(this, Timer);
+      }
+
+      _createClass(Timer, null, [{
+         key: "wait",
+         value: function wait(milliseconds) {
+            return new Promise(function (resolve) {
+               return window.setTimeout(resolve, milliseconds);
+            });
+         }
+      }]);
+
+      return Timer;
+   }();
+
+   exports.default = Timer;
+   module.exports = exports['default'];
+});
+
+},{}],11:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports', './commands', './dom/dom', './reader/recognizer', './router', './reader/speaker', './helpers/event-emitter', './helpers/timer', './webreader-error', '../lang/en-GB.json'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports, require('./commands'), require('./dom/dom'), require('./reader/recognizer'), require('./router'), require('./reader/speaker'), require('./helpers/event-emitter'), require('./helpers/timer'), require('./webreader-error'), require('../lang/en-GB.json'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports, global.commands, global.dom, global.recognizer, global.router, global.speaker, global.eventEmitter, global.timer, global.webreaderError, global.enGB);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports, _commands, _dom, _recognizer, _router, _speaker, _eventEmitter, _timer, _webreaderError, _enGB) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   var Commands = _interopRequireWildcard(_commands);
+
+   var _dom2 = _interopRequireDefault(_dom);
+
+   var _recognizer2 = _interopRequireDefault(_recognizer);
+
+   var _router2 = _interopRequireDefault(_router);
+
+   var _speaker2 = _interopRequireDefault(_speaker);
+
+   var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+
+   var _timer2 = _interopRequireDefault(_timer);
+
+   var _webreaderError2 = _interopRequireDefault(_webreaderError);
+
+   var _enGB2 = _interopRequireDefault(_enGB);
+
+   function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+         default: obj
+      };
+   }
+
+   function _interopRequireWildcard(obj) {
+      if (obj && obj.__esModule) {
+         return obj;
+      } else {
+         var newObj = {};
+
+         if (obj != null) {
+            for (var key in obj) {
+               if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+            }
+         }
+
+         newObj.default = obj;
+         return newObj;
+      }
+   }
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   var defaultLanguage = 'en-GB';
+
+   var defaults = {
+      delay: 300,
+      translationsPath: '',
+      recognizer: {
+         lang: defaultLanguage
+      },
+      speaker: {
+         lang: defaultLanguage,
+         voice: 'Google UK English Female'
+      }
+   };
+
+   var defaultState = {
+      isInteracting: false,
+      elements: null,
+      currentIndex: -1
+   };
+
+   var eventListenersMap = new WeakMap();
+   var statusMap = new WeakMap();
+   var translations = new Map([[defaultLanguage, _enGB2.default]]);
+
+   function downloadTranslation(translationsPath, language) {
+      return window.fetch(translationsPath + '/' + language + '.json').then(function (response) {
+         return response.json();
+      }).then(function (response) {
+         translations.set(language, response);
+
+         return response;
+      });
+   }
+
+   function listenShortcuts(webReader, event) {
+      if (event.ctrlKey === true && (event.code && event.code === 'Space' || event.which === 32)) {
+         if (webReader.isInteracting()) {
+            var state = statusMap.get(webReader);
+
+            if (state.elements) {
+               _dom2.default.unhighlightElement(state.elements[state.currentIndex]);
+            }
+
+            webReader.stopCommand();
+         } else {
+            webReader.receiveCommand();
+         }
+      }
+   }
+
+   /**
+    * The class representing the library
+    * @class
+    */
+
+   var WebReader = function () {
+      /**
+       * Creates a WebReader instance
+       *
+       * @constructor
+       *
+       * @param {Object} [options={}] The options to customize the WebReader
+       * @param {Object} [options.recognizer] The options to customize the Recognizer
+       * @param {Object} [options.speaker] The options to customize the Speaker
+       */
+
+      function WebReader() {
+         var _this = this;
+
+         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+         _classCallCheck(this, WebReader);
+
+         /**
+          * @type {Object}
+          */
+         this.settings = Object.assign({}, defaults, options);
+         /**
+          *
+          * @type {Recognizer}
+          */
+         this.recognizer = new _recognizer2.default(this.settings.recognizer);
+         /**
+          *
+          * @type {Speaker}
+          */
+         this.speaker = new _speaker2.default(this.settings.speaker);
+
+         statusMap.set(this, Object.assign({}, defaultState));
+         eventListenersMap.set(this, new Map());
+
+         var language = this.settings.recognizer.lang;
+
+         if (language && !translations.has(language)) {
+            downloadTranslation(this.settings.translationsPath, language).then(function () {
+               var message = 'Language "' + language + '" successfully loaded';
+
+               console.debug(message);
+
+               _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languagedownload', document, {
+                  data: {
+                     lang: language
+                  }
+               });
+
+               return _this.speaker.speak(message);
+            }, function (err) {
+               console.debug(err.message);
+
+               _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languageerror', document, {
+                  data: {
+                     lang: language
+                  }
+               });
+
+               return _this.speaker.speak('An error occurred: the language "' + language + '" was not loaded');
+            });
+         }
+      }
+
+      /**
+       * Determines if WebReader is currently interacting with the user
+       *
+       * @return {boolean}
+       */
+
+
+      _createClass(WebReader, [{
+         key: 'isInteracting',
+         value: function isInteracting() {
+            return statusMap.get(this).isInteracting;
+         }
+      }, {
+         key: 'enableShortcuts',
+         value: function enableShortcuts() {
+            var eventListeners = eventListenersMap.get(this);
+
+            eventListeners.set('keydown', listenShortcuts.bind(this, this));
+
+            document.documentElement.addEventListener('keydown', eventListeners.get('keydown'));
+
+            return this;
+         }
+      }, {
+         key: 'disableShortcuts',
+         value: function disableShortcuts() {
+            var eventListeners = eventListenersMap.get(this);
+
+            document.documentElement.removeEventListener('keydown', eventListeners.get('keydown'));
+            eventListeners.delete('keydown');
+
+            return this;
+         }
+      }, {
+         key: 'receiveCommand',
+         value: function receiveCommand() {
+            var _this2 = this;
+
+            statusMap.get(this).isInteracting = true;
+            console.debug('Interaction started');
+
+            _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionstart', document);
+
+            return this.speaker.speak('Ready').then(function () {
+               return _this2.recognizer.recognize();
+            }).then(function (recognizedText) {
+               var translation = translations.get(_this2.settings.recognizer.lang);
+
+               return Commands.recognizeCommand(recognizedText, translation);
+            }).then(function (recognizedCommand) {
+               return _router2.default.route(_this2, recognizedCommand);
+            }).catch(function (error) {
+               if (error instanceof _webreaderError2.default) {
+                  return _this2.speaker.speak(error.message);
+               }
+
+               if (error.error !== 'aborted' && error.error !== 'interrupted') {
+                  console.debug('An error occurred', error);
+
+                  statusMap.set(_this2, Object.assign({}, defaultState));
+
+                  return _this2.speaker.speak('Sorry, I could not recognize the command');
+               }
+            }).then( // Simulate an always() method
+            function () {}, function () {}).then(function () {
+               statusMap.get(_this2).isInteracting = false;
+               console.debug('Interaction completed');
+
+               _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionend', document);
+            });
+         }
+      }, {
+         key: 'stopCommand',
+         value: function stopCommand() {
+            this.recognizer.abort();
+            this.speaker.cancel();
+            statusMap.get(this).isInteracting = false;
+            console.debug('Interaction stopped');
+         }
+      }, {
+         key: 'readHeaders',
+         value: function readHeaders(filters) {
+            var _this3 = this;
+
+            var headers = _dom2.default.getHeaders(filters);
+            var level = filters && filters.level ? filters.level : -1;
+
+            statusMap.get(this).elements = headers;
+
+            return headers.reduce(function (promise, header, index) {
+               promise = promise.then(function () {
+                  statusMap.get(_this3).currentIndex = index;
+                  _dom2.default.highlightElement(header);
+
+                  return _this3.speaker.speak(header.textContent + (level !== -1 ? '' : ' ' + header.nodeName)).then(function () {
+                     return _dom2.default.unhighlightElement(header);
+                  }).catch(function (error) {
+                     _dom2.default.unhighlightElement(header);
+
+                     return Promise.reject(error);
+                  });
+               });
+
+               if (_this3.settings.delay > 0) {
+                  promise = promise.then(function () {
+                     return _timer2.default.wait(_this3.settings.delay);
+                  });
+               }
+
+               return promise;
+            }, Promise.resolve());
+         }
+      }, {
+         key: 'readCurrentElement',
+         value: function readCurrentElement() {
+            var state = statusMap.get(this);
+
+            if (!state.elements) {
+               return Promise.reject(new _webreaderError2.default('There is not a current element to read'));
+            }
+
+            var element = state.elements[state.currentIndex];
+
+            _dom2.default.highlightElement(element);
+
+            return this.speaker.speak(element.textContent).then(function () {
+               return _dom2.default.unhighlightElement(element);
+            }).catch(function (error) {
+               _dom2.default.unhighlightElement(element);
+
+               return Promise.reject(error);
+            });
+         }
+      }, {
+         key: 'readPreviousElement',
+         value: function readPreviousElement() {
+            var state = statusMap.get(this);
+
+            if (state.currentIndex === 0) {
+               return Promise.reject(new _webreaderError2.default('The current element is the first'));
+            }
+
+            state.currentIndex--;
+
+            return this.readCurrentElement();
+         }
+      }, {
+         key: 'readNextElement',
+         value: function readNextElement() {
+            var state = statusMap.get(this);
+
+            if (state.currentIndex === state.elements.length - 1) {
+               return Promise.reject(new _webreaderError2.default('The current element is the last'));
+            }
+
+            state.currentIndex++;
+
+            return this.readCurrentElement();
+         }
+      }, {
+         key: 'goToLink',
+         value: function goToLink() {
+            var state = statusMap.get(this);
+            var currentElement = state.elements ? state.elements[state.currentIndex] : null;
+
+            if (!currentElement || currentElement.nodeName !== 'A') {
+               return Promise.reject(new _webreaderError2.default('There is not a current link to follow'));
+            }
+
+            window.location.assign(currentElement.href);
+         }
+      }, {
+         key: 'readLinks',
+         value: function readLinks(filters) {
+            var _this4 = this;
+
+            var links = _dom2.default.getLinks(filters);
+
+            statusMap.get(this).elements = links;
+
+            return links.reduce(function (promise, link, index) {
+               promise = promise.then(function () {
+                  statusMap.get(_this4).currentIndex = index;
+
+                  return _this4.readCurrentElement();
+               });
+
+               if (_this4.settings.delay > 0) {
+                  promise = promise.then(function () {
+                     return _timer2.default.wait(_this4.settings.delay);
+                  });
+               }
+
+               return promise;
+            }, Promise.resolve());
+         }
+      }, {
+         key: 'readMain',
+         value: function readMain() {
+            var main = _dom2.default.getMain();
+            var state = statusMap.get(this);
+
+            state.elements = [main];
+            state.currentIndex = 0;
+
+            if (!main) {
+               return Promise.reject(new _webreaderError2.default('The main content of this page cannot be found'));
+            }
+
+            return this.speaker.speak(main.textContent);
+         }
+      }, {
+         key: 'searchMain',
+         value: function searchMain() {
+            var main = _dom2.default.getMain();
+
+            if (!main) {
+               return Promise.reject(new _webreaderError2.default('The main content of this page cannot be found'));
+            }
+
+            var oldTabIndex = main.getAttribute('tabindex');
+
+            main.setAttribute('tabindex', -1);
+            main.addEventListener('blur', function removeTabIndex() {
+               main.removeEventListener('blur', removeTabIndex);
+
+               // Restore tabindex's old value, if any
+               if (oldTabIndex) {
+                  main.setAttribute('tabindex', oldTabIndex);
+               } else {
+                  main.removeAttribute('tabindex');
+               }
+            });
+            main.focus();
+         }
+      }, {
+         key: 'readPageTitle',
+         value: function readPageTitle() {
+            var title = _dom2.default.getTitle();
+
+            if (title) {
+               return this.speaker.speak('The title of the page is ' + title);
+            } else {
+               return this.speaker.speak('This page does not have a title');
+            }
+         }
+      }, {
+         key: 'readPageSummary',
+         value: function readPageSummary() {
+            var headers = _dom2.default.getHeaders();
+            var links = _dom2.default.getLinks();
+
+            return this.speaker.speak('The page contains ' + headers.length + ' headers and ' + links.length + ' links');
+         }
+      }, {
+         key: 'goToPreviousPage',
+         value: function goToPreviousPage() {
+            window.history.back();
+         }
+      }, {
+         key: 'goToNextPage',
+         value: function goToNextPage() {
+            window.history.forward();
+         }
+      }, {
+         key: 'goToHomepage',
+         value: function goToHomepage() {
+            window.location.assign('/');
+         }
+      }]);
+
+      return WebReader;
+   }();
+
+   exports.default = WebReader;
+   module.exports = exports['default'];
+});
+
+},{"../lang/en-GB.json":1,"./commands":3,"./dom/dom":5,"./helpers/event-emitter":9,"./helpers/timer":10,"./reader/recognizer":12,"./reader/speaker":13,"./router":14,"./webreader-error":15}],12:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports', '../helpers/event-emitter', '../webreader-error'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports, require('../helpers/event-emitter'), require('../webreader-error'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports, global.eventEmitter, global.webreaderError);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports, _eventEmitter, _webreaderError) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+
+   var _webreaderError2 = _interopRequireDefault(_webreaderError);
+
+   function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+         default: obj
+      };
+   }
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   /**
+    * Retrieves the object that allows to recognize the speech or
+    * <code>null</code> if the feature is not supported
+    *
+    * @returns {SpeechRecognition|null}
+    */
+   function getRecognizer() {
+      return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+   }
+
+   function bindEvents(recognizer, eventsHash) {
+      for (var eventName in eventsHash) {
+         recognizer.addEventListener(eventName, eventsHash[eventName]);
+      }
+   }
+
+   function unbindEvents(recognizer, eventsHash) {
+      for (var eventName in eventsHash) {
+         recognizer.removeEventListener(eventName, eventsHash[eventName]);
+      }
+   }
+
+   /**
+    * The class exposing the reading features of a web page
+    *
+    * @class
+    */
+
+   var Recognizer = function () {
+      /**
+       * Creates a Recognizer instance
+       *
+       * @constructor
+       *
+       * @param {Object} [options={}] The options to customize the settings of the recognizer
+       */
+
+      function Recognizer() {
+         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+         _classCallCheck(this, Recognizer);
+
+         var _Recognizer = getRecognizer();
+
+         if (!_Recognizer) {
+            throw Error('API not supported');
+         }
+
+         /**
+          *
+          * @type {SpeechRecognition}
+          */
+         this.recognizer = new _Recognizer();
+
+         for (var key in options) {
+            if (options.hasOwnProperty(key) && this.recognizer[key] !== undefined) {
+               this.recognizer[key] = options[key];
+            }
+         }
+      }
+
+      /**
+       * Detects if the recognition feature is supported
+       *
+       * @returns {boolean}
+       */
+
+
+      _createClass(Recognizer, [{
+         key: 'recognize',
+         value: function recognize() {
+            var _this = this;
+
+            return new Promise(function (resolve, reject) {
+               var recognizer = _this.recognizer;
+               var eventsHash = {
+                  audiostart: function audiostart() {
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionstart', document);
+                  },
+                  result: function result(event) {
+                     for (var i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                           var bestGuess = event.results[i][0];
+
+                           console.debug('Recognition completed');
+                           console.debug('Recognized "' + bestGuess.transcript + '" with a confidence of ' + bestGuess.confidence);
+
+                           _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionresult', document, {
+                              data: {
+                                 result: bestGuess
+                              }
+                           });
+
+                           resolve(bestGuess.transcript);
+                        }
+                     }
+                  },
+                  error: function error(event) {
+                     console.debug('Recognition error:', event.error);
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionerror', document, {
+                        error: event.error
+                     });
+
+                     reject(new _webreaderError2.default('An error has occurred while recognizing your speech'));
+                  },
+                  noMatch: function noMatch() {
+                     console.debug('Recognition ended because of nomatch');
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionnomatch', document);
+
+                     reject(new _webreaderError2.default('Sorry, I could not find a match'));
+                  },
+                  end: function end() {
+                     console.debug('Recognition ended');
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionend', document);
+
+                     unbindEvents(recognizer, eventsHash);
+
+                     // If the Promise isn't resolved or rejected at this point
+                     // the demo is running on Chrome and Windows 8.1 (issue #428873).
+                     reject(new _webreaderError2.default('Sorry, I could not recognize your speech'));
+                  }
+               };
+
+               bindEvents(_this.recognizer, eventsHash);
+
+               console.debug('Recognition started');
+               _this.recognizer.start();
+            });
+         }
+      }, {
+         key: 'abort',
+         value: function abort() {
+            this.recognizer.abort();
+         }
+      }], [{
+         key: 'isSupported',
+         value: function isSupported() {
+            return !!getRecognizer();
+         }
+      }]);
+
+      return Recognizer;
+   }();
+
+   exports.default = Recognizer;
+   module.exports = exports['default'];
+});
+
+},{"../helpers/event-emitter":9,"../webreader-error":15}],13:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports', '../helpers/event-emitter', '../webreader-error'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports, require('../helpers/event-emitter'), require('../webreader-error'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports, global.eventEmitter, global.webreaderError);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports, _eventEmitter, _webreaderError) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+
+   var _webreaderError2 = _interopRequireDefault(_webreaderError);
+
+   function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+         default: obj
+      };
+   }
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   /**
+    * This constant is needed because Chrome doesn't fire an error event
+    * if the <code>cancel()</code> method is called.
+    *
+    * @type {Symbol}
+    */
+   var isCancelledSymbol = Symbol('isCancelled');
+
+   /**
+    * Retrieves the object that allows to prompt the text or
+    * <code>null</code> if the feature is not supported
+    *
+    * @returns {speechSynthesis|null}
+    */
+   function getSpeaker() {
+      return speechSynthesis || null;
+   }
+
+   function setUtteranceSettings(utterance, settings, voices) {
+      var _loop = function _loop(key) {
+         if (!settings.hasOwnProperty(key) || utterance[key] === undefined) {
+            return 'continue';
+         }
+
+         if (key !== 'voice') {
+            utterance[key] = settings[key];
+            return 'continue';
+         }
+
+         var voice = voices.filter(function (voice) {
+            return voice.voiceURI === settings[key];
+         }).pop();
+
+         if (voice) {
+            utterance[key] = voice;
+         } else {
+            console.debug('The voice selected is not available. Falling back to one available');
+            utterance[key] = voices[0];
+         }
+      };
+
+      for (var key in settings) {
+         var _ret = _loop(key);
+
+         if (_ret === 'continue') continue;
+      }
+   }
+
+   /**
+    * The class exposing the speaking features of a web page
+    * @class
+    */
+
+   var Speaker = function () {
+      /**
+       * Creates a Speaker instance
+       *
+       * @constructor
+       *
+       * @param {Object} [options={}] The options to customize the voice prompting the texts
+       */
+
+      function Speaker() {
+         var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+         _classCallCheck(this, Speaker);
+
+         /**
+          *
+          * @type {speechSynthesis|null}
+          */
+         this.speaker = getSpeaker();
+         /**
+          *
+          * @type {Object}
+          */
+         this.settings = options;
+         /**
+          *
+          * @type {boolean}
+          */
+         this[isCancelledSymbol] = false;
+
+         if (!this.speaker) {
+            throw Error('API not supported');
+         }
+      }
+
+      /**
+       * Detects if the speech feature is supported
+       *
+       * @returns {boolean}
+       */
+
+
+      _createClass(Speaker, [{
+         key: 'getVoices',
+         value: function getVoices() {
+            var _this = this;
+
+            return new Promise(function (resolve) {
+               var voices = _this.speaker.getVoices();
+
+               if (voices.length > 1) {
+                  return resolve(voices);
+               } else {
+                  (function () {
+                     var onVoicesChanged = function () {
+                        resolve(this.speaker.getVoices());
+
+                        getSpeaker().removeEventListener('voiceschanged', onVoicesChanged);
+                     }.bind(_this);
+
+                     getSpeaker().addEventListener('voiceschanged', onVoicesChanged);
+                  })();
+               }
+            });
+         }
+      }, {
+         key: 'speak',
+         value: function speak(text) {
+            var _this2 = this;
+
+            return this.getVoices().then(function (voices) {
+               return new Promise(function (resolve, reject) {
+                  var utterance = new window.SpeechSynthesisUtterance(text);
+                  var eventData = Object.assign({ text: text }, _this2.settings);
+
+                  setUtteranceSettings(utterance, _this2.settings, voices);
+
+                  utterance.addEventListener('start', function () {
+                     console.debug('Synthesizing the text: ' + text);
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesisstart', document, {
+                        data: eventData
+                     });
+                  });
+
+                  utterance.addEventListener('end', function () {
+                     console.debug('Synthesis completed');
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesisend', document, {
+                        data: eventData
+                     });
+
+                     if (_this2[isCancelledSymbol]) {
+                        _this2[isCancelledSymbol] = false;
+                        return reject({
+                           error: 'interrupted'
+                        });
+                     }
+
+                     resolve();
+                  });
+
+                  utterance.addEventListener('error', function (event) {
+                     console.debug('Synthesis error: ', event.error);
+
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesiserror', document, {
+                        data: eventData
+                     });
+
+                     reject(new _webreaderError2.default('An error has occurred while speaking'));
+                  });
+
+                  _this2.speaker.speak(utterance);
+               });
+            });
+         }
+      }, {
+         key: 'cancel',
+         value: function cancel() {
+            this.speaker.cancel();
+            this[isCancelledSymbol] = true;
+         }
+      }], [{
+         key: 'isSupported',
+         value: function isSupported() {
+            return !!getSpeaker();
+         }
+      }]);
+
+      return Speaker;
+   }();
+
+   exports.default = Speaker;
+   module.exports = exports['default'];
+});
+
+},{"../helpers/event-emitter":9,"../webreader-error":15}],14:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define('WebReader', ['module', 'exports', './webreader-error'], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports, require('./webreader-error'));
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports, global.webreaderError);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports, _webreaderError) {
+   'use strict';
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   var _webreaderError2 = _interopRequireDefault(_webreaderError);
+
+   function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : {
+         default: obj
+      };
+   }
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var _createClass = function () {
+      function defineProperties(target, props) {
+         for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];
+            descriptor.enumerable = descriptor.enumerable || false;
+            descriptor.configurable = true;
+            if ("value" in descriptor) descriptor.writable = true;
+            Object.defineProperty(target, descriptor.key, descriptor);
+         }
+      }
+
+      return function (Constructor, protoProps, staticProps) {
+         if (protoProps) defineProperties(Constructor.prototype, protoProps);
+         if (staticProps) defineProperties(Constructor, staticProps);
+         return Constructor;
+      };
+   }();
+
+   var Router = function () {
+      function Router() {
+         _classCallCheck(this, Router);
+      }
+
+      _createClass(Router, null, [{
+         key: 'route',
+         value: function route(webReader, recognizedCommand) {
+            /* jshint -W074 */
+            if (recognizedCommand.command === 'READ_ALL_HEADERS') {
+               return webReader.readHeaders();
+            } else if (recognizedCommand.command === 'READ_ALL_LINKS') {
+               return webReader.readLinks();
+            } else if (recognizedCommand.command === 'READ_LEVEL_HEADERS') {
+               return webReader.readHeaders({
+                  level: recognizedCommand.level
+               });
+            } else if (recognizedCommand.command === 'READ_MAIN') {
+               return webReader.readMain();
+            } else if (recognizedCommand.command === 'SEARCH_MAIN') {
+               return webReader.searchMain();
+            } else if (recognizedCommand.command === 'READ_AGAIN') {
+               return webReader.readCurrentElement();
+            } else if (recognizedCommand.command === 'READ_PREVIOUS') {
+               return webReader.readPreviousElement();
+            } else if (recognizedCommand.command === 'READ_NEXT') {
+               return webReader.readNextElement();
+            } else if (recognizedCommand.command === 'READ_PAGE_TITLE') {
+               return webReader.readPageTitle();
+            } else if (recognizedCommand.command === 'READ_LINKS_IN_ELEMENT') {
+               return webReader.readLinks({
+                  ancestor: recognizedCommand.element
+               });
+            } else if (recognizedCommand.command === 'GO_TO_PREVIOUS_PAGE') {
+               return webReader.goToPreviousPage();
+            } else if (recognizedCommand.command === 'GO_TO_NEXT_PAGE') {
+               return webReader.goToNextPage();
+            } else if (recognizedCommand.command === 'READ_PAGE_SUMMARY') {
+               return webReader.readPageSummary();
+            } else if (recognizedCommand.command === 'GO_TO_HOMEPAGE') {
+               return webReader.goToHomepage();
+            } else if (recognizedCommand.command === 'GO_TO_LINK') {
+               return webReader.goToLink();
+            } else {
+               throw new _webreaderError2.default('The command is not supported');
+            }
+         }
+      }]);
+
+      return Router;
+   }();
+
+   exports.default = Router;
+   module.exports = exports['default'];
+});
+
+},{"./webreader-error":15}],15:[function(require,module,exports){
+(function (global, factory) {
+   if (typeof define === "function" && define.amd) {
+      define("WebReader", ["module", "exports"], factory);
+   } else if (typeof exports !== "undefined") {
+      factory(module, exports);
+   } else {
+      var mod = {
+         exports: {}
+      };
+      factory(mod, mod.exports);
+      global.WebReader = mod.exports;
+   }
+})(this, function (module, exports) {
+   "use strict";
+
+   Object.defineProperty(exports, "__esModule", {
+      value: true
+   });
+
+   function _classCallCheck(instance, Constructor) {
+      if (!(instance instanceof Constructor)) {
+         throw new TypeError("Cannot call a class as a function");
+      }
+   }
+
+   var WebReaderError = function WebReaderError(message) {
+      _classCallCheck(this, WebReaderError);
+
+      this.name = this.constructor.name;
+      this.message = message;
+   };
+
+   exports.default = WebReaderError;
+   module.exports = exports['default'];
+});
+
+},{}]},{},[11])(11)
+});
+
+
+//# sourceMappingURL=web-reader.debug.js.map

@@ -1,0 +1,8 @@
+{
+   "moduleId": "WebReader",
+   "plugins": [
+      "add-module-exports",
+      "transform-es2015-modules-umd"
+   ],
+   "presets": ["es2015"]
+}

@@ -1,0 +1,158 @@
+{
+   "commands": {
+      "READ_ALL_HEADERS": {
+         "text": "leggi tutti i titoli",
+         "variations": [
+            "leggi titoli"
+         ]
+      },
+      "READ_ALL_LINKS": {
+         "text": "leggi tutti i links",
+         "variations": [
+            "leggi links",
+            "leggi tutti i collegamenti",
+            "leggi collegamenti"
+         ]
+      },
+      "READ_LEVEL_HEADERS": {
+         "text": "leggi tutti gli h",
+         "variations": [
+            "leggi h"
+         ],
+         "levels": [
+            "uno",
+            "due",
+            "tre",
+            "quattro",
+            "cinque",
+            "sei"
+         ]
+      },
+      "READ_MAIN": {
+         "text": "leggi contenuto principale",
+         "variations": [
+            "leggi il contenuto principale"
+         ]
+      },
+      "SEARCH_MAIN": {
+         "text": "cerca contenuto principale",
+         "variations": [
+            "cerca il contenuto principale",
+            "trova contenuto principale",
+            "trova il contenuto principale"
+         ]
+      },
+      "READ_AGAIN": {
+         "text": "leggi nuovamente l'elemento",
+         "variations": [
+            "rileggi l'elemento corrente",
+            "leggi l'elemento corrente di nuovo",
+            "leggi nuovamente",
+            "leggi di nuovo",
+            "rileggi"
+         ]
+      },
+      "READ_PREVIOUS": {
+         "text": "leggi elemento precendete",
+         "variations": [
+            "leggi l'elemento precendete",
+            "leggi precendete"
+         ]
+      },
+      "READ_NEXT": {
+         "text": "leggi elemento successivo",
+         "variations": [
+            "leggi l'elemento successivo",
+            "leggi successivo"
+         ]
+      },
+      "READ_PAGE_TITLE": {
+         "text": "leggi il titolo della pagina",
+         "variations": [
+            "leggi titolo",
+            "leggi il titolo della pagina",
+            "leggi il titolo del documento"
+         ]
+      },
+      "READ_LINKS_IN_ELEMENT": {
+         "text": "leggi links dentro",
+         "variations": [
+            "leggi i links dentro",
+            "leggi links in",
+            "leggi i links in",
+            "leggi links contenuti",
+            "leggi i links contenuti",
+            "leggi tutti i links dentro",
+            "leggi tutti i links contenuti",
+            "leggi i collegamenti dentro",
+            "leggi collegamenti contenuti",
+            "leggi i collegamenti contenuti",
+            "leggi tutti i collegamenti dentro",
+            "leggi tutti i collegamenti contenuti"
+         ]
+      },
+      "GO_TO_PREVIOUS_PAGE": {
+         "text": "pagina precedente",
+         "variations": [
+            "vai alla pagina precedente"
+         ]
+      },
+      "GO_TO_NEXT_PAGE": {
+         "text": "pagina successiva",
+         "variations": [
+            "vai alla pagina successiva"
+         ]
+      },
+      "READ_PAGE_SUMMARY": {
+         "text": "riassumi pagina",
+         "variations": [
+            "riassumi la pagina",
+            "riassumi il contenuto della pagina",
+            "riassumi contenuto pagina"
+         ]
+      },
+      "GO_TO_HOMEPAGE": {
+         "text": "homepage",
+         "variations": [
+            "via alla homepage"
+         ]
+      },
+      "GO_TO_LINK": {
+         "text": "vai al link",
+         "variations": [
+            "segui link",
+            "segui collegamento",
+            "vai"
+         ]
+      }
+   },
+   "elements": {
+      "MAIN": {
+         "selector": "main",
+         "variations": [
+            "main",
+            "elemento principale"
+         ]
+      },
+      "NAV": {
+         "selector": "nav",
+         "variations": [
+            "nav",
+            "menu"
+         ]
+      },
+      "HEADER": {
+         "selector": "header",
+         "variations": [
+            "header",
+            "intestazione"
+         ]
+      },
+      "FOOTER": {
+         "selector": "footer",
+         "variations": [
+            "footer"
+         ]
+      }
+   }
+}

@@ -1,0 +1,146 @@
+{
+   "commands": {
+      "READ_ALL_HEADERS": {
+         "text": "lis tous les titres",
+         "variations": [
+            "lis les titres"
+         ]
+      },
+      "READ_ALL_LINKS": {
+         "text": "lis tous les liens",
+         "variations": [
+            "lis les liens",
+            "lis toutes les adresses",
+            "lis les adresses"
+         ]
+      },
+      "READ_LEVEL_HEADERS": {
+         "text": "lis tous les titres",
+         "variations": [
+            "lis les titres"
+         ],
+         "levels": [
+            "un",
+            "deux",
+            "trois",
+            "quatre",
+            "cinq",
+            "six"
+         ]
+      },
+      "READ_MAIN": {
+         "text": "lis le contenu principal",
+         "variations": [
+            "lis le message principal"
+         ]
+      },
+      "SEARCH_MAIN": {
+         "text": "cherche le contenu principal",
+         "variations": [
+            "cherche le message principal",
+            "trouve le contenu principal",
+            "trouve le message principal"
+         ]
+      },
+      "READ_AGAIN": {
+         "text": "relis l'élément",
+         "variations": [
+            "relis l'élément courant",
+            "lis l'élément courant à nouveau",
+            "lis l'élément courant une fois encore",
+            "lis à nouveau",
+            "lis une fois encore",
+            "relis"
+         ]
+      },
+      "READ_PREVIOUS": {
+         "text": "lis l'élément précédent",
+         "variations": [
+            "lis l'entrée précédente"
+         ]
+      },
+      "READ_NEXT": {
+         "text": "lis l'élément suivant",
+         "variations": [
+            "lis l'élément qui suit",
+            "lis l'entrée suivante",
+            "lis l'entrée qui suit"
+         ]
+      },
+      "READ_PAGE_TITLE": {
+         "text": "lis le titre de la page",
+         "variations": [
+            "lis le titre",
+            "lis le titre du document"
+         ]
+      },
+      "READ_LINKS_IN_ELEMENT": {
+         "text": "lis les liens à l'intérieur",
+         "variations": [
+            "lis tous les liens à l'intérieur",
+            "lis tous les liens contenus",
+            "lis tous les liens contenus dans l'élément"
+         ]
+      },
+      "GO_TO_PREVIOUS_PAGE": {
+         "text": "page précédente",
+         "variations": [
+            "retourne à la page précédente"
+         ]
+      },
+      "GO_TO_NEXT_PAGE": {
+         "text": "page suivante",
+         "variations": [
+            "passe à la page suivante",
+            "accède à la page suivante"
+         ]
+      },
+      "READ_PAGE_SUMMARY": {
+         "text": "résume la page",
+         "variations": [
+            "résume le contenu de la page"
+         ]
+      },
+      "GO_TO_HOMEPAGE": {
+         "text": "page d'accueil",
+         "variations": [
+            "accède à la page d'accueil du site"
+         ]
+      },
+      "GO_TO_LINK": {
+         "text": "suis le lien",
+         "variations": [
+            "consulte le lien"
+         ]
+      }
+   },
+   "elements": {
+      "MAIN": {
+         "selector": "main",
+         "variations": [
+            "main",
+            "page principale"
+         ]
+      },
+      "NAV": {
+         "selector": "nav",
+         "variations": [
+            "navigation",
+            "menu"
+         ]
+      },
+      "HEADER": {
+         "selector": "header",
+         "variations": [
+            "en-tête de page",
+            "titre"
+         ]
+      },
+      "FOOTER": {
+         "selector": "footer",
+         "variations": [
+            "bas de page"
+         ]
+      }
+   }
+}
