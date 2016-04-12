@@ -63,7 +63,7 @@ or perform a related query.
 
 We plan to further enrich WebReader’s with more useful features in the months to come.
 
-We welcome [your comments, ideas and feedback]](https://github.com/digital-detox/web-reader/issues). Please help solve
+We welcome [your comments, ideas and feedback](https://github.com/digital-detox/web-reader/issues). Please help solve
 the challenges we have and help us create a truly useful, universal and free resource.
 
 ## License
