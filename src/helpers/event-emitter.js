@@ -1,5 +1,15 @@
+/**
+ * The class representing an event emitter
+ *
+ * @class
+ */
 export
    default class EventEmitter {
+   /**
+    * Returns the namespace of the events
+    *
+    * @return {string}
+    */
    static get namespace() {
       return 'webreader';
    }

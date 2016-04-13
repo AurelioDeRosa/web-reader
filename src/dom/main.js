@@ -1,7 +1,9 @@
 /**
- * Returns the main element of a page.
+ * Returns the main element of the page.
+ * If the element is not found, an heuristic is employed to find a possible
+ * main element. If the heuristic approach fails, <code>null</code> is returned
  *
- * @return {HTMLElement}
+ * @return {HTMLElement|null}
  */
 function getMain() {
    let main = document.querySelector('main') ||

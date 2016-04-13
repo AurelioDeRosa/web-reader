@@ -2,6 +2,21 @@ import EventEmitter from '../helpers/event-emitter';
 import WebReaderError from '../webreader-error';
 
 /**
+ * @typedef SpeechRecognitionHash
+ * @type {Object}
+ * @property {Object[]} grammars The collection of <code>SpeechGrammar</code> objects which represent the grammars
+ * that are active for this recognition
+ * @property {string} [lang=''] The language of the recognition for the request.
+ * If unspecified it defaults to the language of the html document root element
+ * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user stops speaking or not
+ * @property {boolean} [interimResults=false] Controls whether interim results are returned or not
+ * @property {number} [maxAlternatives=1] The maximum number of <code>SpeechRecognitionAlternative</code>s per result
+ * @property {string} [serviceURI=''] The location of the speech recognition service to use
+ *
+ * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#speechreco-attributes|SpeechRecognition Attributes}
+ */
+
+/**
  * Retrieves the object that allows to recognize the speech or
  * <code>null</code> if the feature is not supported
  *
@@ -13,12 +28,27 @@ function getRecognizer() {
           null;
 }
 
+/**
+ * Binds one or more events to a <code>SpeechRecognition</code> object
+ *
+ * @param {SpeechRecognition} recognizer A <code>SpeechRecognition</code> object
+ * @param {Object} eventsHash An object of name-function pairs,
+ * where name is the event to listen and function is the function to attach
+ */
 function bindEvents(recognizer, eventsHash) {
    for (let eventName in eventsHash) {
+      console.log(eventName);
       recognizer.addEventListener(eventName, eventsHash[eventName]);
    }
 }
 
+/**
+ * Unbinds one or more events to a <code>SpeechRecognition</code> object
+ *
+ * @param {SpeechRecognition} recognizer A <code>SpeechRecognition</code> object
+ * @param {Object} eventsHash An object of name-function pairs,
+ * where name is the event to listen and function is the function to attach
+ */
 function unbindEvents(recognizer, eventsHash) {
    for (let eventName in eventsHash) {
       recognizer.removeEventListener(eventName, eventsHash[eventName]);
@@ -36,7 +66,7 @@ export default class Recognizer {
     *
     * @constructor
     *
-    * @param {Object} [options={}] The options to customize the settings of the recognizer
+    * @param {SpeechRecognitionHash} [options={}] The options to customize the settings of the recognizer
     */
    constructor(options={}) {
       let Recognizer = getRecognizer();
@@ -46,6 +76,7 @@ export default class Recognizer {
       }
 
       /**
+       * The speech recognizer used
        *
        * @type {SpeechRecognition}
        */

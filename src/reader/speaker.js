@@ -10,7 +10,21 @@ import WebReaderError from '../webreader-error';
 const isCancelledSymbol = Symbol('isCancelled');
 
 /**
- * Retrieves the object that allows to prompt the text or
+ * @typedef SpeechSynthesisUtteranceHash
+ * @type {Object}
+ * @property {string} text The text to be synthesized and spoken
+ * @property {string} [lang=''] The language of the speech synthesis for the utterance.
+ * If unspecified it defaults to the language of the html document root element
+ * @property {string} [voice=''] The voice to use
+ * @property {number} [volume=1.0] The speaking volume
+ * @property {number} [rate=1.0] The speaking rate
+ * @property {number} [pitch=1.0] The speaking pitch
+ *
+ * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes|SpeechSynthesisUtterance Attributes}
+ */
+
+/**
+ * Retrieves the object that allows to speech the text or
  * <code>null</code> if the feature is not supported
  *
  * @returns {speechSynthesis|null}
@@ -20,6 +34,13 @@ function getSpeaker() {
           null;
 }
 
+/**
+ * Sets the settings for a <code>SpeechSynthesisUtterance</code> object
+ *
+ * @param {SpeechSynthesisUtterance} utterance The object whose settings will be set
+ * @param {SpeechSynthesisUtteranceHash} settings
+ * @param {string[]} voices The voices available
+ */
 function setUtteranceSettings(utterance, settings, voices) {
    for(let key in settings) {
       if (!settings.hasOwnProperty(key) || utterance[key] === undefined) {
@@ -46,6 +67,7 @@ function setUtteranceSettings(utterance, settings, voices) {
 
 /**
  * The class exposing the speaking features of a web page
+ *
  * @class
  */
 export default class Speaker {
@@ -54,7 +76,7 @@ export default class Speaker {
     *
     * @constructor
     *
-    * @param {Object} [options={}] The options to customize the voice prompting the texts
+    * @param {SpeechSynthesisUtteranceHash} [options={}] The options to customize the voice prompting the texts
     */
    constructor(options = {}) {
       /**
@@ -64,7 +86,7 @@ export default class Speaker {
       this.speaker = getSpeaker();
       /**
        *
-       * @type {Object}
+       * @type {SpeechSynthesisUtteranceHash}
        */
       this.settings = options;
       /**

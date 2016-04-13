@@ -1,11 +1,24 @@
 import DamerauLevenshtein from 'damerau-levenshtein';
 
+/**
+ * The translation currently in use
+ *
+ * @type {Object}
+ */
 let translation = null;
+
+/**
+ * @typedef CommandsHash
+ * @type {Object}
+ * @property {string} command The command recognized
+ * @property {string} [translationsPath=''] The path to the translations folder
+ * @property {Object} [recognizer] The settings for the speech recognition functionality
+ */
 
 /**
  * Finds the closest match of a string using the Damerau-Levenshtein algorithm
  *
- * @param {(string|string[])} string The string or the strings to test
+ * @param {(string|string[])} string The string or the array of strings to test
  * @param {string} target The string to test against
  *
  * @return {Object}
@@ -72,6 +85,14 @@ function extractHeaderLevel(recognizedText) {
    return data;
 }
 
+/**
+ * Searches an element type, such as <code>main</code> or <code>footer</code>,
+ * in the text provided. If none is found, <code>null</code> is returned
+ *
+ * @param {string} recognizedText The string to analyze
+ *
+ * @return {HTMLElement|null}
+ */
 function findElementInText(recognizedText) {
    let elements = translation.elements;
    let foundElement = null;
@@ -89,8 +110,12 @@ function findElementInText(recognizedText) {
    return foundElement;
 }
 /**
+ * Searches an element type, such as <code>main</code> or <code>footer</code>,
+ * in the text provided. If none is found, the closest match is re is returned
  *
- * @return {Object}
+ * @param {string} recognizedText The string to analyze
+ *
+ * @return {HTMLElement}
  */
 function extractElementFromText(recognizedText) {
    let foundElement = findElementInText(recognizedText);
@@ -149,7 +174,7 @@ function extractData(command, recognizedText) {
  * @param {string} recognizedText The string to analyze
  * @param {Object} currentTranslation The object containing the translation of the application
  *
- * @return {Object}
+ * @return {CommandsHash}
  */
 export
 

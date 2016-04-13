@@ -1,7 +1,20 @@
 import WebReaderError from './webreader-error';
 
+/**
+ * The class responsible of the routing of the commands
+ *
+ * @class
+ */
 export
  default class Router {
+   /**
+    * Performs an action based on the command recognized
+    *
+    * @param {WebReader} webReader An instance of WebReader
+    * @param {CommandsHash} recognizedCommand The command recognized
+    *
+    * @return {Promise|WebReaderError|undefined}
+    */
    static route(webReader, recognizedCommand) {
       /* jshint -W074 */
       if (recognizedCommand.command === 'READ_ALL_HEADERS') {

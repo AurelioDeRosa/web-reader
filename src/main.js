@@ -10,6 +10,24 @@ import defaultTranslation from '../lang/en-GB.json';
 
 const defaultLanguage = 'en-GB';
 
+/**
+ * @typedef SettingsHash
+ * @type {Object}
+ * @property {number} [delay=300] The delay between each spoken text
+ * @property {string} [translationsPath=''] The path to the translations folder
+ * @property {Object} [recognizer] The settings for the speech recognition functionality
+ * @property {string} [recognizer.lang='en-GB'] The language to use for the speech recognition functionality
+ * @property {Object} [speaker] The settings for the speech synthesis functionality
+ * @property {string} [speaker.lang='en-GB'] The language to use for the speech synthesis functionality
+ * @property {string} [speaker.voice='Google UK English Female'] The voice to use for the synthesis recognition
+ * functionality
+ */
+
+/**
+ * The default values for the settings available
+ *
+ * @type {SettingsHash}
+ */
 const defaults = {
    delay: 300,
    translationsPath: '',
@@ -32,6 +50,14 @@ let eventListenersMap = new WeakMap();
 let statusMap = new WeakMap();
 let translations = new Map([[defaultLanguage, defaultTranslation]]);
 
+/**
+ * Downloads a translation for the commands available
+ *
+ * @param {string} translationsPath The path to the translations folder
+ * @param {string} language The language to download
+ *
+ * @return {Promise}
+ */
 function downloadTranslation(translationsPath, language) {
    return window
       .fetch(`${translationsPath}/${language}.json`)
@@ -43,6 +69,12 @@ function downloadTranslation(translationsPath, language) {
       });
 }
 
+/**
+ * Performs certain actions based on the shortcuts pressed by the user
+ *
+ * @param {WebReader} webReader An instance of WebReader
+ * @param {Event} event An event
+ */
 function listenShortcuts(webReader, event) {
    if (
       event.ctrlKey === true &&
@@ -64,18 +96,17 @@ function listenShortcuts(webReader, event) {
 
 /**
  * The class representing the library
+ *
  * @class
  */
 export
    default class WebReader {
    /**
-    * Creates a WebReader instance
+    * Creates an instance of WebReader
     *
     * @constructor
     *
-    * @param {Object} [options={}] The options to customize the WebReader
-    * @param {Object} [options.recognizer] The options to customize the Recognizer
-    * @param {Object} [options.speaker] The options to customize the Speaker
+    * @param {SettingsHash} [options={}] The options to customize WebReader
     */
    constructor(options = {}) {
       /**
@@ -139,7 +170,7 @@ export
    }
 
    /**
-    * Enables keyboard shortcuts
+    * Enables the keyboard shortcuts provided
     *
     * @return {WebReader}
     */
@@ -154,7 +185,7 @@ export
    }
 
    /**
-    * Disables keyboard shortcuts
+    * Disables the keyboard shortcuts provided
     *
     * @return {WebReader}
     */
@@ -224,11 +255,16 @@ export
    }
 
    /**
-    * Reads all the headers of a page
+    * Reads all the headers of a page, optionally filtered
+    *
+    * @param {Object} [filters={}] The filters to apply
+    * @param {number} [filters.level=-1] The level of the headers to read
+    * (e.g. 1 means read all and only the H1 on the page).
+    * If -1 is provided, all the headers are read
     *
     * @return {Promise}
     */
-   readHeaders(filters) {
+   readHeaders(filters = {}) {
       let headers = Dom.getHeaders(filters);
       let level = filters && filters.level ? filters.level : -1;
 
@@ -258,7 +294,7 @@ export
    }
 
    /**
-    * Reads the current element
+    * Reads again the last element processed
     *
     * @return {Promise}
     */
@@ -317,6 +353,9 @@ export
       return this.readCurrentElement();
    }
 
+   /**
+    * Follows the last read link
+    */
    goToLink() {
       let state = statusMap.get(this);
       let currentElement = state.elements ? state.elements[state.currentIndex] : null;
@@ -356,7 +395,7 @@ export
    }
 
    /**
-    * Reads the main element of a page
+    * Reads the main element of the page
     *
     * @return {Promise}
     */
@@ -375,7 +414,7 @@ export
    }
 
    /**
-    * Searches the main content of the page. If founds, the element is focused
+    * Searches the main content of the page. If the element is found, it is focused
     */
    searchMain() {
       let main = Dom.getMain();
@@ -401,7 +440,9 @@ export
    }
 
    /**
-    * Reads the title of a page, if present.
+    * Reads the title of a page, if present or not empty
+    *
+    * @return {Promise}
     */
    readPageTitle() {
       let title = Dom.getTitle();
@@ -415,6 +456,8 @@ export
 
    /**
     * Reads a summary of the content of the page
+    *
+    * @return {Promise}
     */
    readPageSummary() {
       let headers = Dom.getHeaders();
@@ -423,16 +466,22 @@ export
       return this.speaker.speak(`The page contains ${headers.length} headers and ${links.length} links`);
    }
 
+   /**
+    * Goes to the previous page as specified by the browser's history
+    */
    goToPreviousPage() {
       window.history.back();
    }
 
+   /**
+    * Goes to the next page as specified by the browser's history
+    */
    goToNextPage() {
       window.history.forward();
    }
 
    /**
-    * Go to the homepage
+    * Goes to the homepage
     */
    goToHomepage() {
       window.location.assign('/');

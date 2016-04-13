@@ -58,11 +58,12 @@ function createHeadingsStructure(headers) {
 }
 
 /**
- * Returns all the headers of a page
+ * Returns all the headers of a page, optionally filtered
  *
  * @param {Object} [filters={}] An object used to filters the headers to return
- * @param {number} [filters.level=0] An integer that specifies the level to retrieve
- * @param {string} [filters.text=''] A text that must be contained in the header's text
+ * @param {number} [filters.level=-1] An integer that specifies the level to retrieve.
+ * If set  to -1 retrieves all the headers
+ * @param {string} [filters.text=''] A string that must be contained in the header's text
  *
  * @return {HTMLElement[]}
  */
