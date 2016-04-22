@@ -1530,7 +1530,7 @@ module.exports = DamerauLevenshtein;
    /**
     * @typedef SpeechRecognitionHash
     * @type {Object}
-    * @property {Object[]} grammars The collection of <code>SpeechGrammar</code> objects which represent the grammars
+    * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects which represent the grammars
     * that are active for this recognition
     * @property {string} [lang=''] The language of the recognition for the request.
     * If unspecified it defaults to the language of the html document root element
@@ -1539,7 +1539,7 @@ module.exports = DamerauLevenshtein;
     * @property {number} [maxAlternatives=1] The maximum number of <code>SpeechRecognitionAlternative</code>s per result
     * @property {string} [serviceURI=''] The location of the speech recognition service to use
     *
-    * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#speechreco-attributes|SpeechRecognition Attributes}
+    * @see https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#speechreco-attributes
     */
 
    /**
