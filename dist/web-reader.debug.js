@@ -400,7 +400,7 @@ module.exports = DamerauLevenshtein;
     *
     * @param {string} recognizedText The string to analyze
     *
-    * @return {HTMLElement}
+    * @return {Object}
     */
    function extractElementFromText(recognizedText) {
       var foundElement = findElementInText(recognizedText);
@@ -619,7 +619,7 @@ module.exports = DamerauLevenshtein;
          return 0;
       }
 
-      return element.nodeName.charAt(1);
+      return parseInt(element.nodeName.charAt(1), 10);
    }
 
    /**

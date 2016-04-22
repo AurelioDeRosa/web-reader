@@ -11,7 +11,7 @@ function getHeaderLevel(element) {
       return 0;
    }
 
-   return element.nodeName.charAt(1);
+   return parseInt(element.nodeName.charAt(1), 10);
 }
 
 /**

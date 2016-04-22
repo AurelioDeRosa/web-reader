@@ -115,7 +115,7 @@ function findElementInText(recognizedText) {
  *
  * @param {string} recognizedText The string to analyze
  *
- * @return {HTMLElement}
+ * @return {Object}
  */
 function extractElementFromText(recognizedText) {
    let foundElement = findElementInText(recognizedText);
