@@ -15,11 +15,8 @@ const defaultLanguage = 'en-GB';
  * @type {Object}
  * @property {number} [delay=300] The delay between each spoken text
  * @property {string} [translationsPath=''] The path to the translations folder
- * @property {Object} [recognizer] The settings for the speech recognition functionality
- * @property {string} [recognizer.lang='en-GB'] The language to use for the speech recognition functionality
- * @property {Object} [speaker] The settings for the speech synthesis functionality
- * @property {string} [speaker.lang='en-GB'] The language to use for the speech synthesis functionality
- * @property {string} [speaker.voice='Google UK English Female'] The voice to use for the synthesis recognition
+ * @property {SpeechRecognitionHash} [recognizer] The settings for the speech recognition functionality
+ * @property {SpeechSynthesisUtteranceHash} [speaker] The settings for the speech synthesis functionality
  * functionality
  */
 
