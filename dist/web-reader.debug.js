@@ -285,12 +285,25 @@ module.exports = DamerauLevenshtein;
       };
    }
 
+   /**
+    * The translation currently in use
+    *
+    * @type {Object}
+    */
    var translation = null;
+
+   /**
+    * @typedef CommandsHash
+    * @type {Object}
+    * @property {string} command The command recognized
+    * @property {string} [translationsPath=''] The path to the translations folder
+    * @property {Object} [recognizer] The settings for the speech recognition functionality
+    */
 
    /**
     * Finds the closest match of a string using the Damerau-Levenshtein algorithm
     *
-    * @param {(string|string[])} string The string or the strings to test
+    * @param {(string|string[])} string The string or the array of strings to test
     * @param {string} target The string to test against
     *
     * @return {Object}
@@ -357,6 +370,14 @@ module.exports = DamerauLevenshtein;
       return data;
    }
 
+   /**
+    * Searches an element type, such as <code>main</code> or <code>footer</code>,
+    * in the text provided. If none is found, <code>null</code> is returned
+    *
+    * @param {string} recognizedText The string to analyze
+    *
+    * @return {HTMLElement|null}
+    */
    function findElementInText(recognizedText) {
       var elements = translation.elements;
       var foundElement = null;
@@ -374,8 +395,12 @@ module.exports = DamerauLevenshtein;
       return foundElement;
    }
    /**
+    * Searches an element type, such as <code>main</code> or <code>footer</code>,
+    * in the text provided. If none is found, the closest match is re is returned
     *
-    * @return {Object}
+    * @param {string} recognizedText The string to analyze
+    *
+    * @return {HTMLElement}
     */
    function extractElementFromText(recognizedText) {
       var foundElement = findElementInText(recognizedText);
@@ -434,7 +459,7 @@ module.exports = DamerauLevenshtein;
     * @param {string} recognizedText The string to analyze
     * @param {Object} currentTranslation The object containing the translation of the application
     *
-    * @return {Object}
+    * @return {CommandsHash}
     */
 
 
@@ -490,6 +515,11 @@ module.exports = DamerauLevenshtein;
    Object.defineProperty(exports, "__esModule", {
       value: true
    });
+   /**
+    * Returns the title of the current document
+    *
+    * @return {string}
+    */
    function getTitle() {
       return document.title;
    }
@@ -518,6 +548,12 @@ module.exports = DamerauLevenshtein;
    });
 
 
+   /**
+    * Highlights an element in the current document by wrapping it
+    * with a <code>mark</code> element
+    *
+    * @param {HTMLElement} element The element to highlight
+    */
    function highlightElement(element) {
       if (!element instanceof HTMLElement) {
          return;
@@ -526,6 +562,12 @@ module.exports = DamerauLevenshtein;
       element.innerHTML = '<mark>' + element.innerHTML + '</mark>';
    }
 
+   /**
+    * Unhighlights an element in the current document by removing
+    * the <code>mark</code> element wrapping it
+    *
+    * @param {HTMLElement} element The element to unhighlight
+    */
    function unhighlightElement(element) {
       if (!element instanceof HTMLElement) {
          return;
@@ -624,11 +666,12 @@ module.exports = DamerauLevenshtein;
    }
 
    /**
-    * Returns all the headers of a page
+    * Returns all the headers of a page, optionally filtered
     *
     * @param {Object} [filters={}] An object used to filters the headers to return
-    * @param {number} [filters.level=0] An integer that specifies the level to retrieve
-    * @param {string} [filters.text=''] A text that must be contained in the header's text
+    * @param {number} [filters.level=-1] An integer that specifies the level to retrieve.
+    * If set  to -1 retrieves all the headers
+    * @param {string} [filters.text=''] A string that must be contained in the header's text
     *
     * @return {HTMLElement[]}
     */
@@ -679,14 +722,21 @@ module.exports = DamerauLevenshtein;
    Object.defineProperty(exports, "__esModule", {
       value: true
    });
+   /**
+    * Determines if a link would be read or not by a classic screen reader
+    *
+    * @param {HTMLElement} element The element to test
+    *
+    * @return {boolean}
+    */
    function isScreenReaderVisible(element) {
       return window.getComputedStyle(element).display !== 'none' && element.getAttribute('aria-hidden') !== 'true';
    }
 
    /**
-    * Returns all the links of a page.
+    * Returns all the links of a page, optionally filtered
     *
-    * @param {Object} [filters={}] An object used to filters the links to return
+    * @param {Object} [filters={}] An object used to filters the links
     * @param {(HTMLElement|HTMLDocument)} [filters.ancestor=document] The ancestor of the links to retrieve
     *
     * @return {HTMLElement[]}
@@ -728,9 +778,11 @@ module.exports = DamerauLevenshtein;
       value: true
    });
    /**
-    * Returns the main element of a page.
+    * Returns the main element of the page.
+    * If the element is not found, an heuristic is employed to find a possible
+    * main element. If the heuristic approach fails, <code>null</code> is returned
     *
-    * @return {HTMLElement}
+    * @return {HTMLElement|null}
     */
    function getMain() {
       var main = document.querySelector('main') || document.querySelector('[role="main"]');
@@ -842,67 +894,67 @@ module.exports = DamerauLevenshtein;
 
 },{}],10:[function(require,module,exports){
 (function (global, factory) {
-   if (typeof define === "function" && define.amd) {
-      define("WebReader", ["module", "exports"], factory);
-   } else if (typeof exports !== "undefined") {
-      factory(module, exports);
-   } else {
-      var mod = {
-         exports: {}
-      };
-      factory(mod, mod.exports);
-      global.WebReader = mod.exports;
-   }
+  if (typeof define === "function" && define.amd) {
+    define("WebReader", ["module", "exports"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(module, exports);
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod, mod.exports);
+    global.WebReader = mod.exports;
+  }
 })(this, function (module, exports) {
-   "use strict";
+  "use strict";
 
-   Object.defineProperty(exports, "__esModule", {
-      value: true
-   });
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-   function _classCallCheck(instance, Constructor) {
-      if (!(instance instanceof Constructor)) {
-         throw new TypeError("Cannot call a class as a function");
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
       }
-   }
+    }
 
-   var _createClass = function () {
-      function defineProperties(target, props) {
-         for (var i = 0; i < props.length; i++) {
-            var descriptor = props[i];
-            descriptor.enumerable = descriptor.enumerable || false;
-            descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
-         }
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  var Timer = function () {
+    function Timer() {
+      _classCallCheck(this, Timer);
+    }
+
+    _createClass(Timer, null, [{
+      key: "wait",
+      value: function wait(milliseconds) {
+        return new Promise(function (resolve) {
+          return window.setTimeout(resolve, milliseconds);
+        });
       }
+    }]);
 
-      return function (Constructor, protoProps, staticProps) {
-         if (protoProps) defineProperties(Constructor.prototype, protoProps);
-         if (staticProps) defineProperties(Constructor, staticProps);
-         return Constructor;
-      };
-   }();
+    return Timer;
+  }();
 
-   var Timer = function () {
-      function Timer() {
-         _classCallCheck(this, Timer);
-      }
-
-      _createClass(Timer, null, [{
-         key: "wait",
-         value: function wait(milliseconds) {
-            return new Promise(function (resolve) {
-               return window.setTimeout(resolve, milliseconds);
-            });
-         }
-      }]);
-
-      return Timer;
-   }();
-
-   exports.default = Timer;
-   module.exports = exports['default'];
+  exports.default = Timer;
+  module.exports = exports['default'];
 });
 
 },{}],11:[function(require,module,exports){
@@ -992,6 +1044,24 @@ module.exports = DamerauLevenshtein;
 
    var defaultLanguage = 'en-GB';
 
+   /**
+    * @typedef SettingsHash
+    * @type {Object}
+    * @property {number} [delay=300] The delay between each spoken text
+    * @property {string} [translationsPath=''] The path to the translations folder
+    * @property {Object} [recognizer] The settings for the speech recognition functionality
+    * @property {string} [recognizer.lang='en-GB'] The language to use for the speech recognition functionality
+    * @property {Object} [speaker] The settings for the speech synthesis functionality
+    * @property {string} [speaker.lang='en-GB'] The language to use for the speech synthesis functionality
+    * @property {string} [speaker.voice='Google UK English Female'] The voice to use for the synthesis recognition
+    * functionality
+    */
+
+   /**
+    * The default values for the settings available
+    *
+    * @type {SettingsHash}
+    */
    var defaults = {
       delay: 300,
       translationsPath: '',
@@ -1014,6 +1084,14 @@ module.exports = DamerauLevenshtein;
    var statusMap = new WeakMap();
    var translations = new Map([[defaultLanguage, _enGB2.default]]);
 
+   /**
+    * Downloads a translation for the commands available
+    *
+    * @param {string} translationsPath The path to the translations folder
+    * @param {string} language The language to download
+    *
+    * @return {Promise}
+    */
    function downloadTranslation(translationsPath, language) {
       return window.fetch(translationsPath + '/' + language + '.json').then(function (response) {
          return response.json();
@@ -1024,6 +1102,12 @@ module.exports = DamerauLevenshtein;
       });
    }
 
+   /**
+    * Performs certain actions based on the shortcuts pressed by the user
+    *
+    * @param {WebReader} webReader An instance of WebReader
+    * @param {Event} event An event
+    */
    function listenShortcuts(webReader, event) {
       if (event.ctrlKey === true && (event.code && event.code === 'Space' || event.which === 32)) {
          if (webReader.isInteracting()) {
@@ -1042,18 +1126,17 @@ module.exports = DamerauLevenshtein;
 
    /**
     * The class representing the library
+    *
     * @class
     */
 
    var WebReader = function () {
       /**
-       * Creates a WebReader instance
+       * Creates an instance of WebReader
        *
        * @constructor
        *
-       * @param {Object} [options={}] The options to customize the WebReader
-       * @param {Object} [options.recognizer] The options to customize the Recognizer
-       * @param {Object} [options.speaker] The options to customize the Speaker
+       * @param {SettingsHash} [options={}] The options to customize WebReader
        */
 
       function WebReader() {
@@ -1191,8 +1274,10 @@ module.exports = DamerauLevenshtein;
          }
       }, {
          key: 'readHeaders',
-         value: function readHeaders(filters) {
+         value: function readHeaders() {
             var _this3 = this;
+
+            var filters = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
             var headers = _dom2.default.getHeaders(filters);
             var level = filters && filters.level ? filters.level : -1;
@@ -1443,6 +1528,21 @@ module.exports = DamerauLevenshtein;
    }();
 
    /**
+    * @typedef SpeechRecognitionHash
+    * @type {Object}
+    * @property {Object[]} grammars The collection of <code>SpeechGrammar</code> objects which represent the grammars
+    * that are active for this recognition
+    * @property {string} [lang=''] The language of the recognition for the request.
+    * If unspecified it defaults to the language of the html document root element
+    * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user stops speaking or not
+    * @property {boolean} [interimResults=false] Controls whether interim results are returned or not
+    * @property {number} [maxAlternatives=1] The maximum number of <code>SpeechRecognitionAlternative</code>s per result
+    * @property {string} [serviceURI=''] The location of the speech recognition service to use
+    *
+    * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#speechreco-attributes|SpeechRecognition Attributes}
+    */
+
+   /**
     * Retrieves the object that allows to recognize the speech or
     * <code>null</code> if the feature is not supported
     *
@@ -1452,12 +1552,26 @@ module.exports = DamerauLevenshtein;
       return window.SpeechRecognition || window.webkitSpeechRecognition || null;
    }
 
+   /**
+    * Binds one or more events to a <code>SpeechRecognition</code> object
+    *
+    * @param {SpeechRecognition} recognizer A <code>SpeechRecognition</code> object
+    * @param {Object} eventsHash An object of name-function pairs,
+    * where name is the event to listen and function is the function to attach
+    */
    function bindEvents(recognizer, eventsHash) {
       for (var eventName in eventsHash) {
          recognizer.addEventListener(eventName, eventsHash[eventName]);
       }
    }
 
+   /**
+    * Unbinds one or more events to a <code>SpeechRecognition</code> object
+    *
+    * @param {SpeechRecognition} recognizer A <code>SpeechRecognition</code> object
+    * @param {Object} eventsHash An object of name-function pairs,
+    * where name is the event to listen and function is the function to attach
+    */
    function unbindEvents(recognizer, eventsHash) {
       for (var eventName in eventsHash) {
          recognizer.removeEventListener(eventName, eventsHash[eventName]);
@@ -1476,7 +1590,7 @@ module.exports = DamerauLevenshtein;
        *
        * @constructor
        *
-       * @param {Object} [options={}] The options to customize the settings of the recognizer
+       * @param {SpeechRecognitionHash} [options={}] The options to customize the settings of the recognizer
        */
 
       function Recognizer() {
@@ -1491,6 +1605,7 @@ module.exports = DamerauLevenshtein;
          }
 
          /**
+          * The speech recognizer used
           *
           * @type {SpeechRecognition}
           */
@@ -1656,7 +1771,21 @@ module.exports = DamerauLevenshtein;
    var isCancelledSymbol = Symbol('isCancelled');
 
    /**
-    * Retrieves the object that allows to prompt the text or
+    * @typedef SpeechSynthesisUtteranceHash
+    * @type {Object}
+    * @property {string} text The text to be synthesized and spoken
+    * @property {string} [lang=''] The language of the speech synthesis for the utterance.
+    * If unspecified it defaults to the language of the html document root element
+    * @property {string} [voice=''] The voice to use
+    * @property {number} [volume=1.0] The speaking volume
+    * @property {number} [rate=1.0] The speaking rate
+    * @property {number} [pitch=1.0] The speaking pitch
+    *
+    * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes|SpeechSynthesisUtterance Attributes}
+    */
+
+   /**
+    * Retrieves the object that allows to speech the text or
     * <code>null</code> if the feature is not supported
     *
     * @returns {speechSynthesis|null}
@@ -1665,6 +1794,13 @@ module.exports = DamerauLevenshtein;
       return speechSynthesis || null;
    }
 
+   /**
+    * Sets the settings for a <code>SpeechSynthesisUtterance</code> object
+    *
+    * @param {SpeechSynthesisUtterance} utterance The object whose settings will be set
+    * @param {SpeechSynthesisUtteranceHash} settings
+    * @param {string[]} voices The voices available
+    */
    function setUtteranceSettings(utterance, settings, voices) {
       var _loop = function _loop(key) {
          if (!settings.hasOwnProperty(key) || utterance[key] === undefined) {
@@ -1697,6 +1833,7 @@ module.exports = DamerauLevenshtein;
 
    /**
     * The class exposing the speaking features of a web page
+    *
     * @class
     */
 
@@ -1706,7 +1843,7 @@ module.exports = DamerauLevenshtein;
        *
        * @constructor
        *
-       * @param {Object} [options={}] The options to customize the voice prompting the texts
+       * @param {SpeechSynthesisUtteranceHash} [options={}] The options to customize the voice prompting the texts
        */
 
       function Speaker() {
@@ -1721,7 +1858,7 @@ module.exports = DamerauLevenshtein;
          this.speaker = getSpeaker();
          /**
           *
-          * @type {Object}
+          * @type {SpeechSynthesisUtteranceHash}
           */
          this.settings = options;
          /**
@@ -1946,39 +2083,57 @@ module.exports = DamerauLevenshtein;
 
 },{"./webreader-error":15}],15:[function(require,module,exports){
 (function (global, factory) {
-   if (typeof define === "function" && define.amd) {
-      define("WebReader", ["module", "exports"], factory);
-   } else if (typeof exports !== "undefined") {
-      factory(module, exports);
-   } else {
-      var mod = {
-         exports: {}
-      };
-      factory(mod, mod.exports);
-      global.WebReader = mod.exports;
-   }
+  if (typeof define === "function" && define.amd) {
+    define("WebReader", ["module", "exports"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(module, exports);
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(mod, mod.exports);
+    global.WebReader = mod.exports;
+  }
 })(this, function (module, exports) {
-   "use strict";
+  "use strict";
 
-   Object.defineProperty(exports, "__esModule", {
-      value: true
-   });
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
 
-   function _classCallCheck(instance, Constructor) {
-      if (!(instance instanceof Constructor)) {
-         throw new TypeError("Cannot call a class as a function");
-      }
-   }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
 
-   var WebReaderError = function WebReaderError(message) {
-      _classCallCheck(this, WebReaderError);
+  var WebReaderError =
+  /**
+   * Creates an instance of WebReaderError
+   *
+   * @constructor
+   *
+   * @param {string} message The message of the error
+   */
+  function WebReaderError(message) {
+    _classCallCheck(this, WebReaderError);
 
-      this.name = this.constructor.name;
-      this.message = message;
-   };
+    /**
+     * The name of error
+     *
+     * @type {string} WebReaderError
+     */
+    this.name = this.constructor.name;
+    /**
+     * The message describing the error
+     *
+     * @type {string}
+     */
+    this.message = message;
+  };
 
-   exports.default = WebReaderError;
-   module.exports = exports['default'];
+  exports.default = WebReaderError;
+  module.exports = exports['default'];
 });
 
 },{}]},{},[11])(11)

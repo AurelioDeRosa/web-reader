@@ -37,7 +37,6 @@ function getRecognizer() {
  */
 function bindEvents(recognizer, eventsHash) {
    for (let eventName in eventsHash) {
-      console.log(eventName);
       recognizer.addEventListener(eventName, eventsHash[eventName]);
    }
 }
