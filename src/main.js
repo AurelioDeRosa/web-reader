@@ -367,7 +367,7 @@ export
    /**
     * Reads all the links of a page
     *
-    * @param {Object} filters
+    * @param {Object} [filters={}] An object used to filters the links
     *
     * @return {Promise}
     */

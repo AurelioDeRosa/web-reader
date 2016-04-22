@@ -427,7 +427,11 @@ module.exports = DamerauLevenshtein;
       }
 
       // Find the closest match among the closest match
-      return findCloserMatch(closerMatches, recognizedText);
+      var closestMatch = findCloserMatch(closerMatches, recognizedText);
+
+      return {
+         element: closestMatch.index >= 0 ? closerMatches[closestMatch.index] : null
+      };
    }
 
    /**

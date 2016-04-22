@@ -142,7 +142,11 @@ function extractElementFromText(recognizedText) {
    }
 
    // Find the closest match among the closest match
-   return findCloserMatch(closerMatches, recognizedText);
+   let closestMatch = findCloserMatch(closerMatches, recognizedText);
+
+   return {
+      element: closestMatch.index >= 0 ? closerMatches[closestMatch.index] : null
+   };
 }
 
 /**
