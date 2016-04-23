@@ -8,10 +8,10 @@ module.exports = function(config) {
       browserify: {
          debug: true,
          transform: [
-            'babelify',
             browserifyIstanbul({
                instrumenter: isparta
-            })
+            }),
+            'babelify'
          ]
       },
       browsers: ['Chrome'],

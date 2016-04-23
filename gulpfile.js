@@ -49,14 +49,19 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build:debug', function() {
+   var babelifyConfig = {
+      plugins: [
+         'add-module-exports',
+         'transform-es2015-modules-umd',
+         'transform-remove-console'
+      ]
+   };
    var browserifyInstance = browserify({
          debug: true,
          entries: 'src/main.js',
          standalone: 'WebReader'
       })
-      .transform('babelify', {
-         plugins: ['transform-remove-console']
-      });
+      .transform('babelify', babelifyConfig);
 
    return browserifyInstance
       .bundle()
