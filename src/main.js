@@ -1,9 +1,10 @@
-import * as Commands from './commands';
+import Commands from './commands';
 import Dom from './dom/dom';
 import Recognizer from './reader/recognizer';
 import Router from './router';
 import Speaker from './reader/speaker';
 import EventEmitter from './helpers/event-emitter';
+import DamerauLevenshteinComparer from './helpers/string-comparers/damerau-levenshtein-comparer';
 import Timer from './helpers/timer';
 import WebReaderError from './webreader-error';
 import defaultTranslation from '../lang/en-GB.json';
@@ -211,9 +212,10 @@ export
          .speak('Ready')
          .then(() => this.recognizer.recognize())
          .then(recognizedText => {
+            let commands = new Commands(DamerauLevenshteinComparer);
             let translation = translations.get(this.settings.recognizer.lang);
 
-            return Commands.recognizeCommand(recognizedText, translation);
+            return commands.recognizeCommand(recognizedText, translation);
          })
          .then(recognizedCommand => Router.route(this, recognizedCommand))
          .catch(error => {

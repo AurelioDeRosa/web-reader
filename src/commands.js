@@ -1,4 +1,4 @@
-import DamerauLevenshtein from 'damerau-levenshtein';
+import StringComparer from './helpers/string-comparers/string-comparer';
 
 /**
  * The translation currently in use
@@ -16,52 +16,16 @@ let translation = null;
  */
 
 /**
- * Finds the closest match of a string using the Damerau-Levenshtein algorithm
- *
- * @param {(string|string[])} string The string or the array of strings to test
- * @param {string} target The string to test against
- *
- * @return {Object}
- */
-function findCloserMatch(string, target) {
-   if (!Array.isArray(string)) {
-      string = [string];
-   }
-
-   let damerauLevenshtein = DamerauLevenshtein(); // jshint ignore:line
-   let minDistance = Number.POSITIVE_INFINITY;
-   let i;
-
-   for(i = 0; i < string.length; i++) {
-      let distance = damerauLevenshtein(string[i], target);
-
-      console.debug(`The distance between "${string[i]}" and "${target}" is ${distance}`);
-
-      // If a perfect match is found, exit immediately
-      if (distance === 0) {
-         minDistance = distance;
-         break;
-      } else if (distance < minDistance) {
-         minDistance = distance;
-      }
-   }
-
-   return {
-      index: i === string.length ? -1 : i,
-      distance: minDistance
-   };
-}
-
-/**
  * Extracts the heading level contained in the string provided.
  * If a perfect match is not found, the Damerau-Levenshtein algorithm
  * is used to find the closest match.
  *
+ * @param {StringComparer} StringComparer The comparer to use for comparing strings
  * @param {string} recognizedText The string to analyze
  *
  * @return {Object}
  */
-function extractHeaderLevel(recognizedText) {
+function extractHeaderLevel(StringComparer, recognizedText) {
    const headingLevels = translation.commands.READ_LEVEL_HEADERS.levels;
    let data = {};
 
@@ -77,7 +41,7 @@ function extractHeaderLevel(recognizedText) {
    // If the header level has not been found yet,
    // let's try a more heuristic strategy
    if (!data.level) {
-      let closerMatchIndex = findCloserMatch(headingLevels, recognizedText).index;
+      let closerMatchIndex = StringComparer.findCloserMatch(headingLevels, recognizedText).index;
 
       data.level = closerMatchIndex === -1 ? -1 : closerMatchIndex + 1;
    }
@@ -113,11 +77,12 @@ function findElementInText(recognizedText) {
  * Searches an element type, such as <code>main</code> or <code>footer</code>,
  * in the text provided. If none is found, the closest match is re is returned
  *
+ * @param {StringComparer} StringComparer The comparer to use for comparing strings
  * @param {string} recognizedText The string to analyze
  *
  * @return {Object}
  */
-function extractElementFromText(recognizedText) {
+function extractElementFromText(StringComparer, recognizedText) {
    let foundElement = findElementInText(recognizedText);
 
    if (foundElement) {
@@ -134,7 +99,7 @@ function extractElementFromText(recognizedText) {
    // let's try a more heuristic strategy
    for(let key in elements) {
       let variations = elements[key].variations;
-      let closerMatchIndex = findCloserMatch(variations, recognizedText);
+      let closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText);
 
       if (closerMatchIndex !== -1) {
          closerMatches.push(variations[closerMatchIndex]);
@@ -142,7 +107,7 @@ function extractElementFromText(recognizedText) {
    }
 
    // Find the closest match among the closest match
-   let closestMatch = findCloserMatch(closerMatches, recognizedText);
+   let closestMatch = StringComparer.findCloserMatch(closerMatches, recognizedText);
 
    return {
       element: closestMatch.index >= 0 ? closerMatches[closestMatch.index] : null
@@ -152,70 +117,95 @@ function extractElementFromText(recognizedText) {
 /**
  * Extracts relevant data from a string, based on the recognized command
  *
+ * @param {StringComparer} StringComparer The comparer to use for comparing strings
  * @param {string} command The recognized command
  * @param {string} recognizedText The string from which the data are extracted
  *
  * @return {Object}
  */
-function extractData(command, recognizedText) {
+function extractData(StringComparer, command, recognizedText) {
    let data = {};
 
    if (command === 'READ_LEVEL_HEADERS') {
       console.debug('Extracting header level from text');
-      data = extractHeaderLevel(recognizedText);
+      data = extractHeaderLevel(StringComparer, recognizedText);
    } else if (command === 'READ_LINKS_IN_ELEMENT') {
       console.debug('Extracting element from text');
-      data = extractElementFromText(recognizedText);
+      data = extractElementFromText(StringComparer, recognizedText);
    }
 
    return data;
 }
 
 /**
- * Detects the action to perform and extracts any relevant data
- * based on the string provided
+ * The class responsible for the commands
  *
- * @param {string} recognizedText The string to analyze
- * @param {Object} currentTranslation The object containing the translation of the application
- *
- * @return {CommandsHash}
+ * @class
  */
 export
-
- function recognizeCommand(recognizedText, currentTranslation) {
-   let minDistance = Number.POSITIVE_INFINITY;
-   let commands = currentTranslation.commands;
-   let foundCommand;
-
-   translation = currentTranslation;
-   recognizedText = recognizedText.toLocaleLowerCase();
-
-   console.debug('Command recognition started');
-
-   for(let command in commands) {
-      let closerMatch = findCloserMatch(
-         [commands[command].text].concat(commands[command].variations),
-         recognizedText
-      );
-
-      if (closerMatch.distance < minDistance) {
-         foundCommand = Object.assign(
-            {
-               command: command
-            },
-            extractData(command, recognizedText)
-         );
-
-         if (closerMatch.distance === 0) {
-            break;
-         } else {
-            minDistance = closerMatch.distance;
-         }
+   default class Commands {
+   /**
+    * Creates an instance of Commands
+    *
+    * @constructor
+    *
+    * @param {StringComparer} Comparer The class representing the strategy to adopt to compare strings
+    */
+   constructor(Comparer) {
+      if (!(Comparer.prototype instanceof StringComparer)) {
+         throw new TypeError(`${arguments[0]} is not an instance of StringComparer`);
       }
+
+      Object.defineProperty(this, 'StringComparer', {
+         enumerable: false,
+         configurable: false,
+         get: function() {
+            return Comparer;
+         }
+      });
    }
 
-   console.debug(`Command recognition ended. Found command "${commands[foundCommand.command].text}"`);
-   console.debug('Extrapolated data:', foundCommand);
+   /**
+    * Detects the action to perform and extracts any relevant data
+    * based on the string provided
+    *
+    * @param {string} recognizedText The string to analyze
+    * @param {Object} currentTranslation The object containing the translation of the application
+    *
+    * @return {CommandsHash}
+    */
+   recognizeCommand(recognizedText, currentTranslation) {
+      let minDistance = Number.POSITIVE_INFINITY;
+      let commands = currentTranslation.commands;
+      let foundCommand;
 
-   return foundCommand;
+      translation = currentTranslation;
+      recognizedText = recognizedText.toLocaleLowerCase();
+
+      console.debug('Command recognition started');
+
+      for(let command in commands) {
+         let closerMatch = this.StringComparer.findCloserMatch(
+            [commands[command].text].concat(commands[command].variations),
+            recognizedText
+         );
+
+         if (closerMatch.distance < minDistance) {
+            foundCommand = Object.assign({
+               command
+            }, extractData(this.StringComparer, command, recognizedText));
+
+            if (closerMatch.distance === 0) {
+               break;
+            } else {
+               minDistance = closerMatch.distance;
+            }
+         }
+      }
+
+      console.debug(`Command recognition ended. Found command "${commands[foundCommand.command].text}"`);
+      console.debug('Extrapolated data:', foundCommand);
+
+      return foundCommand;
+   }
 }
