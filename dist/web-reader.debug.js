@@ -877,24 +877,26 @@ var DamerauLevenshteinComparer = function (_StringComparer) {
 
          var damerauLevenshtein = (0, _damerauLevenshtein2.default)(); // jshint ignore:line
          var minDistance = Number.POSITIVE_INFINITY;
-         var i = void 0;
+         var index = 0;
 
-         for (i = 0; i < string.length; i++) {
+         for (var i = 0; i < string.length; i++) {
             var distance = damerauLevenshtein(string[i], target);
 
             console.debug('The distance between "' + string[i] + '" and "' + target + '" is ' + distance);
 
-            // If a perfect match is found, exit immediately
-            if (distance === 0) {
+            if (distance === 0 || distance < minDistance) {
                minDistance = distance;
-               break;
-            } else if (distance < minDistance) {
-               minDistance = distance;
+               index = i;
+
+               // If a perfect match is found, exit immediately
+               if (distance === 0) {
+                  break;
+               }
             }
          }
 
          return {
-            index: i === string.length ? -1 : i,
+            index: index,
             distance: minDistance
          };
       }

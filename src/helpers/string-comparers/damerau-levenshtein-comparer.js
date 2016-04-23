@@ -23,24 +23,26 @@ export
 
       let damerauLevenshtein = DamerauLevenshtein(); // jshint ignore:line
       let minDistance = Number.POSITIVE_INFINITY;
-      let i;
+      let index = 0;
 
-      for(i = 0; i < string.length; i++) {
+      for(let i = 0; i < string.length; i++) {
          let distance = damerauLevenshtein(string[i], target);
 
          console.debug(`The distance between "${string[i]}" and "${target}" is ${distance}`);
 
-         // If a perfect match is found, exit immediately
-         if (distance === 0) {
+         if (distance === 0 || distance < minDistance) {
             minDistance = distance;
-            break;
-         } else if (distance < minDistance) {
-            minDistance = distance;
+            index = i;
+
+            // If a perfect match is found, exit immediately
+            if (distance === 0) {
+               break;
+            }
          }
       }
 
       return {
-         index: i === string.length ? -1 : i,
+         index: index,
          distance: minDistance
       };
    }
