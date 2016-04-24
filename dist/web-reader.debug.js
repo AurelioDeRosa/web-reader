@@ -779,12 +779,14 @@ var EventEmitter = function () {
        *
        * @param {string} eventName The name of the event
        * @param {HTMLElement|Document} element The element on which the event is dispatched
-       * @param {Object} [properties] A set of key-values to assign to the event
+       * @param {Object} [properties={}] A set of key-values to assign to the event
        */
 
    }, {
       key: 'fireEvent',
-      value: function fireEvent(eventName, element, properties) {
+      value: function fireEvent(eventName, element) {
+         var properties = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
          var customEvent = document.createEvent('Event');
 
          customEvent.initEvent(eventName, true, true);

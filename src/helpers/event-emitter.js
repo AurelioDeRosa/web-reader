@@ -30,9 +30,9 @@ export
     *
     * @param {string} eventName The name of the event
     * @param {HTMLElement|Document} element The element on which the event is dispatched
-    * @param {Object} [properties] A set of key-values to assign to the event
+    * @param {Object} [properties={}] A set of key-values to assign to the event
     */
-   static fireEvent(eventName, element, properties) {
+   static fireEvent(eventName, element, properties = {}) {
       let customEvent = document.createEvent('Event');
 
       customEvent.initEvent(eventName, true, true);
