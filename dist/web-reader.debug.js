@@ -791,15 +791,9 @@ var EventEmitter = function () {
 
          customEvent.initEvent(eventName, true, true);
 
-         for (var property in properties) {
-            if (properties.hasOwnProperty(property)) {
-               try {
-                  customEvent[property] = properties[property];
-               } catch (ex) {
-                  console.debug('Properties ' + property + ' cannot be copied');
-               }
-            }
-         }
+         Object.getOwnPropertyNames(properties).forEach(function (property) {
+            return customEvent[property] = properties[property];
+         });
 
          element.dispatchEvent(customEvent);
       }
