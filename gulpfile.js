@@ -48,7 +48,7 @@ gulp.task('watch', function() {
    gulp.watch('src/**/*.js', ['build']);
 });
 
-gulp.task('build:debug', function() {
+gulp.task('build:min', function() {
    var babelifyConfig = {
       plugins: [
          'add-module-exports',
@@ -76,13 +76,19 @@ gulp.task('build:debug', function() {
       .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build:min', function() {
+gulp.task('build:debug', function() {
+   var babelifyConfig = {
+      plugins: [
+         'add-module-exports',
+         'transform-es2015-modules-umd'
+      ]
+   };
    var browserifyInstance = browserify({
-      debug: true,
-      entries: 'src/main.js',
-      standalone: 'WebReader',
-      transform: [babelify]
-   });
+         debug: true,
+         entries: 'src/main.js',
+         standalone: 'WebReader'
+      })
+      .transform('babelify', babelifyConfig);
 
    return browserifyInstance
       .bundle()
