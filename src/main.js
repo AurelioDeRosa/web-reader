@@ -414,12 +414,14 @@ export
 
    /**
     * Searches the main content of the page. If the element is found, it is focused
+    *
+    * @throws {WebReaderError} main content is not found
     */
    searchMain() {
       let main = Dom.getMain();
 
       if (!main) {
-         return Promise.reject(new WebReaderError('The main content of this page cannot be found'));
+         throw new new WebReaderError('The main content of this page has not been found');
       }
 
       let oldTabIndex = main.getAttribute('tabindex');
