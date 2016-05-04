@@ -19,7 +19,10 @@
    "nonbsp": true,
    "nonew": true,
    "notypeof": true,
-   "predef": [],
+   "predef": [
+      "fixture",
+      "assert"
+   ],
    "shadow": "inner",
    "singleGroups": true,
    "strict": "implied",
@@ -28,5 +31,6 @@
    "varstmt": false,
 
    "browser": true,
-   "devel": true
+   "devel": true,
+   "mocha": true
 }
