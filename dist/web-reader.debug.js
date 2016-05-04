@@ -435,8 +435,10 @@ module.exports = DamerauLevenshtein;
       var data = {};
 
       if (command === 'READ_LEVEL_HEADERS') {
+         console.debug('Extracting header level from text');
          data = extractHeaderLevel(StringComparer, recognizedText);
       } else if (command === 'READ_LINKS_IN_ELEMENT') {
+         console.debug('Extracting element from text');
          data = extractElementFromText(StringComparer, recognizedText);
       }
 
@@ -495,6 +497,8 @@ module.exports = DamerauLevenshtein;
             translation = currentTranslation;
             recognizedText = recognizedText.toLocaleLowerCase();
 
+            console.debug('Command recognition started');
+
             for (var command in commands) {
                var closerMatch = this.StringComparer.findCloserMatch([commands[command].text].concat(commands[command].variations), recognizedText);
 
@@ -510,6 +514,9 @@ module.exports = DamerauLevenshtein;
                   }
                }
             }
+
+            console.debug('Command recognition ended. Found command "' + commands[foundCommand.command].text + '"');
+            console.debug('Extrapolated data:', foundCommand);
 
             return foundCommand;
          }
@@ -1015,6 +1022,8 @@ module.exports = DamerauLevenshtein;
             for (var i = 0; i < string.length; i++) {
                var distance = damerauLevenshtein(string[i], target);
 
+               console.debug('The distance between "' + string[i] + '" and "' + target + '" is ' + distance);
+
                if (distance === 0 || distance < minDistance) {
                   minDistance = distance;
                   index = i;
@@ -1363,6 +1372,8 @@ module.exports = DamerauLevenshtein;
             downloadTranslation(this.settings.translationsPath, language).then(function () {
                var message = 'Language "' + language + '" successfully loaded';
 
+               console.debug(message);
+
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languagedownload', document, {
                   data: {
                      lang: language
@@ -1371,6 +1382,7 @@ module.exports = DamerauLevenshtein;
 
                return _this.speaker.speak(message);
             }, function (err) {
+               console.debug(err.message);
 
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languageerror', document, {
                   data: {
@@ -1422,7 +1434,7 @@ module.exports = DamerauLevenshtein;
             var _this2 = this;
 
             statusMap.get(this).isInteracting = true;
-
+            console.debug('Interaction started');
 
             _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionstart', document);
 
@@ -1441,6 +1453,7 @@ module.exports = DamerauLevenshtein;
                }
 
                if (error.error !== 'aborted' && error.error !== 'interrupted') {
+                  console.debug('An error occurred', error);
 
                   statusMap.set(_this2, Object.assign({}, defaultState));
 
@@ -1449,7 +1462,7 @@ module.exports = DamerauLevenshtein;
             }).then( // Simulate an always() method
             function () {}, function () {}).then(function () {
                statusMap.get(_this2).isInteracting = false;
-
+               console.debug('Interaction completed');
 
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionend', document);
             });
@@ -1460,6 +1473,7 @@ module.exports = DamerauLevenshtein;
             this.recognizer.abort();
             this.speaker.cancel();
             statusMap.get(this).isInteracting = false;
+            console.debug('Interaction stopped');
          }
       }, {
          key: 'readHeaders',
@@ -1550,7 +1564,7 @@ module.exports = DamerauLevenshtein;
             var currentElement = state.elements ? state.elements[state.currentIndex] : null;
 
             if (!currentElement || currentElement.nodeName !== 'A') {
-               return Promise.reject(new _webreaderError2.default('There is not a current link to follow'));
+               throw new _webreaderError2.default('There is not a current link to follow');
             }
 
             window.location.assign(currentElement.href);
@@ -1641,12 +1655,49 @@ module.exports = DamerauLevenshtein;
       }, {
          key: 'goToPreviousPage',
          value: function goToPreviousPage() {
-            window.history.back();
+            return new Promise(function (resolve, reject) {
+               function onPopState() {
+                  window.removeEventListener('popstate', onPopState);
+                  resolve();
+               }
+
+               window.addEventListener('popstate', onPopState);
+               window.history.back();
+
+               // For privacy reasons a script doesn't have access to the list of pages
+               // visited by the user. So, there is no way to detect if the current page
+               // is already the first of the history. If that is the case, the
+               // "popstate" event won't be triggered and there is no way to know when
+               // to reject the promise (for example by checking that the current page has
+               // the same URL of the previous one).
+               //
+               // This hack allows to reject the promise if it hasn't been already resolved
+               // by the event listener for the "popstate" event.
+               setTimeout(function () {
+                  reject(new _webreaderError2.default('This is already the first page'));
+                  window.removeEventListener('popstate', onPopState);
+               }, 10);
+            });
          }
       }, {
          key: 'goToNextPage',
          value: function goToNextPage() {
-            window.history.forward();
+            return new Promise(function (resolve, reject) {
+               function onPopState() {
+                  window.removeEventListener('popstate', onPopState);
+                  resolve();
+               }
+
+               window.addEventListener('popstate', onPopState);
+               window.history.forward();
+
+               // To know the rationale behind this hack, read the comment inside
+               // the "goToPreviousPage()" function.
+               setTimeout(function () {
+                  reject(new _webreaderError2.default('This is already the last page'));
+                  window.removeEventListener('popstate', onPopState);
+               }, 10);
+            });
          }
       }, {
          key: 'goToHomepage',
@@ -1830,6 +1881,9 @@ module.exports = DamerauLevenshtein;
                         if (event.results[i].isFinal) {
                            var bestGuess = event.results[i][0];
 
+                           console.debug('Recognition completed');
+                           console.debug('Recognized "' + bestGuess.transcript + '" with a confidence of ' + bestGuess.confidence);
+
                            _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionresult', document, {
                               data: {
                                  result: bestGuess
@@ -1841,6 +1895,7 @@ module.exports = DamerauLevenshtein;
                      }
                   },
                   error: function error(event) {
+                     console.debug('Recognition error:', event.error);
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionerror', document, {
                         error: event.error
@@ -1849,12 +1904,14 @@ module.exports = DamerauLevenshtein;
                      reject(new _webreaderError2.default('An error has occurred while recognizing your speech'));
                   },
                   noMatch: function noMatch() {
+                     console.debug('Recognition ended because of nomatch');
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionnomatch', document);
 
                      reject(new _webreaderError2.default('Sorry, I could not find a match'));
                   },
                   end: function end() {
+                     console.debug('Recognition ended');
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionend', document);
 
@@ -1868,6 +1925,7 @@ module.exports = DamerauLevenshtein;
 
                bindEvents(_this.recognizer, eventsHash);
 
+               console.debug('Recognition started');
                _this.recognizer.start();
             });
          }
@@ -2001,6 +2059,7 @@ module.exports = DamerauLevenshtein;
          if (voice) {
             utterance[key] = voice;
          } else {
+            console.debug('The voice selected is not available. Falling back to one available');
             utterance[key] = voices[0];
          }
       };
@@ -2096,6 +2155,7 @@ module.exports = DamerauLevenshtein;
                   setUtteranceSettings(utterance, _this2.settings, voices);
 
                   utterance.addEventListener('start', function () {
+                     console.debug('Synthesizing the text: ' + text);
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesisstart', document, {
                         data: eventData
@@ -2103,6 +2163,7 @@ module.exports = DamerauLevenshtein;
                   });
 
                   utterance.addEventListener('end', function () {
+                     console.debug('Synthesis completed');
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesisend', document, {
                         data: eventData
@@ -2119,6 +2180,7 @@ module.exports = DamerauLevenshtein;
                   });
 
                   utterance.addEventListener('error', function (event) {
+                     console.debug('Synthesis error: ', event.error);
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesiserror', document, {
                         data: eventData

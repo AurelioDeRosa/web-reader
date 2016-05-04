@@ -354,13 +354,15 @@ export
 
    /**
     * Follows the last read link
+    *
+    * @throws {WebReaderError} the current element is not a link
     */
    goToLink() {
       let state = statusMap.get(this);
       let currentElement = state.elements ? state.elements[state.currentIndex] : null;
 
       if (!currentElement || currentElement.nodeName !== 'A') {
-         return Promise.reject(new WebReaderError('There is not a current link to follow'));
+         throw new WebReaderError('There is not a current link to follow');
       }
 
       window.location.assign(currentElement.href);
@@ -469,16 +471,57 @@ export
 
    /**
     * Goes to the previous page as specified by the browser's history
+    *
+    * @return {Promise}
     */
    goToPreviousPage() {
-      window.history.back();
+      return new Promise((resolve, reject) => {
+         function onPopState() {
+            window.removeEventListener('popstate', onPopState);
+            resolve();
+         }
+
+         window.addEventListener('popstate', onPopState);
+         window.history.back();
+
+         // For privacy reasons a script doesn't have access to the list of pages
+         // visited by the user. So, there is no way to detect if the current page
+         // is already the first of the history. If that is the case, the
+         // "popstate" event won't be triggered and there is no way to know when
+         // to reject the promise (for example by checking that the current page has
+         // the same URL of the previous one).
+         //
+         // This hack allows to reject the promise if it hasn't been already resolved
+         // by the event listener for the "popstate" event.
+         setTimeout(() => {
+            reject(new WebReaderError('This is already the first page'));
+            window.removeEventListener('popstate', onPopState);
+         }, 10);
+      });
    }
 
    /**
     * Goes to the next page as specified by the browser's history
+    *
+    * @return {Promise}
     */
    goToNextPage() {
-      window.history.forward();
+      return new Promise((resolve, reject) => {
+         function onPopState() {
+            window.removeEventListener('popstate', onPopState);
+            resolve();
+         }
+
+         window.addEventListener('popstate', onPopState);
+         window.history.forward();
+
+         // To know the rationale behind this hack, read the comment inside
+         // the "goToPreviousPage()" function.
+         setTimeout(() => {
+            reject(new WebReaderError('This is already the last page'));
+            window.removeEventListener('popstate', onPopState);
+         }, 10);
+      });
    }
 
    /**
