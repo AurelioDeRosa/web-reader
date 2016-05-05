@@ -13,7 +13,7 @@ var karma = require('karma');
 var esdoc = require('gulp-esdoc');
 
 gulp.task('lint', function() {
-   return gulp.src('src/*.js')
+   return gulp.src('src/**/*.js')
       .pipe(jscs({
          fix: true
       }))
