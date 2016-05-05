@@ -59,6 +59,8 @@ function createHeadingsStructure(headers) {
    })(headers, {
       index: 0
    }, tree);
+
+   return tree;
 }
 
 /**

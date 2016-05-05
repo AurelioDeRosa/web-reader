@@ -700,6 +700,8 @@ module.exports = DamerauLevenshtein;
       })(headers, {
          index: 0
       }, tree);
+
+      return tree;
    }
 
    /**
