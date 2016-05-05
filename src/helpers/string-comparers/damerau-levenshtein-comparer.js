@@ -23,7 +23,7 @@ export
 
       let damerauLevenshtein = DamerauLevenshtein(); // jshint ignore:line
       let minDistance = Number.POSITIVE_INFINITY;
-      let index = 0;
+      let index = -1;
 
       for(let i = 0; i < string.length; i++) {
          let distance = damerauLevenshtein(string[i], target);

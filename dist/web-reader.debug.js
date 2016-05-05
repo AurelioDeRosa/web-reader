@@ -1017,7 +1017,7 @@ module.exports = DamerauLevenshtein;
 
             var damerauLevenshtein = (0, _damerauLevenshtein2.default)(); // jshint ignore:line
             var minDistance = Number.POSITIVE_INFINITY;
-            var index = 0;
+            var index = -1;
 
             for (var i = 0; i < string.length; i++) {
                var distance = damerauLevenshtein(string[i], target);
