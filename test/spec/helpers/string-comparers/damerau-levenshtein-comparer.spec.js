@@ -1,4 +1,4 @@
-import DamerauLevenshteinComparer from '../../../src/helpers/string-comparers/damerau-levenshtein-comparer';
+import DamerauLevenshteinComparer from '../../../../src/helpers/string-comparers/damerau-levenshtein-comparer';
 
 /**
  * @test {DamerauLevenshteinComparer}
