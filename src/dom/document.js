@@ -9,4 +9,4 @@ function getTitle() {
 
 export {
    getTitle
-}
+};

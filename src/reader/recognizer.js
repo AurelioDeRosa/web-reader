@@ -4,11 +4,12 @@ import WebReaderError from '../webreader-error';
 /**
  * @typedef SpeechRecognitionHash
  * @type {Object}
- * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects which represent the grammars
- * that are active for this recognition
+ * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects
+ * which represent the grammars that are active for this recognition
  * @property {string} [lang=''] The language of the recognition for the request.
  * If unspecified it defaults to the language of the html document root element
- * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user stops speaking or not
+ * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user
+ * stops speaking or not
  * @property {boolean} [interimResults=false] Controls whether interim results are returned or not
  * @property {number} [maxAlternatives=1] The maximum number of <code>SpeechRecognitionAlternative</code>s per result
  * @property {string} [serviceURI=''] The location of the speech recognition service to use
@@ -36,7 +37,7 @@ function getRecognizer() {
  * where name is the event to listen and function is the function to attach
  */
 function bindEvents(recognizer, eventsHash) {
-   for (let eventName in eventsHash) {
+   for(let eventName in eventsHash) {
       recognizer.addEventListener(eventName, eventsHash[eventName]);
    }
 }
@@ -49,7 +50,7 @@ function bindEvents(recognizer, eventsHash) {
  * where name is the event to listen and function is the function to attach
  */
 function unbindEvents(recognizer, eventsHash) {
-   for (let eventName in eventsHash) {
+   for(let eventName in eventsHash) {
       recognizer.removeEventListener(eventName, eventsHash[eventName]);
    }
 }
@@ -59,7 +60,8 @@ function unbindEvents(recognizer, eventsHash) {
  *
  * @class
  */
-export default class Recognizer {
+export
+ default class Recognizer {
    /**
     * Creates a Recognizer instance
     *
@@ -110,7 +112,7 @@ export default class Recognizer {
                EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionstart`, document);
             },
             result: event => {
-               for (let i = event.resultIndex; i < event.results.length; i++) {
+               for(let i = event.resultIndex; i < event.results.length; i++) {
                   if (event.results[i].isFinal) {
                      let bestGuess = event.results[i][0];
 

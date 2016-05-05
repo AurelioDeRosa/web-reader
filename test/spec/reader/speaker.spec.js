@@ -1,5 +1,3 @@
-'use strict';
-
 import Speaker from '../../../src/reader/speaker';
 
 /**
@@ -10,7 +8,7 @@ describe('Speaker', () => {
 
    before(() => {
       speaker = new Speaker();
-      nativeSpeaker =  window.speechSynthesis;
+      nativeSpeaker = window.speechSynthesis;
    });
 
    describe('Constructor', () => {

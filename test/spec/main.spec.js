@@ -1,7 +1,5 @@
 import WebReader from '../../src/main';
 import WebReaderError from '../../src/webreader-error';
-import Timer from '../../src/helpers/timer';
-
 
 describe('WebReader', () => {
    describe('constructor()', () => {
@@ -82,7 +80,6 @@ describe('WebReader', () => {
                window.removeEventListener('popstate', onPopState);
                resolve();
             }
-
 
             window.addEventListener('popstate', onPopState);
             window.history.back();

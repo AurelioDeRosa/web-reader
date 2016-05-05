@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Basic requirements', () => {
    it('should support the basic requirements', () => {
       assert.isDefined(window, 'window');

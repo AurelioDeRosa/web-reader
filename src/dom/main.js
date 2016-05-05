@@ -26,4 +26,4 @@ function getMain() {
 
 export {
    getMain
-}
+};

@@ -1,7 +1,7 @@
-import {getTitle} from './document'
-import {getHeaders} from './headers'
-import {getLinks} from './links'
-import {getMain} from './main'
+import {getTitle} from './document';
+import {getHeaders} from './headers';
+import {getLinks} from './links';
+import {getMain} from './main';
 
 /**
  * Highlights an element in the current document by wrapping it
@@ -10,7 +10,7 @@ import {getMain} from './main'
  * @param {HTMLElement} element The element to highlight
  */
 function highlightElement(element) {
-   if (!element instanceof HTMLElement) {
+   if (!(element instanceof HTMLElement)) {
       return;
    }
 
@@ -24,7 +24,7 @@ function highlightElement(element) {
  * @param {HTMLElement} element The element to unhighlight
  */
 function unhighlightElement(element) {
-   if (!element instanceof HTMLElement) {
+   if (!(element instanceof HTMLElement)) {
       return;
    }
 
@@ -33,7 +33,8 @@ function unhighlightElement(element) {
       .replace(/<\/mark>$/, '');
 }
 
-export default {
+export
+ default {
    getHeaders,
    getLinks,
    getMain,

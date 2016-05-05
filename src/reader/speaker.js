@@ -20,7 +20,7 @@ const isCancelledSymbol = Symbol('isCancelled');
  * @property {number} [rate=1.0] The speaking rate
  * @property {number} [pitch=1.0] The speaking pitch
  *
- * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes|SpeechSynthesisUtterance Attributes}
+ * @see https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes
  */
 
 /**
@@ -30,8 +30,22 @@ const isCancelledSymbol = Symbol('isCancelled');
  * @returns {speechSynthesis|null}
  */
 function getSpeaker() {
-   return speechSynthesis ||
+   return window.speechSynthesis ||
           null;
+}
+
+/**
+ * Searches a voice among those provided
+ *
+ * @param {SpeechSynthesisUtterance[]} voices The voices available
+ * @param {string} target The voice to search
+ *
+ * @return {SpeechSynthesisUtterance|undefined}
+ */
+function searchVoice(voices, target) {
+   return voices
+      .filter(voice => voice.voiceURI === target)
+      .pop();
 }
 
 /**
@@ -39,7 +53,7 @@ function getSpeaker() {
  *
  * @param {SpeechSynthesisUtterance} utterance The object whose settings will be set
  * @param {SpeechSynthesisUtteranceHash} settings
- * @param {string[]} voices The voices available
+ * @param {SpeechSynthesisUtterance[]} voices The voices available
  */
 function setUtteranceSettings(utterance, settings, voices) {
    for(let key in settings) {
@@ -52,9 +66,7 @@ function setUtteranceSettings(utterance, settings, voices) {
          continue;
       }
 
-      let voice = voices
-         .filter(voice => voice.voiceURI === settings[key])
-         .pop();
+      let voice = searchVoice(voices, settings[key]);
 
       if (voice) {
          utterance[key] = voice;
@@ -70,7 +82,8 @@ function setUtteranceSettings(utterance, settings, voices) {
  *
  * @class
  */
-export default class Speaker {
+export
+ default class Speaker {
    /**
     * Creates a Speaker instance
     *
@@ -145,7 +158,9 @@ export default class Speaker {
          .then(voices => {
             return new Promise((resolve, reject) => {
                let utterance = new window.SpeechSynthesisUtterance(text);
-               let eventData = Object.assign({text}, this.settings);
+               let eventData = Object.assign({
+                  text
+               }, this.settings);
 
                setUtteranceSettings(utterance, this.settings, voices);
 
@@ -166,6 +181,7 @@ export default class Speaker {
 
                   if (this[isCancelledSymbol]) {
                      this[isCancelledSymbol] = false;
+
                      return reject({
                         error: 'interrupted'
                      });
@@ -185,7 +201,7 @@ export default class Speaker {
                });
 
                this.speaker.speak(utterance);
-            })
+            });
          });
    }
 

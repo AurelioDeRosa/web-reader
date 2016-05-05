@@ -15,7 +15,9 @@ export
        *
        * @return {Object}
        */
+      /* jshint ignore:start */
       static findCloserMatch(string, target) {
          throw new Error(`The ${arguments.callee.name} function must be overridden`);
       }
+      /* jshint ignore:end */
    }

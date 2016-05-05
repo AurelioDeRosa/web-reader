@@ -35,4 +35,4 @@ function getLinks(filters = {}) {
 
 export {
    getLinks
-}
+};

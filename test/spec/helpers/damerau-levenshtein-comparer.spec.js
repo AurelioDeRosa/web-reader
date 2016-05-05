@@ -125,7 +125,12 @@ describe('DamerauLevenshteinComparer', () => {
                }
             },
             {
-               string: ['this', 'is', 'a', 'test'],
+               string: [
+                  'this',
+                  'is',
+                  'a',
+                  'test'
+],
                target: 'that',
                expected: {
                   index: 0,

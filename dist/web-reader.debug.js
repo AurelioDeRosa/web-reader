@@ -588,7 +588,7 @@ module.exports = DamerauLevenshtein;
     * @param {HTMLElement} element The element to highlight
     */
    function highlightElement(element) {
-      if (!element instanceof HTMLElement) {
+      if (!(element instanceof HTMLElement)) {
          return;
       }
 
@@ -602,7 +602,7 @@ module.exports = DamerauLevenshtein;
     * @param {HTMLElement} element The element to unhighlight
     */
    function unhighlightElement(element) {
-      if (!element instanceof HTMLElement) {
+      if (!(element instanceof HTMLElement)) {
          return;
       }
 
@@ -1770,11 +1770,12 @@ module.exports = DamerauLevenshtein;
    /**
     * @typedef SpeechRecognitionHash
     * @type {Object}
-    * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects which represent the grammars
-    * that are active for this recognition
+    * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects
+    * which represent the grammars that are active for this recognition
     * @property {string} [lang=''] The language of the recognition for the request.
     * If unspecified it defaults to the language of the html document root element
-    * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user stops speaking or not
+    * @property {boolean} [continuous=false] Controls whether the interaction is stopped when the user
+    * stops speaking or not
     * @property {boolean} [interimResults=false] Controls whether interim results are returned or not
     * @property {number} [maxAlternatives=1] The maximum number of <code>SpeechRecognitionAlternative</code>s per result
     * @property {string} [serviceURI=''] The location of the speech recognition service to use
@@ -2021,7 +2022,7 @@ module.exports = DamerauLevenshtein;
     * @property {number} [rate=1.0] The speaking rate
     * @property {number} [pitch=1.0] The speaking pitch
     *
-    * @see {@link https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes|SpeechSynthesisUtterance Attributes}
+    * @see https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html#utterance-attributes
     */
 
    /**
@@ -2031,7 +2032,21 @@ module.exports = DamerauLevenshtein;
     * @returns {speechSynthesis|null}
     */
    function getSpeaker() {
-      return speechSynthesis || null;
+      return window.speechSynthesis || null;
+   }
+
+   /**
+    * Searches a voice among those provided
+    *
+    * @param {SpeechSynthesisUtterance[]} voices The voices available
+    * @param {string} target The voice to search
+    *
+    * @return {SpeechSynthesisUtterance|undefined}
+    */
+   function searchVoice(voices, target) {
+      return voices.filter(function (voice) {
+         return voice.voiceURI === target;
+      }).pop();
    }
 
    /**
@@ -2039,22 +2054,20 @@ module.exports = DamerauLevenshtein;
     *
     * @param {SpeechSynthesisUtterance} utterance The object whose settings will be set
     * @param {SpeechSynthesisUtteranceHash} settings
-    * @param {string[]} voices The voices available
+    * @param {SpeechSynthesisUtterance[]} voices The voices available
     */
    function setUtteranceSettings(utterance, settings, voices) {
-      var _loop = function _loop(key) {
+      for (var key in settings) {
          if (!settings.hasOwnProperty(key) || utterance[key] === undefined) {
-            return 'continue';
+            continue;
          }
 
          if (key !== 'voice') {
             utterance[key] = settings[key];
-            return 'continue';
+            continue;
          }
 
-         var voice = voices.filter(function (voice) {
-            return voice.voiceURI === settings[key];
-         }).pop();
+         var voice = searchVoice(voices, settings[key]);
 
          if (voice) {
             utterance[key] = voice;
@@ -2062,12 +2075,6 @@ module.exports = DamerauLevenshtein;
             console.debug('The voice selected is not available. Falling back to one available');
             utterance[key] = voices[0];
          }
-      };
-
-      for (var key in settings) {
-         var _ret = _loop(key);
-
-         if (_ret === 'continue') continue;
       }
    }
 
@@ -2150,7 +2157,9 @@ module.exports = DamerauLevenshtein;
             return this.getVoices().then(function (voices) {
                return new Promise(function (resolve, reject) {
                   var utterance = new window.SpeechSynthesisUtterance(text);
-                  var eventData = Object.assign({ text: text }, _this2.settings);
+                  var eventData = Object.assign({
+                     text: text
+                  }, _this2.settings);
 
                   setUtteranceSettings(utterance, _this2.settings, voices);
 
@@ -2171,6 +2180,7 @@ module.exports = DamerauLevenshtein;
 
                      if (_this2[isCancelledSymbol]) {
                         _this2[isCancelledSymbol] = false;
+
                         return reject({
                            error: 'interrupted'
                         });
