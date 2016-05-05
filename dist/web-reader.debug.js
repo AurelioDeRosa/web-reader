@@ -661,13 +661,15 @@ module.exports = DamerauLevenshtein;
     * is an <code>HTMLElement</code> referencing the header, while the latter is an array
     * containing all the subheadings of the header.
     *
+    * @param {HTMLElement[]} headers The headers to use to create the tree
+    *
     * @return {Object[]}
     */
    function createHeadingsStructure(headers) {
       var tree = [];
 
       (function recurse(headers, index, tree) {
-         if (headers.length === 0 || index.index === headers.length) {
+         if (index.index === headers.length) {
             return tree;
          }
 
@@ -695,7 +697,9 @@ module.exports = DamerauLevenshtein;
          } else {
             return tree;
          }
-      })(headers, { index: 0 }, tree);
+      })(headers, {
+         index: 0
+      }, tree);
    }
 
    /**

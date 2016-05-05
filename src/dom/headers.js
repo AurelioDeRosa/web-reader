@@ -20,13 +20,15 @@ function getHeaderLevel(element) {
  * is an <code>HTMLElement</code> referencing the header, while the latter is an array
  * containing all the subheadings of the header.
  *
+ * @param {HTMLElement[]} headers The headers to use to create the tree
+ *
  * @return {Object[]}
  */
 function createHeadingsStructure(headers) {
    let tree = [];
 
    (function recurse(headers, index, tree) {
-      if (headers.length === 0 || index.index === headers.length) {
+      if (index.index === headers.length) {
          return tree;
       }
 
@@ -54,7 +56,9 @@ function createHeadingsStructure(headers) {
       } else {
          return tree;
       }
-   })(headers, {index: 0}, tree);
+   })(headers, {
+      index: 0
+   }, tree);
 }
 
 /**
@@ -95,4 +99,4 @@ function getHeaders(filters = {}) {
 export {
    createHeadingsStructure,
    getHeaders
-}
+};
