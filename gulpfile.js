@@ -11,18 +11,28 @@ var rename = require('gulp-rename');
 var del = require('del');
 var karma = require('karma');
 var esdoc = require('gulp-esdoc');
+var lazypipe = require('lazypipe');
 
-gulp.task('lint', function() {
+var jsLintTasks = lazypipe()
+   .pipe(jscs, {
+      fix: true
+   })
+   .pipe(jscs.reporter)
+   .pipe(jscs.reporter, 'fail')
+   .pipe(jshint)
+   .pipe(jshint.reporter, 'default')
+   .pipe(jshint.reporter, 'fail');
+
+gulp.task('lint:src', function() {
    return gulp.src('src/**/*.js')
-      .pipe(jscs({
-         fix: true
-      }))
-      .pipe(jscs.reporter())
-      .pipe(jscs.reporter('fail'))
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'))
-      .pipe(jshint.reporter('fail'))
+      .pipe(jsLintTasks())
       .pipe(gulp.dest('src'));
+});
+
+gulp.task('lint:test', function() {
+   return gulp.src('test/spec/**/*.js')
+      .pipe(jsLintTasks())
+      .pipe(gulp.dest('test/spec'));
 });
 
 gulp.task('test', function(done) {
@@ -102,6 +112,7 @@ gulp.task('build:debug', function() {
       .pipe(gulp.dest('dist'));
 });
 
+gulp.task('lint', ['lint:src', 'lint:test']);
 gulp.task('build', ['build:min', 'build:debug']);
 
 gulp.task('default', ['clean', 'lint', 'test', 'documentation', 'build']);
