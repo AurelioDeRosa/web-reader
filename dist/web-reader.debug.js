@@ -1284,7 +1284,7 @@ module.exports = DamerauLevenshtein;
 
    var defaultState = {
       isInteracting: false,
-      elements: null,
+      elements: [],
       currentIndex: -1
    };
 
@@ -1320,9 +1320,10 @@ module.exports = DamerauLevenshtein;
       if (event.ctrlKey === true && (event.code && event.code === 'Space' || event.which === 32)) {
          if (webReader.isInteracting()) {
             var state = statusMap.get(webReader);
+            var element = state.elements[state.currentIndex];
 
-            if (state.elements) {
-               _dom2.default.unhighlightElement(state.elements[state.currentIndex]);
+            if (element) {
+               _dom2.default.unhighlightElement(element);
             }
 
             webReader.stopCommand();
@@ -1520,12 +1521,11 @@ module.exports = DamerauLevenshtein;
          key: 'readCurrentElement',
          value: function readCurrentElement() {
             var state = statusMap.get(this);
+            var element = state.elements[state.currentIndex];
 
-            if (!state.elements) {
+            if (!element) {
                return Promise.reject(new _webreaderError2.default('There is not a current element to read'));
             }
-
-            var element = state.elements[state.currentIndex];
 
             _dom2.default.highlightElement(element);
 
@@ -1567,13 +1567,13 @@ module.exports = DamerauLevenshtein;
          key: 'goToLink',
          value: function goToLink() {
             var state = statusMap.get(this);
-            var currentElement = state.elements ? state.elements[state.currentIndex] : null;
+            var element = state.elements[state.currentIndex];
 
-            if (!currentElement || currentElement.nodeName !== 'A') {
+            if (!element || element.nodeName !== 'A') {
                throw new _webreaderError2.default('There is not a current link to follow');
             }
 
-            window.location.assign(currentElement.href);
+            window.location.assign(element.href);
          }
       }, {
          key: 'readLinks',
@@ -1606,11 +1606,11 @@ module.exports = DamerauLevenshtein;
             var main = _dom2.default.getMain();
             var state = statusMap.get(this);
 
-            state.elements = [main];
-            state.currentIndex = 0;
-
             if (!main) {
                return Promise.reject(new _webreaderError2.default('The main content of this page cannot be found'));
+            } else {
+               state.elements = [main];
+               state.currentIndex = 0;
             }
 
             return this.speaker.speak(main.textContent);

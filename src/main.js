@@ -40,7 +40,7 @@ const defaults = {
 
 const defaultState = {
    isInteracting: false,
-   elements: null,
+   elements: [],
    currentIndex: -1
 };
 
@@ -80,9 +80,10 @@ function listenShortcuts(webReader, event) {
    ) {
       if (webReader.isInteracting()) {
          let state = statusMap.get(webReader);
+         let element = state.elements[state.currentIndex];
 
-         if (state.elements) {
-            Dom.unhighlightElement(state.elements[state.currentIndex]);
+         if (element) {
+            Dom.unhighlightElement(element);
          }
 
          webReader.stopCommand();
@@ -299,12 +300,11 @@ export
     */
    readCurrentElement() {
       let state = statusMap.get(this);
+      let element = state.elements[state.currentIndex];
 
-      if (!state.elements) {
+      if (!element) {
          return Promise.reject(new WebReaderError('There is not a current element to read'));
       }
-
-      let element = state.elements[state.currentIndex];
 
       Dom.highlightElement(element);
 
@@ -359,13 +359,13 @@ export
     */
    goToLink() {
       let state = statusMap.get(this);
-      let currentElement = state.elements ? state.elements[state.currentIndex] : null;
+      let element = state.elements[state.currentIndex];
 
-      if (!currentElement || currentElement.nodeName !== 'A') {
+      if (!element || element.nodeName !== 'A') {
          throw new WebReaderError('There is not a current link to follow');
       }
 
-      window.location.assign(currentElement.href);
+      window.location.assign(element.href);
    }
 
    /**
@@ -404,11 +404,11 @@ export
       let main = Dom.getMain();
       let state = statusMap.get(this);
 
-      state.elements = [main];
-      state.currentIndex = 0;
-
       if (!main) {
          return Promise.reject(new WebReaderError('The main content of this page cannot be found'));
+      } else {
+         state.elements = [main];
+         state.currentIndex = 0;
       }
 
       return this.speaker.speak(main.textContent);
