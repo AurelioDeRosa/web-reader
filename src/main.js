@@ -423,7 +423,7 @@ export
       let main = Dom.getMain();
 
       if (!main) {
-         throw new new WebReaderError('The main content of this page has not been found');
+         throw new WebReaderError('The main content of this page has not been found');
       }
 
       let oldTabIndex = main.getAttribute('tabindex');

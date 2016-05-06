@@ -1621,7 +1621,7 @@ module.exports = DamerauLevenshtein;
             var main = _dom2.default.getMain();
 
             if (!main) {
-               throw new new _webreaderError2.default('The main content of this page has not been found')();
+               throw new _webreaderError2.default('The main content of this page has not been found');
             }
 
             var oldTabIndex = main.getAttribute('tabindex');
