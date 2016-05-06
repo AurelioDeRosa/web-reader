@@ -13,7 +13,7 @@ export
     * @param {WebReader} webReader An instance of WebReader
     * @param {CommandsHash} recognizedCommand The command recognized
     *
-    * @return {Promise|WebReaderError|undefined}
+    * @return {Promise}
     */
    static route(webReader, recognizedCommand) {
       /* jshint -W074 */
@@ -28,7 +28,13 @@ export
       } else if (recognizedCommand.command === 'READ_MAIN') {
          return webReader.readMain();
       } else if (recognizedCommand.command === 'SEARCH_MAIN') {
-         return webReader.searchMain();
+         return new Promise((resolve, reject) => {
+            try {
+               resolve(webReader.searchMain());
+            } catch(ex) {
+               reject(ex);
+            }
+         });
       } else if (recognizedCommand.command === 'READ_AGAIN') {
          return webReader.readCurrentElement();
       } else if (recognizedCommand.command === 'READ_PREVIOUS') {
@@ -48,11 +54,17 @@ export
       } else if (recognizedCommand.command === 'READ_PAGE_SUMMARY') {
          return webReader.readPageSummary();
       } else if (recognizedCommand.command === 'GO_TO_HOMEPAGE') {
-         return webReader.goToHomepage();
+         return Promise.resolve(webReader.goToHomepage());
       } else if (recognizedCommand.command === 'GO_TO_LINK') {
-         return webReader.goToLink();
+         return new Promise((resolve, reject) => {
+            try {
+               resolve(webReader.goToLink());
+            } catch(ex) {
+               reject(ex);
+            }
+         });
       } else {
-         throw new WebReaderError('The command is not supported');
+         return Promise.reject(new WebReaderError('The command is not supported'));
       }
    }
 }

@@ -2301,7 +2301,13 @@ module.exports = DamerauLevenshtein;
             } else if (recognizedCommand.command === 'READ_MAIN') {
                return webReader.readMain();
             } else if (recognizedCommand.command === 'SEARCH_MAIN') {
-               return webReader.searchMain();
+               return new Promise(function (resolve, reject) {
+                  try {
+                     resolve(webReader.searchMain());
+                  } catch (ex) {
+                     reject(ex);
+                  }
+               });
             } else if (recognizedCommand.command === 'READ_AGAIN') {
                return webReader.readCurrentElement();
             } else if (recognizedCommand.command === 'READ_PREVIOUS') {
@@ -2321,11 +2327,17 @@ module.exports = DamerauLevenshtein;
             } else if (recognizedCommand.command === 'READ_PAGE_SUMMARY') {
                return webReader.readPageSummary();
             } else if (recognizedCommand.command === 'GO_TO_HOMEPAGE') {
-               return webReader.goToHomepage();
+               return Promise.resolve(webReader.goToHomepage());
             } else if (recognizedCommand.command === 'GO_TO_LINK') {
-               return webReader.goToLink();
+               return new Promise(function (resolve, reject) {
+                  try {
+                     resolve(webReader.goToLink());
+                  } catch (ex) {
+                     reject(ex);
+                  }
+               });
             } else {
-               throw new _webreaderError2.default('The command is not supported');
+               return Promise.reject(new _webreaderError2.default('The command is not supported'));
             }
          }
       }]);
