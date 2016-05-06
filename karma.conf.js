@@ -36,6 +36,7 @@ module.exports = function(config) {
          'mocha',
          'chai-as-promised',
          'chai',
+         'sinon-chai',
          'fixture'
       ],
       port: 9001,

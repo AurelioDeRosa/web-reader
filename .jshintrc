@@ -21,7 +21,8 @@
    "notypeof": true,
    "predef": [
       "fixture",
-      "assert"
+      "assert",
+      "sinon"
    ],
    "shadow": "inner",
    "singleGroups": true,
