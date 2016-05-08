@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <title>Test page for WebReader</title>
+
+      <style>
+         .hidden
+         {
+            display: none;
+         }
+      </style>
+   </head>
+   <body>
+      <h1>Test page</h1>
+
+      <ul>
+         <li><a href="/" class="target">Homepage</a></li>
+         <li><a href="http://www.digital-detox.co.uk" aria-hidden="false" class="target">Digital Detox</a></li>
+         <li><a href="http://www.digital-detox.co.uk" aria-hidden="true">About us</a></li>
+      </ul>
+
+      <p>
+         This is a paragraph <a href="#" class="hidden">with a link hidden via an internal stylesheet</a>,
+         <a href="/" style="display: none">a link hidden via inline style</a>, and
+         <a href="#" class="target">a visible link</a>.
+      </p>
+
+      <footer>
+         <h3>Additional info</h3>
+         <p>
+            This is a paragraph contained into the <code>footer</code> element which contains
+            <a href="#" class="target">a link</a> and <a href="/" class="hidden">another link</a>.
+         </p>
+      </footer>
+   </body>
+</html>
