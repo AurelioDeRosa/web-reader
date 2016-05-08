@@ -351,7 +351,7 @@ module.exports = DamerauLevenshtein;
       if (!data.level) {
          var closerMatchIndex = StringComparer.findCloserMatch(headingLevels, recognizedText).index;
 
-         data.level = closerMatchIndex === -1 ? -1 : closerMatchIndex + 1;
+         data.level = closerMatchIndex + 1;
       }
 
       return data;
@@ -409,16 +409,14 @@ module.exports = DamerauLevenshtein;
          var variations = elements[key].variations;
          var closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText).index;
 
-         if (closerMatchIndex !== -1) {
-            closerMatches.push(variations[closerMatchIndex]);
-         }
+         closerMatches.push(variations[closerMatchIndex]);
       }
 
       // Find the closest match among the closest match
       var closestMatch = StringComparer.findCloserMatch(closerMatches, recognizedText);
 
       return {
-         element: closestMatch.index >= 0 ? document.querySelector(closerMatches[closestMatch.index]) : null
+         element: document.querySelector(closerMatches[closestMatch.index])
       };
    }
 

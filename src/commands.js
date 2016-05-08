@@ -43,7 +43,7 @@ function extractHeaderLevel(StringComparer, recognizedText) {
    if (!data.level) {
       let closerMatchIndex = StringComparer.findCloserMatch(headingLevels, recognizedText).index;
 
-      data.level = closerMatchIndex === -1 ? -1 : closerMatchIndex + 1;
+      data.level = closerMatchIndex + 1;
    }
 
    return data;
@@ -101,16 +101,14 @@ function extractElementFromText(StringComparer, recognizedText) {
       let variations = elements[key].variations;
       let closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText).index;
 
-      if (closerMatchIndex !== -1) {
-         closerMatches.push(variations[closerMatchIndex]);
-      }
+      closerMatches.push(variations[closerMatchIndex]);
    }
 
    // Find the closest match among the closest match
    let closestMatch = StringComparer.findCloserMatch(closerMatches, recognizedText);
 
    return {
-      element: closestMatch.index >= 0 ? document.querySelector(closerMatches[closestMatch.index]) : null
+      element: document.querySelector(closerMatches[closestMatch.index])
    };
 }
 
