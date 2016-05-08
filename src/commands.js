@@ -17,7 +17,7 @@ let translation = null;
 
 /**
  * Extracts the heading level contained in the string provided.
- * If a perfect match is not found, the Damerau-Levenshtein algorithm
+ * If a perfect match is not found, a string comparison algorithm
  * is used to find the closest match.
  *
  * @param {StringComparer} StringComparer The comparer to use for comparing strings
