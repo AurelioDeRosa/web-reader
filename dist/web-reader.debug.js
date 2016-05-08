@@ -463,7 +463,7 @@ module.exports = DamerauLevenshtein;
       function Commands(Comparer) {
          _classCallCheck(this, Commands);
 
-         if (!(Comparer.prototype instanceof _stringComparer2.default)) {
+         if (typeof Comparer !== 'function' || !(Comparer.prototype instanceof _stringComparer2.default)) {
             throw new TypeError(arguments[0] + ' is not an instance of StringComparer');
          }
 

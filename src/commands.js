@@ -152,7 +152,7 @@ export
     * @param {StringComparer} Comparer The class representing the strategy to adopt to compare strings
     */
    constructor(Comparer) {
-      if (!(Comparer.prototype instanceof StringComparer)) {
+      if (typeof Comparer !== 'function' || !(Comparer.prototype instanceof StringComparer)) {
          throw new TypeError(`${arguments[0]} is not an instance of StringComparer`);
       }
 
