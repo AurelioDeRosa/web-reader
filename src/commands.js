@@ -75,7 +75,7 @@ function findElementInText(recognizedText) {
 }
 /**
  * Searches an element type, such as <code>main</code> or <code>footer</code>,
- * in the text provided. If none is found, the closest match is re is returned
+ * in the text provided. If none is found, the closest match is returned
  *
  * @param {StringComparer} StringComparer The comparer to use for comparing strings
  * @param {string} recognizedText The string to analyze
@@ -99,7 +99,7 @@ function extractElementFromText(StringComparer, recognizedText) {
    // let's try a more heuristic strategy
    for(let key in elements) {
       let variations = elements[key].variations;
-      let closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText);
+      let closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText).index;
 
       if (closerMatchIndex !== -1) {
          closerMatches.push(variations[closerMatchIndex]);
@@ -110,7 +110,7 @@ function extractElementFromText(StringComparer, recognizedText) {
    let closestMatch = StringComparer.findCloserMatch(closerMatches, recognizedText);
 
    return {
-      element: closestMatch.index >= 0 ? closerMatches[closestMatch.index] : null
+      element: closestMatch.index >= 0 ? document.querySelector(closerMatches[closestMatch.index]) : null
    };
 }
 

@@ -383,7 +383,7 @@ module.exports = DamerauLevenshtein;
    }
    /**
     * Searches an element type, such as <code>main</code> or <code>footer</code>,
-    * in the text provided. If none is found, the closest match is re is returned
+    * in the text provided. If none is found, the closest match is returned
     *
     * @param {StringComparer} StringComparer The comparer to use for comparing strings
     * @param {string} recognizedText The string to analyze
@@ -407,7 +407,7 @@ module.exports = DamerauLevenshtein;
       // let's try a more heuristic strategy
       for (var key in elements) {
          var variations = elements[key].variations;
-         var closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText);
+         var closerMatchIndex = StringComparer.findCloserMatch(variations, recognizedText).index;
 
          if (closerMatchIndex !== -1) {
             closerMatches.push(variations[closerMatchIndex]);
@@ -418,7 +418,7 @@ module.exports = DamerauLevenshtein;
       var closestMatch = StringComparer.findCloserMatch(closerMatches, recognizedText);
 
       return {
-         element: closestMatch.index >= 0 ? closerMatches[closestMatch.index] : null
+         element: closestMatch.index >= 0 ? document.querySelector(closerMatches[closestMatch.index]) : null
       };
    }
 
