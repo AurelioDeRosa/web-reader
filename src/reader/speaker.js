@@ -2,12 +2,11 @@ import EventEmitter from '../helpers/event-emitter';
 import WebReaderError from '../webreader-error';
 
 /**
- * This constant is needed because Chrome doesn't fire an error event
- * if the <code>cancel()</code> method is called.
+ * Stores the private data of a Speaker instance
  *
- * @type {Symbol}
+ * @type {WeakMap}
  */
-const isCancelledSymbol = Symbol('isCancelled');
+let dataMap = new WeakMap();
 
 /**
  * @typedef SpeechSynthesisUtteranceHash
@@ -96,21 +95,22 @@ export
        *
        * @type {speechSynthesis|null}
        */
-      this.speaker = getSpeaker();
+      let speaker = getSpeaker();
+
       /**
        *
        * @type {SpeechSynthesisUtteranceHash}
        */
       this.settings = options;
-      /**
-       *
-       * @type {boolean}
-       */
-      this[isCancelledSymbol] = false;
 
-      if (!this.speaker) {
+      if (!speaker) {
          throw Error('API not supported');
       }
+
+      dataMap.set(this, {
+         speaker: speaker,
+         isCancelled: false
+      });
    }
 
    /**
@@ -129,18 +129,17 @@ export
     */
    getVoices() {
       return new Promise(resolve => {
-         let voices = this.speaker.getVoices();
+         let speaker = dataMap.get(this).speaker;
+         let voices = speaker.getVoices();
 
          if (voices.length > 1) {
             return resolve(voices);
          } else {
-            let onVoicesChanged = function() {
-               resolve(this.speaker.getVoices());
+            speaker.addEventListener('voiceschanged', function onVoicesChanged() {
+               speaker.removeEventListener('voiceschanged', onVoicesChanged);
 
-               getSpeaker().removeEventListener('voiceschanged', onVoicesChanged);
-            }.bind(this);
-
-            getSpeaker().addEventListener('voiceschanged', onVoicesChanged);
+               resolve(speaker.getVoices());
+            });
          }
       });
    }
@@ -157,6 +156,7 @@ export
          .getVoices()
          .then(voices => {
             return new Promise((resolve, reject) => {
+               let speaker = dataMap.get(this).speaker;
                let utterance = new window.SpeechSynthesisUtterance(text);
                let eventData = Object.assign({
                   text
@@ -173,14 +173,16 @@ export
                });
 
                utterance.addEventListener('end', () => {
+                  let data = dataMap.get(this);
+
                   console.debug('Synthesis completed');
 
                   EventEmitter.fireEvent(`${EventEmitter.namespace}.synthesisend`, document, {
                      data: eventData
                   });
 
-                  if (this[isCancelledSymbol]) {
-                     this[isCancelledSymbol] = false;
+                  if (data.isCancelled) {
+                     data.isCancelled = false;
 
                      return reject({
                         error: 'interrupted'
@@ -200,7 +202,7 @@ export
                   reject(new WebReaderError('An error has occurred while speaking'));
                });
 
-               this.speaker.speak(utterance);
+               speaker.speak(utterance);
             });
          });
    }
@@ -209,7 +211,9 @@ export
     * Stops the prompt of the utterance
     */
    cancel() {
-      this.speaker.cancel();
-      this[isCancelledSymbol] = true;
+      let data = dataMap.get(this);
+
+      data.speaker.cancel();
+      data.isCancelled = true;
    }
 }

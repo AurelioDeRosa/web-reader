@@ -2008,12 +2008,11 @@ module.exports = DamerauLevenshtein;
    }();
 
    /**
-    * This constant is needed because Chrome doesn't fire an error event
-    * if the <code>cancel()</code> method is called.
+    * Stores the private data of a Speaker instance
     *
-    * @type {Symbol}
+    * @type {WeakMap}
     */
-   var isCancelledSymbol = Symbol('isCancelled');
+   var dataMap = new WeakMap();
 
    /**
     * @typedef SpeechSynthesisUtteranceHash
@@ -2106,21 +2105,22 @@ module.exports = DamerauLevenshtein;
           *
           * @type {speechSynthesis|null}
           */
-         this.speaker = getSpeaker();
+         var speaker = getSpeaker();
+
          /**
           *
           * @type {SpeechSynthesisUtteranceHash}
           */
          this.settings = options;
-         /**
-          *
-          * @type {boolean}
-          */
-         this[isCancelledSymbol] = false;
 
-         if (!this.speaker) {
+         if (!speaker) {
             throw Error('API not supported');
          }
+
+         dataMap.set(this, {
+            speaker: speaker,
+            isCancelled: false
+         });
       }
 
       /**
@@ -2136,20 +2136,17 @@ module.exports = DamerauLevenshtein;
             var _this = this;
 
             return new Promise(function (resolve) {
-               var voices = _this.speaker.getVoices();
+               var speaker = dataMap.get(_this).speaker;
+               var voices = speaker.getVoices();
 
                if (voices.length > 1) {
                   return resolve(voices);
                } else {
-                  (function () {
-                     var onVoicesChanged = function () {
-                        resolve(this.speaker.getVoices());
+                  speaker.addEventListener('voiceschanged', function onVoicesChanged() {
+                     speaker.removeEventListener('voiceschanged', onVoicesChanged);
 
-                        getSpeaker().removeEventListener('voiceschanged', onVoicesChanged);
-                     }.bind(_this);
-
-                     getSpeaker().addEventListener('voiceschanged', onVoicesChanged);
-                  })();
+                     resolve(speaker.getVoices());
+                  });
                }
             });
          }
@@ -2160,6 +2157,7 @@ module.exports = DamerauLevenshtein;
 
             return this.getVoices().then(function (voices) {
                return new Promise(function (resolve, reject) {
+                  var speaker = dataMap.get(_this2).speaker;
                   var utterance = new window.SpeechSynthesisUtterance(text);
                   var eventData = Object.assign({
                      text: text
@@ -2176,14 +2174,16 @@ module.exports = DamerauLevenshtein;
                   });
 
                   utterance.addEventListener('end', function () {
+                     var data = dataMap.get(_this2);
+
                      console.debug('Synthesis completed');
 
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.synthesisend', document, {
                         data: eventData
                      });
 
-                     if (_this2[isCancelledSymbol]) {
-                        _this2[isCancelledSymbol] = false;
+                     if (data.isCancelled) {
+                        data.isCancelled = false;
 
                         return reject({
                            error: 'interrupted'
@@ -2203,15 +2203,17 @@ module.exports = DamerauLevenshtein;
                      reject(new _webreaderError2.default('An error has occurred while speaking'));
                   });
 
-                  _this2.speaker.speak(utterance);
+                  speaker.speak(utterance);
                });
             });
          }
       }, {
          key: 'cancel',
          value: function cancel() {
-            this.speaker.cancel();
-            this[isCancelledSymbol] = true;
+            var data = dataMap.get(this);
+
+            data.speaker.cancel();
+            data.isCancelled = true;
          }
       }], [{
          key: 'isSupported',
