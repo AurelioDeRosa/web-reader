@@ -15,14 +15,14 @@ describe('Router', () => {
             command: 'READ_ALL_HEADERS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -37,14 +37,14 @@ describe('Router', () => {
             command: 'READ_ALL_HEADERS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -57,14 +57,14 @@ describe('Router', () => {
             command: 'READ_ALL_LINKS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -79,14 +79,14 @@ describe('Router', () => {
             command: 'READ_ALL_LINKS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -101,8 +101,6 @@ describe('Router', () => {
             level: level
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
@@ -111,6 +109,8 @@ describe('Router', () => {
                assert.isTrue(stub.calledWithExactly({
                   level
                }), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -127,8 +127,6 @@ describe('Router', () => {
             level: level
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
@@ -137,6 +135,8 @@ describe('Router', () => {
                assert.isTrue(stub.calledWithExactly({
                   level
                }), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -149,14 +149,14 @@ describe('Router', () => {
             command: 'READ_MAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -171,14 +171,14 @@ describe('Router', () => {
             command: 'READ_MAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -191,14 +191,14 @@ describe('Router', () => {
             command: 'SEARCH_MAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -211,14 +211,14 @@ describe('Router', () => {
             command: 'SEARCH_MAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -231,14 +231,14 @@ describe('Router', () => {
             command: 'READ_AGAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -253,14 +253,14 @@ describe('Router', () => {
             command: 'READ_AGAIN'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -273,14 +273,14 @@ describe('Router', () => {
             command: 'READ_PREVIOUS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -295,14 +295,14 @@ describe('Router', () => {
             command: 'READ_PREVIOUS'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -315,14 +315,14 @@ describe('Router', () => {
             command: 'READ_NEXT'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -337,14 +337,14 @@ describe('Router', () => {
             command: 'READ_NEXT'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -357,14 +357,14 @@ describe('Router', () => {
             command: 'READ_PAGE_TITLE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -379,14 +379,14 @@ describe('Router', () => {
             command: 'READ_PAGE_TITLE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -401,8 +401,6 @@ describe('Router', () => {
             element: ancestor
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
@@ -411,6 +409,8 @@ describe('Router', () => {
                assert.isTrue(stub.calledWithExactly({
                   ancestor
                }), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -427,8 +427,6 @@ describe('Router', () => {
             element: ancestor
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
@@ -437,6 +435,8 @@ describe('Router', () => {
                assert.isTrue(stub.calledWithExactly({
                   ancestor
                }), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -449,14 +449,14 @@ describe('Router', () => {
             command: 'GO_TO_PREVIOUS_PAGE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -471,14 +471,14 @@ describe('Router', () => {
             command: 'GO_TO_PREVIOUS_PAGE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -491,14 +491,14 @@ describe('Router', () => {
             command: 'GO_TO_NEXT_PAGE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -513,14 +513,14 @@ describe('Router', () => {
             command: 'GO_TO_NEXT_PAGE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -533,14 +533,14 @@ describe('Router', () => {
             command: 'READ_PAGE_SUMMARY'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -555,14 +555,14 @@ describe('Router', () => {
             command: 'READ_PAGE_SUMMARY'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -575,14 +575,14 @@ describe('Router', () => {
             command: 'GO_TO_HOMEPAGE'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -595,14 +595,14 @@ describe('Router', () => {
             command: 'GO_TO_LINK'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isFulfilled(promise, 'The promise is fulfilled'),
             promise.then(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
@@ -615,14 +615,14 @@ describe('Router', () => {
             command: 'GO_TO_LINK'
          });
 
-         stub.restore();
-
          return Promise.all([
             assert.instanceOf(promise, Promise, 'The returned value is a promise'),
             assert.isRejected(promise, WebReaderError, 'The promise is rejected'),
             promise.catch(() => {
                assert.isTrue(stub.calledOnce, 'The method is only called once');
                assert.isTrue(stub.calledWithExactly(), 'The method is called with the expected arguments');
+
+               stub.restore();
             })
          ]);
       });
