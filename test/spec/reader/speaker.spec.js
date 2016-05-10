@@ -170,4 +170,92 @@ describe('Speaker', () => {
          spy.restore();
       });
    });
+
+   describe('events', () => {
+      it('should trigger a webreader.synthesisstart event when a text starts being prompted', () => {
+         let text, synthesisStartSpy, speakSpy;
+
+         function synthesisStart(event) {
+            document.removeEventListener('webreader.synthesisstart', synthesisStart);
+
+            assert.isOk(true, 'The event is triggered is executed');
+            assert.isTrue(
+               speakSpy.calledBefore(synthesisStartSpy),
+               'The event is fired after the speak method is called'
+            );
+            assert.instanceOf(event, Event, 'The event listener receives an event');
+            assert.property(event, 'data', 'The event exposes a data property');
+            assert.deepEqual(
+               event.data,
+               Object.assign(
+                  {
+                     text
+                  },
+                  settings
+               ),
+               'The data property of the event possesses the settings provided in the constructor and the spoken text'
+            );
+
+            speakSpy.restore();
+         }
+
+         text = 'hello';
+         synthesisStartSpy = sinon.spy(synthesisStart);
+         speakSpy = sinon.spy(speaker, 'speak');
+
+         document.addEventListener('webreader.synthesisstart', synthesisStart);
+
+         return speaker.speak(text);
+      });
+
+      it('should trigger a webreader.synthesisend event when a text ends being prompted', () => {
+         let text, synthesisStartSpy, synthesisEndSpy, speakSpy;
+
+         function synthesisStart() {
+            document.removeEventListener('webreader.synthesisstart', synthesisStartSpy);
+         }
+
+         function synthesisEnd(event) {
+            document.removeEventListener('webreader.synthesisend', synthesisEndSpy);
+
+            assert.isOk(true, 'The event is triggered is executed');
+            assert.isTrue(
+               speakSpy.calledBefore(synthesisEndSpy),
+               'The event is fired after the speak method is called'
+            );
+            assert.isTrue(
+               synthesisStartSpy.calledBefore(synthesisEndSpy),
+               'The webreader.synthesisend event is fired after the webreader.synthesisstart event'
+            );
+            assert.isFalse(speaker.isSpeaking(), 'The event is fired after the text has been prompted');
+            assert.instanceOf(event, Event, 'The event listener receives an event');
+            assert.property(event, 'data', 'The event exposes a data property');
+            assert.deepEqual(
+               event.data,
+               Object.assign(
+                  {
+                     text
+                  },
+                  settings
+               ),
+               'The data property of the event possesses the settings provided in the constructor and the spoken text'
+            );
+
+            speakSpy.restore();
+         }
+
+         text = 'hello';
+         synthesisStartSpy = sinon.spy(synthesisStart);
+         synthesisEndSpy = sinon.spy(synthesisEnd);
+         speakSpy = sinon.spy(speaker, 'speak');
+
+         document.addEventListener('webreader.synthesisstart', synthesisStartSpy);
+         document.addEventListener('webreader.synthesisend', synthesisEndSpy);
+
+         return speaker.speak(text);
+      });
+
+      // TODO: Find a way to trigger an error event to complete this test
+      it('should trigger a webreader.synthesiserror event when an error occurs while a text is prompted');
+   });
 });
