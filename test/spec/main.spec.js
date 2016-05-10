@@ -21,7 +21,9 @@ function simulateToggleInteractionShortcut() {
 
 describe('WebReader', () => {
    const METHODS_DELAY = 5;
-   const webReader = new WebReader();
+   const webReader = new WebReader({
+      delay: 0
+   });
 
    before(() => {
       fixture.setBase('test/fixtures');
@@ -36,6 +38,8 @@ describe('WebReader', () => {
    });
 
    describe('constructor()', () => {
+      let webReader = new WebReader();
+
       it('should crate an instance of WebReader', () => {
          assert.instanceOf(webReader, WebReader, 'The returned object is an instance of WebReader');
          assert.isObject(webReader.settings, 'The settings are exposed');
@@ -70,13 +74,14 @@ describe('WebReader', () => {
             .returns(new Promise(resolve => {
                setTimeout(() => resolve('search main content'), METHODS_DELAY);
             }));
-
-         webReader.receiveCommand();
+         let promise = webReader.receiveCommand();
 
          assert.isTrue(webReader.isInteracting(), 'The returned value is correct');
 
-         speakerStub.restore();
-         recognizerStub.restore();
+         return promise.then(() => {
+            speakerStub.restore();
+            recognizerStub.restore();
+         });
       });
 
       it('should return false if WebReader is not interacting', () => {
