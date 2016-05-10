@@ -4,9 +4,10 @@ import Speaker from '../../../src/reader/speaker';
  * @test {Speaker}
  */
 describe('Speaker', () => {
-   const speaker = new Speaker({
+   const settings = {
       volume: 0
-   });
+   };
+   const speaker = new Speaker(settings);
 
    describe('constructor()', () => {
       it('should crate an instance of Speaker', () => {
@@ -42,7 +43,7 @@ describe('Speaker', () => {
          speaker.cancel();
       });
 
-      it('should return true if a text is being prompted', done => {
+      it('should return true if a text is being prompted', () => {
          function synthesisStart() {
             document.removeEventListener('webreader.synthesisstart', synthesisStart);
 
@@ -53,14 +54,12 @@ describe('Speaker', () => {
             document.removeEventListener('webreader.synthesisend', synthesisEnd);
 
             assert.isFalse(speaker.isSpeaking(), 'The speech is complete');
-
-            done();
          }
-
-         speaker.speak('hello');
 
          document.addEventListener('webreader.synthesisstart', synthesisStart);
          document.addEventListener('webreader.synthesisend', synthesisEnd);
+
+         return speaker.speak('hello');
       });
 
       it('should return false if a text is not being prompted', () => {
@@ -117,7 +116,7 @@ describe('Speaker', () => {
                      lang: 'en-GB',
                      voice: 'Google UK English Female',
                      volume: 0.25,
-                     rate: 0.8,
+                     rate: 1.5,
                      pitch: 0.9
                   };
                   let voice = voices
