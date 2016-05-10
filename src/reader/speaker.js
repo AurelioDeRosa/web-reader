@@ -208,7 +208,7 @@ export
    }
 
    /**
-    * Stops the prompt of the utterance
+    * Stops the prompt of the utterance and cleans the queue of the texts to prompt
     */
    cancel() {
       let data = dataMap.get(this);
