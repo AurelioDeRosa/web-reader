@@ -2131,6 +2131,11 @@ module.exports = DamerauLevenshtein;
 
 
       _createClass(Speaker, [{
+         key: 'isSpeaking',
+         value: function isSpeaking() {
+            return dataMap.get(this).speaker.speaking;
+         }
+      }, {
          key: 'getVoices',
          value: function getVoices() {
             var _this = this;
@@ -2212,8 +2217,11 @@ module.exports = DamerauLevenshtein;
          value: function cancel() {
             var data = dataMap.get(this);
 
+            if (this.isSpeaking()) {
+               data.isCancelled = true;
+            }
+
             data.speaker.cancel();
-            data.isCancelled = true;
          }
       }], [{
          key: 'isSupported',

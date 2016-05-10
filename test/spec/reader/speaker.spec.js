@@ -35,6 +35,37 @@ describe('Speaker', () => {
       });
    });
 
+   describe('isSpeaking()', () => {
+      beforeEach(() => {
+         speaker.cancel();
+      });
+
+      it('should return true if a text is being prompted', done => {
+         function synthesisStart() {
+            document.removeEventListener('webreader.synthesisstart', synthesisStart);
+
+            assert.isTrue(speaker.isSpeaking(), 'The speech is in progress');
+         }
+
+         function synthesisEnd() {
+            document.removeEventListener('webreader.synthesisend', synthesisEnd);
+
+            assert.isFalse(speaker.isSpeaking(), 'The speech is complete');
+
+            done();
+         }
+
+         speaker.speak('hello');
+
+         document.addEventListener('webreader.synthesisstart', synthesisStart);
+         document.addEventListener('webreader.synthesisend', synthesisEnd);
+      });
+
+      it('should return false if a text is not being prompted', () => {
+         assert.isFalse(speaker.isSpeaking(), 'The speaker is not speaking');
+      });
+   });
+
    describe('getVoices()', () => {
       it('should return all the voices available', () => {
          let promise = speaker.getVoices();

@@ -123,6 +123,18 @@ export
    }
 
    /**
+    * Determines if a text is being prompted
+    *
+    * @return {boolean}
+    */
+   isSpeaking() {
+      return dataMap
+         .get(this)
+         .speaker
+         .speaking;
+   }
+
+   /**
     * Returns the list of voices available
     *
     * @return {Promise}
@@ -213,7 +225,10 @@ export
    cancel() {
       let data = dataMap.get(this);
 
+      if (this.isSpeaking()) {
+         data.isCancelled = true;
+      }
+
       data.speaker.cancel();
-      data.isCancelled = true;
    }
 }
