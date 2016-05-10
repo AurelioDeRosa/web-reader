@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+   <head>
+      <meta charset="UTF-8">
+      <title>Web Screen Reader</title>
+
+      <style>
+         body
+         {
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 0 1em;
+         }
+
+         button
+         {
+            display: block;
+            margin: 10px 0;
+         }
+
+         *:focus
+         {
+            outline: 1px solid red;
+         }
+      </style>
+   </head>
+   <body>
+      <header>
+         <h1>WebReader demo page</h1>
+         <p>
+            This is a demo page for <a href="https://web-reader.digital-detox.co.uk/">WebReader</a>.
+         </p>
+      </header>
+
+      <nav>
+         <ul>
+            <li><a href="/">Homepage</a></li>
+            <li><a href="http://www.digital-detox.co.uk">Digital Detox</a></li>
+            <li><a href="http://www.digital-detox.co.uk">About us</a></li>
+         </ul>
+      </nav>
+
+      <article>
+         <h2>Instructions to use WebReader</h2>
+         <p>
+            To see WebReader in action, click on the <em>Receive command</em> button and, when asked,
+            speak one of the commands available. The commands available are:
+         </p>
+
+         <ul>
+            <li>To read all the headers say: <em>read all headers</em></li>
+            <li>To read all the headers of a given type (e.g. H1) say: <em>read all H1</em></li>
+            <li>To read all the links say: <em>read all links</em></li>
+            <li>To read all the links inside an element (e.g. header) say: <em>read links inside header</em></li>
+            <li>To read the main content say: <em>read main content</em></li>
+            <li>To read the page title say: <em>read page title</em></li>
+            <li>To read a summary of the page say: <em>read page summary</em></li>
+            <li>To search and focus the main content say: <em>find main content</em></li>
+            <li>To go to the previous page say: <em>go to previous page</em></li>
+            <li>To go to the next page say: <em>go to next page</em></li>
+            <li>To go to the homepage say: <em>go to homepage</em></li>
+         </ul>
+
+         <p>
+            In general, the commands accept variations so that you can use the natural language to interact with the
+            library. For example, to search and focus the main content you can also say <em>Search main content</em> or
+            <em>Can you search the main content of the page, please?</em>
+         </p>
+         <p>
+            It's possible to stop the current interaction to start a new one or to move inside the list of elements
+            retrieved by click again the <em>Receive command</em> button. For example, if WebReader was reading the
+            headers of the page, you can stop the interaction to read again the current, or to move to the previous or
+            next header. The commands available are:
+         </p>
+
+         <ul>
+            <li>To follow the current element if it is a link say: <em>go to link</em></li>
+            <li>To read again the current element say: <em>read again</em></li>
+            <li>To read the previous element say: <em>read previous</em></li>
+            <li>To read the next element say: <em>read next</em></li>
+         </ul>
+
+         <p>
+            Alternatively, you can start a complete new interaction.
+         </p>
+      </article>
+
+      <button type="button" id="receive-command">Receive command</button>
+
+      <label>
+         You can even choose the language you want to use to interact with WebReader:
+         <select id="recognition-language">
+            <option value="en-GB" selected>English (UK)</option>
+            <option value="it-IT">Italiano (Italia)</option>
+            <option value="fr-FR">French (France)</option>
+         </select>
+      </label>
+
+      <p>
+         Starting from this points, the page is made of dummy elements to demonstrate the feature of the library.
+      </p>
+
+      <main>
+         <h1>Test</h1>
+         <p>
+            This is a paragraph <a href="#">with a link</a>.
+         </p>
+
+         <h2>Hello</h2>
+         <p>
+            This is a paragraph without a link.
+         </p>
+
+         <h2>Subheading</h2>
+         <p>
+            This is yet another <em>paragraph</em> with <b>many</b> elements and <a href="#">another link</a>.
+         </p>
+      </main>
+
+      <footer>
+         <h3>Additional info</h3>
+         <p>
+            This is a paragraph contained into the <code>footer</code> element which also contains
+            <a href="#">a link</a>.
+         </p>
+      </footer>
+   </body>
+</html>
