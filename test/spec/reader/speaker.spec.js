@@ -4,7 +4,9 @@ import Speaker from '../../../src/reader/speaker';
  * @test {Speaker}
  */
 describe('Speaker', () => {
-   const speaker = new Speaker();
+   const speaker = new Speaker({
+      volume: 0
+   });
 
    describe('constructor()', () => {
       it('should crate an instance of Speaker', () => {
