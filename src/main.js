@@ -372,6 +372,7 @@ export
     * Reads all the links of a page
     *
     * @param {Object} [filters={}] An object used to filters the links
+    * @param {(HTMLElement|HTMLDocument)} [filters.ancestor=document] The ancestor of the links to retrieve
     *
     * @return {Promise}
     */
