@@ -9,13 +9,23 @@ describe('getMain()', () => {
       fixture.cleanup();
    });
 
-   describe('main element', () => {
+   describe('single main element', () => {
       before(function() {
-         fixture.load('main-element.html');
+         fixture.load('single-main-element.html');
       });
 
       it('should return the main element', () => {
          assert.strictEqual(Main.getMain(), document.querySelector('main'));
+      });
+   });
+
+   describe('multiple main elements', () => {
+      before(function() {
+         fixture.load('multiple-main-elements.html');
+      });
+
+      it('should return null', () => {
+         assert.strictEqual(Main.getMain(), null);
       });
    });
 
