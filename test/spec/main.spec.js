@@ -244,6 +244,68 @@ describe('WebReader', () => {
       });
    });
 
+   describe('readLinks()', () => {
+      let stub;
+
+      before(() => {
+         stub = sinon
+            .stub(webReader.speaker, 'speak')
+            .returns(Promise.resolve());
+      });
+
+      afterEach(() => {
+         stub.reset();
+      });
+
+      after(() => {
+         stub.restore();
+      });
+
+      context('with no parameters provided', () => {
+         it('should read all the links', () => {
+            let promise = webReader.readLinks();
+
+            return Promise.all([
+               assert.instanceOf(promise, Promise, 'The value returned is a promise'),
+               assert.isFulfilled(promise, 'The promise is fulfilled'),
+               promise.then(() => {
+                  let links = Array.from(document.querySelectorAll('a.target'));
+
+                  links.forEach((link, index) => {
+                     assert.isTrue(
+                        stub.getCall(index).calledWithExactly(link.textContent),
+                        'The prompted text is correct'
+                     );
+                  });
+               })
+            ]);
+         });
+      });
+
+      context('with parameters provided', () => {
+         it('should read all the headers with the specified ancestor', () => {
+            let promise = webReader.readLinks({
+               ancestor: document.querySelector('footer')
+            });
+
+            return Promise.all([
+               assert.instanceOf(promise, Promise, 'The value returned is a promise'),
+               assert.isFulfilled(promise, 'The promise is fulfilled'),
+               promise.then(() => {
+                  let links = Array.from(document.querySelectorAll('footer a.target'));
+
+                  links.forEach((link, index) => {
+                     assert.isTrue(
+                        stub.getCall(index).calledWithExactly(link.textContent),
+                        'The prompted text is correct'
+                     );
+                  });
+               })
+            ]);
+         });
+      });
+   });
+
    describe('readMain()', () => {
       it('should read the content of the main element', () => {
          let stub = sinon

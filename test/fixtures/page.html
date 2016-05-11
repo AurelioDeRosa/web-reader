@@ -22,21 +22,26 @@
          {
             outline: 1px solid red;
          }
+
+         .hidden
+         {
+            display: none;
+         }
       </style>
    </head>
    <body>
       <header>
          <h1>WebReader demo page</h1>
          <p>
-            This is a demo page for <a href="https://web-reader.digital-detox.co.uk/">WebReader</a>.
+            This is a demo page for <a href="https://web-reader.digital-detox.co.uk/" class="target">WebReader</a>.
          </p>
       </header>
 
       <nav>
          <ul>
-            <li><a href="/">Homepage</a></li>
-            <li><a href="http://www.digital-detox.co.uk">Digital Detox</a></li>
-            <li><a href="http://www.digital-detox.co.uk">About us</a></li>
+            <li><a href="/" aria-hidden="false" class="target">Homepage</a></li>
+            <li><a href="http://www.digital-detox.co.uk" class="target">Digital Detox</a></li>
+            <li><a href="http://www.digital-detox.co.uk" aria-hidden="true">About us</a></li>
          </ul>
       </nav>
 
@@ -103,7 +108,7 @@
       <main>
          <h1>Test</h1>
          <p>
-            This is a paragraph <a href="#">with a link</a>.
+            This is a paragraph <a href="#" class="hidden">with a link</a>.
          </p>
 
          <h2>Hello</h2>
@@ -113,7 +118,8 @@
 
          <h2>Subheading</h2>
          <p>
-            This is yet another <em>paragraph</em> with <b>many</b> elements and <a href="#">another link</a>.
+            This is yet another <em>paragraph</em> with <b>many</b> elements and
+            <a href="#" class="target">another link</a>.
          </p>
       </main>
 
@@ -121,7 +127,7 @@
          <h3>Additional info</h3>
          <p>
             This is a paragraph contained into the <code>footer</code> element which also contains
-            <a href="#">a link</a>.
+            <a href="#" aria-hidden="true">a link</a>.
          </p>
       </footer>
    </body>
