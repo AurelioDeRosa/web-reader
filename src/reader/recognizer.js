@@ -2,6 +2,13 @@ import EventEmitter from '../helpers/event-emitter';
 import WebReaderError from '../webreader-error';
 
 /**
+ * Stores the private data of a Recognizer instance
+ *
+ * @type {WeakMap}
+ */
+let dataMap = new WeakMap();
+
+/**
  * @typedef SpeechRecognitionHash
  * @type {Object}
  * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects
@@ -81,13 +88,17 @@ export
        *
        * @type {SpeechRecognition}
        */
-      this.recognizer = new Recognizer();
+      let recognizer = new Recognizer();
 
       for(let key in options) {
-         if (options.hasOwnProperty(key) && this.recognizer[key] !== undefined) {
-            this.recognizer[key] = options[key];
+         if (options.hasOwnProperty(key) && recognizer[key] !== undefined) {
+            recognizer[key] = options[key];
          }
       }
+
+      dataMap.set(this, {
+         recognizer
+      });
    }
 
    /**
@@ -106,7 +117,7 @@ export
     */
    recognize() {
       return new Promise((resolve, reject) => {
-         let recognizer = this.recognizer;
+         let recognizer = dataMap.get(this).recognizer;
          let eventsHash = {
             audiostart: () => {
                EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionstart`, document);
@@ -158,10 +169,10 @@ export
             }
          };
 
-         bindEvents(this.recognizer, eventsHash);
+         bindEvents(recognizer, eventsHash);
 
          console.debug('Recognition started');
-         this.recognizer.start();
+         recognizer.start();
       });
    }
 
@@ -169,6 +180,9 @@ export
     * Stops listening and recognizing the speech of the user
     */
    abort() {
-      this.recognizer.abort();
+      dataMap
+         .get(this)
+         .recognizer
+         .abort();
    }
 }

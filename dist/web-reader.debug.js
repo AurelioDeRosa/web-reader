@@ -1784,6 +1784,13 @@ module.exports = DamerauLevenshtein;
    }();
 
    /**
+    * Stores the private data of a Recognizer instance
+    *
+    * @type {WeakMap}
+    */
+   var dataMap = new WeakMap();
+
+   /**
     * @typedef SpeechRecognitionHash
     * @type {Object}
     * @property {Object[]} [grammars=[]] The collection of <code>SpeechGrammar</code> objects
@@ -1866,13 +1873,17 @@ module.exports = DamerauLevenshtein;
           *
           * @type {SpeechRecognition}
           */
-         this.recognizer = new _Recognizer();
+         var recognizer = new _Recognizer();
 
          for (var key in options) {
-            if (options.hasOwnProperty(key) && this.recognizer[key] !== undefined) {
-               this.recognizer[key] = options[key];
+            if (options.hasOwnProperty(key) && recognizer[key] !== undefined) {
+               recognizer[key] = options[key];
             }
          }
+
+         dataMap.set(this, {
+            recognizer: recognizer
+         });
       }
 
       /**
@@ -1888,7 +1899,7 @@ module.exports = DamerauLevenshtein;
             var _this = this;
 
             return new Promise(function (resolve, reject) {
-               var recognizer = _this.recognizer;
+               var recognizer = dataMap.get(_this).recognizer;
                var eventsHash = {
                   audiostart: function audiostart() {
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionstart', document);
@@ -1940,16 +1951,16 @@ module.exports = DamerauLevenshtein;
                   }
                };
 
-               bindEvents(_this.recognizer, eventsHash);
+               bindEvents(recognizer, eventsHash);
 
                console.debug('Recognition started');
-               _this.recognizer.start();
+               recognizer.start();
             });
          }
       }, {
          key: 'abort',
          value: function abort() {
-            this.recognizer.abort();
+            dataMap.get(this).recognizer.abort();
          }
       }], [{
          key: 'isSupported',
