@@ -97,7 +97,8 @@ export
       }
 
       dataMap.set(this, {
-         recognizer
+         recognizer: recognizer,
+         isRecognizing: false
       });
    }
 
@@ -111,15 +112,27 @@ export
    }
 
    /**
+    * Determines if the recognizer is recognizing a speech
+    *
+    * @return {boolean}
+    */
+   isRecognizing() {
+      return dataMap
+         .get(this)
+         .isRecognizing;
+   }
+
+   /**
     * Starts the recognition of the speech
     *
     * @returns {Promise}
     */
    recognize() {
       return new Promise((resolve, reject) => {
-         let recognizer = dataMap.get(this).recognizer;
+         let data = dataMap.get(this);
          let eventsHash = {
             audiostart: () => {
+               data.isRecognizing = true;
                EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionstart`, document);
             },
             result: event => {
@@ -136,6 +149,7 @@ export
                         }
                      });
 
+                     data.isRecognizing = false;
                      resolve(bestGuess.transcript);
                   }
                }
@@ -143,6 +157,7 @@ export
             error: event => {
                console.debug('Recognition error:', event.error);
 
+               data.isRecognizing = false;
                EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionerror`, document, {
                   error: event.error
                });
@@ -152,6 +167,7 @@ export
             noMatch: () => {
                console.debug('Recognition ended because of nomatch');
 
+               data.isRecognizing = false;
                EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionnomatch`, document);
 
                reject(new WebReaderError('Sorry, I could not find a match'));
@@ -159,9 +175,10 @@ export
             end: () => {
                console.debug('Recognition ended');
 
-               EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionend`, document);
+               data.isRecognizing = false;
+               unbindEvents(data.recognizer, eventsHash);
 
-               unbindEvents(recognizer, eventsHash);
+               EventEmitter.fireEvent(`${EventEmitter.namespace}.recognitionend`, document);
 
                // If the Promise isn't resolved or rejected at this point
                // the demo is running on Chrome and Windows 8.1 (issue #428873).
@@ -169,10 +186,10 @@ export
             }
          };
 
-         bindEvents(recognizer, eventsHash);
+         bindEvents(data.recognizer, eventsHash);
 
          console.debug('Recognition started');
-         recognizer.start();
+         data.recognizer.start();
       });
    }
 

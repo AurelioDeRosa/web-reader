@@ -1882,7 +1882,8 @@ module.exports = DamerauLevenshtein;
          }
 
          dataMap.set(this, {
-            recognizer: recognizer
+            recognizer: recognizer,
+            isRecognizing: false
          });
       }
 
@@ -1894,14 +1895,20 @@ module.exports = DamerauLevenshtein;
 
 
       _createClass(Recognizer, [{
+         key: 'isRecognizing',
+         value: function isRecognizing() {
+            return dataMap.get(this).isRecognizing;
+         }
+      }, {
          key: 'recognize',
          value: function recognize() {
             var _this = this;
 
             return new Promise(function (resolve, reject) {
-               var recognizer = dataMap.get(_this).recognizer;
+               var data = dataMap.get(_this);
                var eventsHash = {
                   audiostart: function audiostart() {
+                     data.isRecognizing = true;
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionstart', document);
                   },
                   result: function result(event) {
@@ -1918,6 +1925,7 @@ module.exports = DamerauLevenshtein;
                               }
                            });
 
+                           data.isRecognizing = false;
                            resolve(bestGuess.transcript);
                         }
                      }
@@ -1925,6 +1933,7 @@ module.exports = DamerauLevenshtein;
                   error: function error(event) {
                      console.debug('Recognition error:', event.error);
 
+                     data.isRecognizing = false;
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionerror', document, {
                         error: event.error
                      });
@@ -1934,6 +1943,7 @@ module.exports = DamerauLevenshtein;
                   noMatch: function noMatch() {
                      console.debug('Recognition ended because of nomatch');
 
+                     data.isRecognizing = false;
                      _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionnomatch', document);
 
                      reject(new _webreaderError2.default('Sorry, I could not find a match'));
@@ -1941,9 +1951,10 @@ module.exports = DamerauLevenshtein;
                   end: function end() {
                      console.debug('Recognition ended');
 
-                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionend', document);
+                     data.isRecognizing = false;
+                     unbindEvents(data.recognizer, eventsHash);
 
-                     unbindEvents(recognizer, eventsHash);
+                     _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.recognitionend', document);
 
                      // If the Promise isn't resolved or rejected at this point
                      // the demo is running on Chrome and Windows 8.1 (issue #428873).
@@ -1951,10 +1962,10 @@ module.exports = DamerauLevenshtein;
                   }
                };
 
-               bindEvents(recognizer, eventsHash);
+               bindEvents(data.recognizer, eventsHash);
 
                console.debug('Recognition started');
-               recognizer.start();
+               data.recognizer.start();
             });
          }
       }, {
