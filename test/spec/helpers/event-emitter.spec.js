@@ -65,7 +65,7 @@ describe('EventEmitter', () => {
       });
 
       it('should emit an event with custom options', done => {
-         let eventName = EventEmitter.namespaceEvent('keydown');
+         let eventName = 'keydown';
          let config = {
             which: 32,
             key: 32
@@ -85,7 +85,7 @@ describe('EventEmitter', () => {
       });
 
       it('should throw an error when emitting an event with custom options, including read-only ones', () => {
-         let eventName = EventEmitter.namespaceEvent('keydown');
+         let eventName = 'keydown';
          let config = {
             target: document,
             which: 32,
