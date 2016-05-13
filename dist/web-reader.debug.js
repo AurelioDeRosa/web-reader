@@ -284,6 +284,20 @@ module.exports = DamerauLevenshtein;
       };
    }
 
+   var _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+         var source = arguments[i];
+
+         for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+               target[key] = source[key];
+            }
+         }
+      }
+
+      return target;
+   };
+
    function _classCallCheck(instance, Constructor) {
       if (!(instance instanceof Constructor)) {
          throw new TypeError("Cannot call a class as a function");
@@ -501,7 +515,7 @@ module.exports = DamerauLevenshtein;
                var closerMatch = this.StringComparer.findCloserMatch([commands[command].text].concat(commands[command].variations), recognizedText);
 
                if (closerMatch.distance < minDistance) {
-                  foundCommand = Object.assign({
+                  foundCommand = _extends({
                      command: command
                   }, extractData(this.StringComparer, command, recognizedText));
 
@@ -637,6 +651,21 @@ module.exports = DamerauLevenshtein;
    Object.defineProperty(exports, "__esModule", {
       value: true
    });
+
+   var _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+         var source = arguments[i];
+
+         for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+               target[key] = source[key];
+            }
+         }
+      }
+
+      return target;
+   };
+
    /**
     * Returns the level of a header (1 for an <code>h1</code>, 2 for an <code>h2</code>,
     * and so on). If the element is not an header or it is not defined, zero is returned
@@ -717,7 +746,7 @@ module.exports = DamerauLevenshtein;
 
       var selector = void 0;
 
-      filters = Object.assign({
+      filters = _extends({
          level: -1,
          text: ''
       }, filters);
@@ -759,6 +788,21 @@ module.exports = DamerauLevenshtein;
    Object.defineProperty(exports, "__esModule", {
       value: true
    });
+
+   var _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+         var source = arguments[i];
+
+         for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+               target[key] = source[key];
+            }
+         }
+      }
+
+      return target;
+   };
+
    /**
     * Determines if a link would be read or not by a classic screen reader
     *
@@ -781,7 +825,7 @@ module.exports = DamerauLevenshtein;
    function getLinks() {
       var filters = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-      filters = Object.assign({
+      filters = _extends({
          ancestor: document
       }, filters);
 
@@ -1239,6 +1283,20 @@ module.exports = DamerauLevenshtein;
       };
    }
 
+   var _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+         var source = arguments[i];
+
+         for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+               target[key] = source[key];
+            }
+         }
+      }
+
+      return target;
+   };
+
    function _classCallCheck(instance, Constructor) {
       if (!(instance instanceof Constructor)) {
          throw new TypeError("Cannot call a class as a function");
@@ -1368,7 +1426,7 @@ module.exports = DamerauLevenshtein;
          /**
           * @type {Object}
           */
-         this.settings = Object.assign({}, defaults, options);
+         this.settings = _extends({}, defaults, options);
          /**
           *
           * @type {Recognizer}
@@ -1380,7 +1438,7 @@ module.exports = DamerauLevenshtein;
           */
          this.speaker = new _speaker2.default(this.settings.speaker);
 
-         statusMap.set(this, Object.assign({}, defaultState));
+         statusMap.set(this, _extends({}, defaultState));
          eventListenersMap.set(this, new Map());
 
          var language = this.settings.recognizer.lang;
@@ -1472,7 +1530,7 @@ module.exports = DamerauLevenshtein;
                if (error.error !== 'aborted' && error.error !== 'interrupted') {
                   console.debug('An error occurred', error);
 
-                  statusMap.set(_this2, Object.assign({}, defaultState));
+                  statusMap.set(_this2, _extends({}, defaultState));
 
                   return _this2.speaker.speak('Sorry, I could not recognize the command');
                }
@@ -2017,6 +2075,20 @@ module.exports = DamerauLevenshtein;
       };
    }
 
+   var _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+         var source = arguments[i];
+
+         for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+               target[key] = source[key];
+            }
+         }
+      }
+
+      return target;
+   };
+
    function _classCallCheck(instance, Constructor) {
       if (!(instance instanceof Constructor)) {
          throw new TypeError("Cannot call a class as a function");
@@ -2198,7 +2270,7 @@ module.exports = DamerauLevenshtein;
                return new Promise(function (resolve, reject) {
                   var speaker = dataMap.get(_this2).speaker;
                   var utterance = new window.SpeechSynthesisUtterance(text);
-                  var eventData = Object.assign({
+                  var eventData = _extends({
                      text: text
                   }, _this2.settings);
 
