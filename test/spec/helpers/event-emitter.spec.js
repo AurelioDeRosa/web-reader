@@ -92,7 +92,7 @@ describe('EventEmitter', () => {
             key: 32
          };
 
-         assert.throw(() => EventEmitter.fireEvent(eventName, target, config), TypeError);
+         assert.throws(() => EventEmitter.fireEvent(eventName, target, config), TypeError);
       });
    });
 });
