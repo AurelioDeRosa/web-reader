@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Commands from './commands';
 import Dom from './dom/dom';
 import Recognizer from './reader/recognizer';
