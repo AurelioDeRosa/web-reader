@@ -8145,8 +8145,13 @@ process.umask = function() { return 0; };
 
             _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionstart', document);
 
+            // This variable is needed because when Babel transpiles the code,
+            // it prevents stubs of the method created by Sinon to be used in place
+            // of the original method
+            var recognize = this.recognizer.recognize.bind(this.recognizer);
+
             return this.speaker.speak('Ready').then(function () {
-               return _this2.recognizer.recognize();
+               return recognize();
             }).then(function (recognizedText) {
                var commands = new _commands2.default(_damerauLevenshteinComparer2.default);
                var translation = translations.get(_this2.settings.recognizer.lang);

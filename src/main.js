@@ -210,9 +210,14 @@ export
 
       EventEmitter.fireEvent(`${EventEmitter.namespace}.interactionstart`, document);
 
+      // This variable is needed because when Babel transpiles the code,
+      // it prevents stubs of the method created by Sinon to be used in place
+      // of the original method
+      let recognize = this.recognizer.recognize.bind(this.recognizer);
+
       return this.speaker
          .speak('Ready')
-         .then(() => this.recognizer.recognize())
+         .then(() => recognize())
          .then(recognizedText => {
             let commands = new Commands(DamerauLevenshteinComparer);
             let translation = translations.get(this.settings.recognizer.lang);
