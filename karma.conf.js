@@ -67,6 +67,7 @@ module.exports = function(config) {
    };
 
    if (process.env.TRAVIS) {
+      settings.exclude = ['test/spec/reader/*.js'];
       settings.browsers = ['Chrome_travis_ci'];
    }
 
