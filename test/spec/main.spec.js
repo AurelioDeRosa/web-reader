@@ -177,8 +177,8 @@ describe('WebReader', () => {
          assert.isTrue(recognizerSpy.calledOnce, 'The recognizer is stopped');
          assert.isFalse(webReader.isInteracting(), 'No interaction is in progress');
 
-         speakerSpy.restore();
-         recognizerSpy.restore();
+         webReader.speaker.cancel.restore();
+         webReader.recognizer.abort.restore();
       });
    });
 
@@ -463,8 +463,8 @@ describe('WebReader', () => {
                }));
             recognizerStub = sinon
                .stub(webReader.recognizer, 'recognize')
-               .returns(new Promise(resolve => {
-                  setTimeout(() => resolve('search main content'), METHODS_DELAY);
+               .returns(Promise.reject({
+                  error: 'interrupted'
                }));
          });
 
@@ -494,15 +494,14 @@ describe('WebReader', () => {
 
             let promise = spy.getCall(0).returnValue;
 
-            spy.restore();
+            webReader.receiveCommand.restore();
 
             return promise;
          });
 
          it('should stop the interaction if one was in progress', () => {
             let spy = sinon.spy(webReader, 'stopCommand');
-
-            webReader.receiveCommand();
+            let promise = webReader.receiveCommand();
 
             assert.isTrue(webReader.isInteracting(), 'An interaction is in progress');
 
@@ -511,7 +510,9 @@ describe('WebReader', () => {
             assert.isTrue(spy.calledOnce, 'The stopCommand method is called');
             assert.isFalse(webReader.isInteracting(), 'No interaction is in progress');
 
-            spy.restore();
+            webReader.stopCommand.restore();
+
+            return promise;
          });
       });
    });

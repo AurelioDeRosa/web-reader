@@ -100,7 +100,7 @@ describe('Speaker', () => {
                   assert.isTrue(spy.calledOnce, 'The native speak method is called');
                   assert.propertyVal(spy.getCall(0).args[0], 'text', text, 'The prompted text is correct');
 
-                  spy.restore();
+                  window.speechSynthesis.speak.restore();
                })
             ]);
          });
@@ -151,7 +151,7 @@ describe('Speaker', () => {
                               );
                            });
 
-                        spy.restore();
+                        window.speechSynthesis.speak.restore();
                      })
                   ]);
                });
@@ -167,7 +167,7 @@ describe('Speaker', () => {
 
          assert.isTrue(spy.calledOnce, 'The native cancel method is called');
 
-         spy.restore();
+         window.speechSynthesis.cancel.restore();
       });
    });
 
@@ -196,7 +196,7 @@ describe('Speaker', () => {
                'The data property of the event possesses the settings provided in the constructor and the spoken text'
             );
 
-            speakSpy.restore();
+            speaker.speak.restore();
          }
 
          text = 'hello';
@@ -241,7 +241,7 @@ describe('Speaker', () => {
                'The data property of the event possesses the settings provided in the constructor and the spoken text'
             );
 
-            speakSpy.restore();
+            speaker.speak.restore();
          }
 
          text = 'hello';
