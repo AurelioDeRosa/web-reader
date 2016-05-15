@@ -24,8 +24,16 @@ module.exports = function(config) {
          }
       },
       coverageReporter: {
-         type : 'html',
-         dir : 'coverage/'
+         dir : 'coverage',
+         reporters: [
+            {
+               type : 'html'
+            },
+            {
+               type: 'lcovonly',
+               subdir: 'lcov'
+            }
+         ]
       },
       customLaunchers: {
          Chrome_travis_ci: {
@@ -52,7 +60,8 @@ module.exports = function(config) {
       },
       reporters: [
          'mocha',
-         'coverage'
+         'coverage',
+         'coveralls'
       ],
       reportSlowerThan: 800,
       singleRun: true

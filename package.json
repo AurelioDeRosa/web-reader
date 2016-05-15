@@ -58,6 +58,7 @@
     "karma-chai-as-promised": "^0.1.2",
     "karma-chrome-launcher": "^0.2.2",
     "karma-coverage": "git://github.com/douglasduteil/karma-coverage#next",
+    "karma-coveralls": "^1.1.2",
     "karma-fixture": "^0.2.5",
     "karma-html2js-preprocessor": "^0.1.0",
     "karma-mocha": "^0.2.2",
