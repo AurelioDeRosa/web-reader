@@ -30,6 +30,9 @@ module.exports = function(config) {
                type : 'html'
             },
             {
+               type: 'text-summary'
+            },
+            {
                type: 'lcovonly',
                subdir: 'lcov'
             }
