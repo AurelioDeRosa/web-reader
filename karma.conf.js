@@ -4,7 +4,7 @@ var browserifyIstanbul = require('browserify-istanbul');
 var isparta = require('isparta');
 
 module.exports = function(config) {
-   config.set({
+   var settings = {
       browserify: {
          debug: true,
          transform: [
@@ -26,6 +26,12 @@ module.exports = function(config) {
       coverageReporter: {
          type : 'html',
          dir : 'coverage/'
+      },
+      customLaunchers: {
+         Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
+         }
       },
       files: [
          'test/spec/**/*.js',
@@ -50,5 +56,12 @@ module.exports = function(config) {
       ],
       reportSlowerThan: 800,
       singleRun: true
-   });
+   };
+
+   if (process.env.TRAVIS) {
+      settings.exclude = ['test/spec/reader/*.js'];
+      settings.browsers = ['Chrome_travis_ci'];
+   }
+
+   config.set(settings);
 };
