@@ -24,8 +24,22 @@ module.exports = function(config) {
          }
       },
       coverageReporter: {
-         type : 'html',
-         dir : 'coverage/'
+         dir : 'coverage',
+         reporters: [
+            {
+               type : 'html'
+            },
+            {
+               type: 'lcovonly',
+               subdir: 'lcov'
+            }
+         ]
+      },
+      customLaunchers: {
+         Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
+         }
       },
       customLaunchers: {
          Chrome_travis_ci: {
