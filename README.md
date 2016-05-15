@@ -1,5 +1,8 @@
 # Web Reader: a screen reader for everyone, everywhere
 
+[![Build Status](https://travis-ci.org/digital-detox/web-reader.svg?branch=master)](https://travis-ci.org/digital-detox/web-reader)
+[![Coverage Status](https://coveralls.io/repos/digital-detox/web-reader/badge.svg?branch=master&service=github)](https://coveralls.io/github/digital-detox/web-reader?branch=master)
+
 [WebReader](https://web-reader.digital-detox.co.uk/) is a free and open source JavaScript library developed for modern
 web browsers. Built using emerging functionality, WebReader can be integrated into any web page. Underneath, 
 WebReader relies on the [Web Speech API](https://dvcs.w3.org/hg/speech-api/raw-file/tip/webspeechapi.html)
