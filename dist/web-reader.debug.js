@@ -7550,7 +7550,15 @@ process.umask = function() { return 0; };
             customEvent.initEvent(eventName, true, true);
 
             Object.getOwnPropertyNames(properties).forEach(function (property) {
-               return customEvent[property] = properties[property];
+               customEvent[property] = properties[property];
+
+               // Internet Explorer and some older versions of other browsers don't throw
+               // a TypeError when trying to assign a value to a read-only property.
+               // To keep the behavior consistent, I check that the value is actually
+               // changed. If the value is not changed, the expected TypeError is thrown.
+               if (customEvent[property] !== properties[property]) {
+                  throw new TypeError('Cannot set a property which has only a getter');
+               }
             });
 
             element.dispatchEvent(customEvent);
