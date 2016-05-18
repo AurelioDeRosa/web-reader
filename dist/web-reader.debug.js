@@ -8275,6 +8275,8 @@ process.umask = function() { return 0; };
          value: function searchMain() {
             var main = _dom2.default.getMain();
 
+            statusMap.set(this, Object.assign({}, defaultState));
+
             if (!main) {
                throw new _webreaderError2.default('The main content of this page has not been found');
             }

@@ -429,6 +429,8 @@ export
    searchMain() {
       let main = Dom.getMain();
 
+      statusMap.set(this, Object.assign({}, defaultState));
+
       if (!main) {
          throw new WebReaderError('The main content of this page has not been found');
       }
