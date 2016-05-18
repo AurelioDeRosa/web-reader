@@ -375,6 +375,54 @@ describe('WebReader', () => {
       });
    });
 
+   describe('goToLink()', () => {
+      context('without a previously spoken element', () => {
+         let webReader;
+
+         before(() => {
+            webReader = new WebReader();
+         });
+
+         it('should thrown an expection', () => {
+            assert.throws(() => {
+               webReader.goToLink()
+            }, WebReaderError);
+         });
+      });
+
+      context('with the last spoken element being a link', () => {
+         it('should navigate to the page specified by the href attribute of the link');
+      });
+
+      context('with the last spoken element different from a link', () => {
+         let stub;
+
+         before(() => {
+            stub = sinon
+               .stub(webReader.speaker, 'speak')
+               .returns(Promise.resolve());
+         });
+
+         beforeEach(() => {
+            return webReader.readMain();
+         });
+
+         afterEach(() => {
+            stub.reset();
+         });
+
+         after(() => {
+            stub.restore();
+         });
+
+         it('should thrown an exception', () => {
+            assert.throws(() => {
+               webReader.goToLink()
+            }, WebReaderError);
+         });
+      });
+   });
+
    describe('readLinks()', () => {
       let stub;
 
