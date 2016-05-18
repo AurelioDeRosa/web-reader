@@ -244,6 +244,137 @@ describe('WebReader', () => {
       });
    });
 
+   describe('readCurrentElement()', () => {
+      context('without a previous interaction', () => {
+         let webReader;
+
+         before(() => {
+            webReader = new WebReader();
+         });
+
+         it('should return a rejected promise', () => {
+            return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
+         });
+      });
+
+      context('with a previously recognized command of a set of elements', () => {
+         let stub;
+
+         before(() => {
+            stub = sinon
+               .stub(webReader.speaker, 'speak')
+               .returns(Promise.resolve());
+         });
+
+         beforeEach(() => {
+            return webReader.readLinks();
+         });
+
+         afterEach(() => {
+            stub.reset();
+         });
+
+         after(() => {
+            stub.restore();
+         });
+
+         it('should read again the last spoken element', () => {
+            let promise = webReader.readCurrentElement();
+
+            return Promise.all([
+               assert.instanceOf(promise, Promise, 'The value returned is a promise'),
+               assert.isFulfilled(promise, 'The promise is fulfilled'),
+               promise.then(() => {
+                  assert.deepEqual(
+                     stub.getCall(stub.callCount - 2).args,
+                     stub.lastCall.args,
+                     'The prompted text is correct'
+                  );
+               })
+            ]);
+         });
+      });
+
+      context('with a previously recognized command of a single of element', () => {
+         let stub;
+
+         before(() => {
+            stub = sinon
+               .stub(webReader.speaker, 'speak')
+               .returns(Promise.resolve());
+         });
+
+         beforeEach(() => {
+            return webReader.readMain();
+         });
+
+         afterEach(() => {
+            stub.reset();
+         });
+
+         after(() => {
+            stub.restore();
+         });
+
+         it('should read again the element', () => {
+            let promise = webReader.readCurrentElement();
+
+            return Promise.all([
+               assert.instanceOf(promise, Promise, 'The value returned is a promise'),
+               assert.isFulfilled(promise, 'The promise is fulfilled'),
+               promise.then(() => {
+                  let main = document.querySelector('main');
+
+                  assert.isTrue(stub.alwaysCalledWithExactly(main.textContent), 'The prompted text is correct');
+               })
+            ]);
+         });
+      });
+
+      context('with a previously recognized command that does not involve a spoken prompt', () => {
+         beforeEach(() => {
+            webReader.searchMain();
+         });
+
+         it('should return a rejected promise', () => {
+            return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
+         });
+      });
+
+      context('with a previously unrecognized command', () => {
+         let speakerStub, recognizerStub;
+
+         before(() => {
+            speakerStub = sinon
+               .stub(webReader.speaker, 'speak')
+               .returns(Promise.resolve());
+            recognizerStub = sinon
+               .stub(webReader.recognizer, 'recognize')
+               .returns(Promise.reject({
+                  error: 'interrupted'
+               }));
+         });
+
+         beforeEach(() => {
+            return webReader.receiveCommand();
+         });
+
+         afterEach(() => {
+            speakerStub.reset();
+            recognizerStub.reset();
+         });
+
+         after(() => {
+            speakerStub.restore();
+            recognizerStub.restore();
+         });
+
+         it('should return a rejected promise', () => {
+            return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
+         });
+      });
+   });
+
    describe('readLinks()', () => {
       let stub;
 
