@@ -12,6 +12,7 @@ var del = require('del');
 var karma = require('karma');
 var esdoc = require('gulp-esdoc');
 var lazypipe = require('lazypipe');
+var runSequence = require('run-sequence');
 
 var jsLintTasks = lazypipe()
    .pipe(jscs, {
@@ -115,4 +116,11 @@ gulp.task('build:debug', function() {
 gulp.task('lint', ['lint:src', 'lint:test']);
 gulp.task('build', ['build:min', 'build:debug']);
 
-gulp.task('default', ['clean', 'lint', 'test', 'documentation', 'build']);
+gulp.task('default', function(callback) {
+   runSequence(
+      'clean',
+      'lint',
+      ['test', 'documentation', 'build'],
+      callback
+   );
+});
