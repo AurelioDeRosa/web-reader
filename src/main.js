@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'whatwg-fetch';
 import Commands from './commands';
 import Dom from './dom/dom';
 import Recognizer from './reader/recognizer';

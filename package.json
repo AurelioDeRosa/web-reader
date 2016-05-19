@@ -70,7 +70,8 @@
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "whatwg-fetch": "^1.0.0"
   },
   "dependencies": {
     "damerau-levenshtein": "git://github.com/cbaatz/damerau-levenshtein.git"
