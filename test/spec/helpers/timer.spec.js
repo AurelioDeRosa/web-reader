@@ -4,9 +4,9 @@ import Timer from '../../../src/helpers/timer';
  * @test {Timer}
  */
 
-describe('Timer', () => {
-   describe('wait()', () => {
-      it('should wait for the amount of time specified', () => {
+describe('Timer', function() {
+   describe('wait()', function() {
+      it('should wait for the amount of time specified', function() {
          let start = Date.now();
          let timer = Timer.wait(100);
 

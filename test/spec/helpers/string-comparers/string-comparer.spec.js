@@ -4,9 +4,9 @@ import StringComparer from '../../../../src/helpers/string-comparers/string-comp
  * @test {StringComparer}
  */
 
-describe('StringComparer', () => {
-   describe('findCloserMatch()', () => {
-      it('should throw an Error', () => {
+describe('StringComparer', function() {
+   describe('findCloserMatch()', function() {
+      it('should throw an Error', function() {
          assert.throws(() => StringComparer.findCloserMatch('hi', 'hello'), Error);
       });
    });

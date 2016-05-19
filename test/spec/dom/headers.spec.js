@@ -1,20 +1,20 @@
 import * as Headers from '../../../src/dom/headers';
 
-describe('getHeaders()', () => {
-   before(() => {
+describe('getHeaders()', function() {
+   before(function() {
       fixture.setBase('test/fixtures/dom/headers');
    });
 
-   beforeEach(() => {
+   beforeEach(function() {
       fixture.load('page.html');
    });
 
-   afterEach(() => {
+   afterEach(function() {
       fixture.cleanup();
    });
 
-   context('with no parameters', () => {
-      it('should return all the headers', () => {
+   context('with no parameters', function() {
+      it('should return all the headers', function() {
          assert.sameDeepMembers(
             Headers.getHeaders(),
             Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6')),
@@ -23,8 +23,8 @@ describe('getHeaders()', () => {
       });
    });
 
-   context('with parameters', () => {
-      it('should return the headers of the required level', () => {
+   context('with parameters', function() {
+      it('should return the headers of the required level', function() {
          for(let level = 1; level <= 6; level++) {
             assert.sameDeepMembers(
                Headers.getHeaders({
@@ -36,7 +36,7 @@ describe('getHeaders()', () => {
          }
       });
 
-      it('should return the headers containing the required text', () => {
+      it('should return the headers containing the required text', function() {
          assert.sameDeepMembers(
             Headers.getHeaders({
                text: 'title'
@@ -48,20 +48,20 @@ describe('getHeaders()', () => {
    });
 });
 
-describe('createHeadingsStructure()', () => {
-   before(() => {
+describe('createHeadingsStructure()', function() {
+   before(function() {
       fixture.setBase('test/fixtures/dom/headers');
    });
 
-   beforeEach(() => {
+   beforeEach(function() {
       fixture.load('page.html');
    });
 
-   afterEach(() => {
+   afterEach(function() {
       fixture.cleanup();
    });
 
-   it('should create a tree representing the headings structure of the page', () => {
+   it('should create a tree representing the headings structure of the page', function() {
       let expectedTree = [
          {
             element: document.querySelector('.l1'),

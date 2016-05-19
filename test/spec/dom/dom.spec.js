@@ -1,8 +1,8 @@
 import Dom from '../../../src/dom/dom';
 
-describe('highlightElement()', () => {
-   context('with an invalid argument', () => {
-      it('should not modify the element', () => {
+describe('highlightElement()', function() {
+   context('with an invalid argument', function() {
+      it('should not modify the element', function() {
          let textNode = document.createTextNode('hello');
          let anotherNode = textNode.cloneNode(true);
 
@@ -11,8 +11,8 @@ describe('highlightElement()', () => {
       });
    });
 
-   context('with a valid argument', () => {
-      it('should highlight the element', () => {
+   context('with a valid argument', function() {
+      it('should highlight the element', function() {
          let element = document.createElement('p');
          let anotherElement = element.cloneNode(true);
 
@@ -29,9 +29,9 @@ describe('highlightElement()', () => {
    });
 });
 
-describe('unhighlightElement()', () => {
-   context('with an invalid argument', () => {
-      it('should not modify the element', () => {
+describe('unhighlightElement()', function() {
+   context('with an invalid argument', function() {
+      it('should not modify the element', function() {
          let textNode = document.createTextNode('hello');
          let anotherNode = textNode.cloneNode(true);
 
@@ -40,8 +40,8 @@ describe('unhighlightElement()', () => {
       });
    });
 
-   context('with a valid argument', () => {
-      it('should unhighlight the element', () => {
+   context('with a valid argument', function() {
+      it('should unhighlight the element', function() {
          let element = document.createElement('p');
          let anotherElement = element.cloneNode(true);
 

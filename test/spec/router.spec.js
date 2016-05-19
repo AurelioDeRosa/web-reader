@@ -2,12 +2,12 @@ import Router from '../../src/router';
 import WebReader from '../../src/main';
 import WebReaderError from '../../src/webreader-error';
 
-describe('Router', () => {
-   describe('route()', () => {
+describe('Router', function() {
+   describe('route()', function() {
       /* jshint -W071 */
       const webReader = new WebReader();
 
-      it('should recognize the "read all headers" command (happy path)', () => {
+      it('should recognize the "read all headers" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readHeaders')
             .returns(Promise.resolve());
@@ -27,7 +27,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read all headers" command (sad path)', () => {
+      it('should recognize the "read all headers" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readHeaders')
             .returns(
@@ -49,7 +49,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read all links" command (happy path)', () => {
+      it('should recognize the "read all links" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readLinks')
             .returns(Promise.resolve());
@@ -69,7 +69,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read all links" command (sad path)', () => {
+      it('should recognize the "read all links" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readLinks')
             .returns(
@@ -91,7 +91,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read headers of level" command (happy path)', () => {
+      it('should recognize the "read headers of level" command (happy path)', function() {
          let level = 2;
          let stub = sinon
             .stub(webReader, 'readHeaders')
@@ -115,7 +115,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read headers of level" command (sad path)', () => {
+      it('should recognize the "read headers of level" command (sad path)', function() {
          let level = 2;
          let stub = sinon
             .stub(webReader, 'readHeaders')
@@ -141,7 +141,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read main" command (happy path)', () => {
+      it('should recognize the "read main" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readMain')
             .returns(Promise.resolve());
@@ -161,7 +161,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read main" command (sad path)', () => {
+      it('should recognize the "read main" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readMain')
             .returns(
@@ -183,7 +183,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "search main" command (happy path)', () => {
+      it('should recognize the "search main" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'searchMain')
             .returns(Promise.resolve());
@@ -203,7 +203,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "search main" command (sad path)', () => {
+      it('should recognize the "search main" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'searchMain')
             .throws(new WebReaderError());
@@ -223,7 +223,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read again" command (happy path)', () => {
+      it('should recognize the "read again" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readCurrentElement')
             .returns(Promise.resolve());
@@ -243,7 +243,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read again" command (sad path)', () => {
+      it('should recognize the "read again" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readCurrentElement')
             .returns(
@@ -265,7 +265,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read previous" command (happy path)', () => {
+      it('should recognize the "read previous" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readPreviousElement')
             .returns(Promise.resolve());
@@ -285,7 +285,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read previous" command (sad path)', () => {
+      it('should recognize the "read previous" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readPreviousElement')
             .returns(
@@ -307,7 +307,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read next" command (happy path)', () => {
+      it('should recognize the "read next" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readNextElement')
             .returns(Promise.resolve());
@@ -327,7 +327,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read next" command (sad path)', () => {
+      it('should recognize the "read next" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readNextElement')
             .returns(
@@ -349,7 +349,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read page title" command (happy path)', () => {
+      it('should recognize the "read page title" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readPageTitle')
             .returns(Promise.resolve());
@@ -369,7 +369,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read page title" command (sad path)', () => {
+      it('should recognize the "read page title" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readPageTitle')
             .returns(
@@ -391,7 +391,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read links in element" command (happy path)', () => {
+      it('should recognize the "read links in element" command (happy path)', function() {
          let ancestor = document.createElement('header');
          let stub = sinon
             .stub(webReader, 'readLinks')
@@ -415,7 +415,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read links in element" command (sad path)', () => {
+      it('should recognize the "read links in element" command (sad path)', function() {
          let ancestor = document.createElement('header');
          let stub = sinon
             .stub(webReader, 'readLinks')
@@ -441,7 +441,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to previous page" command (happy path)', () => {
+      it('should recognize the "go to previous page" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'goToPreviousPage')
             .returns(Promise.resolve());
@@ -461,7 +461,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to previous page" command (sad path)', () => {
+      it('should recognize the "go to previous page" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'goToPreviousPage')
             .returns(
@@ -483,7 +483,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to next page" command (happy path)', () => {
+      it('should recognize the "go to next page" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'goToNextPage')
             .returns(Promise.resolve());
@@ -503,7 +503,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to next page" command (sad path)', () => {
+      it('should recognize the "go to next page" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'goToNextPage')
             .returns(
@@ -525,7 +525,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read page summary" command (happy path)', () => {
+      it('should recognize the "read page summary" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'readPageSummary')
             .returns(Promise.resolve());
@@ -545,7 +545,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "read page summary" command (sad path)', () => {
+      it('should recognize the "read page summary" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'readPageSummary')
             .returns(
@@ -567,7 +567,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to homepage" command', () => {
+      it('should recognize the "go to homepage" command', function() {
          let stub = sinon
             .stub(webReader, 'goToHomepage')
             .returns();
@@ -587,7 +587,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to link" command (happy path)', () => {
+      it('should recognize the "go to link" command (happy path)', function() {
          let stub = sinon
             .stub(webReader, 'goToLink')
             .returns();
@@ -607,7 +607,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should recognize the "go to link" command (sad path)', () => {
+      it('should recognize the "go to link" command (sad path)', function() {
          let stub = sinon
             .stub(webReader, 'goToLink')
             .throws(new WebReaderError());
@@ -627,7 +627,7 @@ describe('Router', () => {
          ]);
       });
 
-      it('should not recognize an unknown command', () => {
+      it('should not recognize an unknown command', function() {
          let promise = Router.route(webReader, {
             command: 'UNKNOWN_COMMAND'
          });

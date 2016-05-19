@@ -3,21 +3,21 @@ import Speaker from '../../../src/reader/speaker';
 /**
  * @test {Speaker}
  */
-describe('Speaker', () => {
+describe('Speaker', function() {
    const settings = {
       volume: 0
    };
    const speaker = new Speaker(settings);
 
-   describe('constructor()', () => {
-      it('should crate an instance of Speaker', () => {
+   describe('constructor()', function() {
+      it('should crate an instance of Speaker', function() {
          let speaker = new Speaker();
 
          assert.instanceOf(speaker, Speaker, 'The returned object is an instance of Speaker');
          assert.isObject(speaker.settings, 'The settings property is exposed');
       });
 
-      it('should expose the provided settings', () => {
+      it('should expose the provided settings', function() {
          const settings = {
             text: 'this is a test',
             lang: 'en-GB',
@@ -32,18 +32,18 @@ describe('Speaker', () => {
       });
    });
 
-   describe('isSupported()', () => {
-      it('should detect if the speak feature is available', () => {
+   describe('isSupported()', function() {
+      it('should detect if the speak feature is available', function() {
          assert.strictEqual(Speaker.isSupported(), !!window.speechSynthesis, 'Feature detected correctly');
       });
    });
 
-   describe('isSpeaking()', () => {
-      beforeEach(() => {
+   describe('isSpeaking()', function() {
+      beforeEach(function() {
          speaker.cancel();
       });
 
-      it('should return true if a text is being prompted', () => {
+      it('should return true if a text is being prompted', function() {
          function synthesisStart() {
             document.removeEventListener('webreader.synthesisstart', synthesisStart);
 
@@ -62,13 +62,13 @@ describe('Speaker', () => {
          return speaker.speak('hello');
       });
 
-      it('should return false if a text is not being prompted', () => {
+      it('should return false if a text is not being prompted', function() {
          assert.isFalse(speaker.isSpeaking(), 'The speaker is not speaking');
       });
    });
 
-   describe('getVoices()', () => {
-      it('should return all the voices available', () => {
+   describe('getVoices()', function() {
+      it('should return all the voices available', function() {
          let promise = speaker.getVoices();
 
          return Promise.all([
@@ -86,9 +86,9 @@ describe('Speaker', () => {
       });
    });
 
-   describe('speak()', () => {
-      context('with the default settings', () => {
-         it('should prompt the text provided', () => {
+   describe('speak()', function() {
+      context('with the default settings', function() {
+         it('should prompt the text provided', function() {
             let text = 'hello';
             let spy = sinon.spy(window.speechSynthesis, 'speak');
             let promise = speaker.speak(text);
@@ -106,8 +106,8 @@ describe('Speaker', () => {
          });
       });
 
-      context('with custom settings', () => {
-         it('should prompt the text provided', () => {
+      context('with custom settings', function() {
+         it('should prompt the text provided', function() {
             return speaker
                .getVoices()
                .then(voices => {
@@ -159,8 +159,8 @@ describe('Speaker', () => {
       });
    });
 
-   describe('cancel()', () => {
-      it('should stop the speaker', () => {
+   describe('cancel()', function() {
+      it('should stop the speaker', function() {
          let spy = sinon.spy(window.speechSynthesis, 'cancel');
 
          speaker.cancel();
@@ -171,8 +171,8 @@ describe('Speaker', () => {
       });
    });
 
-   describe('events', () => {
-      it('should trigger a webreader.synthesisstart event when a text starts being prompted', () => {
+   describe('events', function() {
+      it('should trigger a webreader.synthesisstart event when a text starts being prompted', function() {
          let text, synthesisStartSpy, speakSpy;
 
          function synthesisStart(event) {
@@ -208,7 +208,7 @@ describe('Speaker', () => {
          return speaker.speak(text);
       });
 
-      it('should trigger a webreader.synthesisend event when a text ends being prompted', () => {
+      it('should trigger a webreader.synthesisend event when a text ends being prompted', function() {
          let text, synthesisStartSpy, synthesisEndSpy, speakSpy;
 
          function synthesisStart() {

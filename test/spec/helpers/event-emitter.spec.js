@@ -4,7 +4,7 @@ import EventEmitter from '../../../src/helpers/event-emitter';
  * @test {EventEmitter}
  */
 
-describe('EventEmitter', () => {
+describe('EventEmitter', function() {
    const namespace = 'webreader';
    let target;
 
@@ -22,21 +22,21 @@ describe('EventEmitter', () => {
       fixture.cleanup();
    });
 
-   describe('namespace', () => {
-      it('should return the namespace', () => {
+   describe('namespace', function() {
+      it('should return the namespace', function() {
          assert.strictEqual(EventEmitter.namespace, namespace);
       });
    });
 
-   describe('namespaceEvent', () => {
-      it('should namespace an event', () => {
+   describe('namespaceEvent', function() {
+      it('should namespace an event', function() {
          assert.strictEqual(EventEmitter.namespaceEvent('click'), `${namespace}.click`, 'DOM event');
          assert.strictEqual(EventEmitter.namespaceEvent('synthesisend'), `${namespace}.synthesisend`, 'Custom event');
       });
    });
 
-   describe('fireEvent', () => {
-      it('should emit a DOM event', done => {
+   describe('fireEvent', function() {
+      it('should emit a DOM event', function(done) {
          let eventName = EventEmitter.namespaceEvent('focus');
 
          target.addEventListener(eventName, event => {
@@ -50,7 +50,7 @@ describe('EventEmitter', () => {
          EventEmitter.fireEvent(eventName, target);
       });
 
-      it('should emit a custom event', done => {
+      it('should emit a custom event', function(done) {
          let eventName = EventEmitter.namespaceEvent('synthesisend');
 
          target.addEventListener(eventName, event => {
@@ -64,7 +64,7 @@ describe('EventEmitter', () => {
          EventEmitter.fireEvent(eventName, target);
       });
 
-      it('should emit an event with custom options', done => {
+      it('should emit an event with custom options', function(done) {
          let eventName = 'keydown';
          let config = {
             which: 32,
@@ -84,7 +84,7 @@ describe('EventEmitter', () => {
          EventEmitter.fireEvent(eventName, target, config);
       });
 
-      it('should throw an error when emitting an event with custom options, including read-only ones', () => {
+      it('should throw an error when emitting an event with custom options, including read-only ones', function() {
          let eventName = 'keydown';
          let config = {
             target: document,

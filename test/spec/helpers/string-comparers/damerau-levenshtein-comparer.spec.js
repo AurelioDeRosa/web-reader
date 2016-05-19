@@ -4,9 +4,9 @@ import DamerauLevenshteinComparer from '../../../../src/helpers/string-comparers
  * @test {DamerauLevenshteinComparer}
  */
 
-describe('DamerauLevenshteinComparer', () => {
-   describe('findCloserMatch()', () => {
-      it('should return an object', () => {
+describe('DamerauLevenshteinComparer', function() {
+   describe('findCloserMatch()', function() {
+      it('should return an object', function() {
          let match = DamerauLevenshteinComparer.findCloserMatch('hi', 'hello');
 
          assert.isObject(match, 'The returned value is an object');
@@ -14,7 +14,7 @@ describe('DamerauLevenshteinComparer', () => {
          assert.property(match, 'distance', 'The returned value possesses a "distance" property');
       });
 
-      it('should find the closer match when a string is provided', () => {
+      it('should find the closer match when a string is provided', function() {
          let tests = [
             {
                string: '',
@@ -56,7 +56,7 @@ describe('DamerauLevenshteinComparer', () => {
             assert.deepEqual(match, tests[i].expected, 'The returned value is correct');
          }
       });
-      it('should find the closer match when an array containing one string is provided', () => {
+      it('should find the closer match when an array containing one string is provided', function() {
          let tests = [
             {
                string: [],
@@ -106,7 +106,7 @@ describe('DamerauLevenshteinComparer', () => {
             assert.deepEqual(match, tests[i].expected, 'The returned value is correct');
          }
       });
-      it('should find the closer match when an array with multiple strings is provided', () => {
+      it('should find the closer match when an array with multiple strings is provided', function() {
          let tests = [
             {
                string: ['goodbye', 'hello', 'hi'],

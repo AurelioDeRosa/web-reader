@@ -19,34 +19,34 @@ function simulateToggleInteractionShortcut() {
    EventEmitter.fireEvent('keydown', document.documentElement, shortcuts.toggleInteraction.reverse()[0]);
 }
 
-describe('WebReader', () => {
+describe('WebReader', function() {
    const webReader = new WebReader({
       delay: 0
    });
 
-   before(() => {
+   before(function() {
       fixture.setBase('test/fixtures');
    });
 
-   beforeEach(() => {
+   beforeEach(function() {
       fixture.load('page.html');
    });
 
-   afterEach(() => {
+   afterEach(function() {
       fixture.cleanup();
    });
 
-   describe('constructor()', () => {
+   describe('constructor()', function() {
       let webReader = new WebReader();
 
-      it('should crate an instance of WebReader', () => {
+      it('should crate an instance of WebReader', function() {
          assert.instanceOf(webReader, WebReader, 'The returned object is an instance of WebReader');
          assert.isObject(webReader.settings, 'The settings are exposed');
          assert.isObject(webReader.recognizer, 'The recognizer object is exposed');
          assert.isObject(webReader.speaker, 'The speaker object is exposed');
       });
 
-      it('should use the default settings when custom options are not provided', () => {
+      it('should use the default settings when custom options are not provided', function() {
          assert.deepEqual(webReader.settings, {
             delay: 300,
             translationsPath: '',
@@ -61,8 +61,8 @@ describe('WebReader', () => {
       });
    });
 
-   describe('isInteracting()', () => {
-      it('should return true if WebReader is interacting', () => {
+   describe('isInteracting()', function() {
+      it('should return true if WebReader is interacting', function() {
          let speakerStub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
@@ -79,23 +79,23 @@ describe('WebReader', () => {
          });
       });
 
-      it('should return false if WebReader is not interacting', () => {
+      it('should return false if WebReader is not interacting', function() {
          webReader.stopCommand();
 
          assert.isFalse(webReader.isInteracting(), 'The returned value is correct');
       });
    });
 
-   describe('enableShortcuts()', () => {
-      afterEach(() => {
+   describe('enableShortcuts()', function() {
+      afterEach(function() {
          webReader.disableShortcuts();
       });
 
-      it('should return the current instance of WebReader is returned', () => {
+      it('should return the current instance of WebReader is returned', function() {
          assert.strictEqual(webReader, webReader.enableShortcuts(), 'The instance is returned');
       });
 
-      it('should enable the shortcuts', () => {
+      it('should enable the shortcuts', function() {
          let stub = sinon.stub(webReader, 'receiveCommand');
 
          webReader.enableShortcuts();
@@ -108,16 +108,16 @@ describe('WebReader', () => {
       });
    });
 
-   describe('disableShortcuts()', () => {
-      beforeEach(() => {
+   describe('disableShortcuts()', function() {
+      beforeEach(function() {
          webReader.enableShortcuts();
       });
 
-      it('should return the current instance of WebReader is returned', () => {
+      it('should return the current instance of WebReader is returned', function() {
          assert.strictEqual(webReader, webReader.disableShortcuts(), 'The instance is returned');
       });
 
-      it('should disable the shortcuts', () => {
+      it('should disable the shortcuts', function() {
          let stub = sinon.stub(webReader, 'receiveCommand');
 
          webReader.disableShortcuts();
@@ -130,10 +130,10 @@ describe('WebReader', () => {
       });
    });
 
-   describe('stopCommand()', () => {
+   describe('stopCommand()', function() {
       let speakerStub, recognizerStub;
 
-      before(() => {
+      before(function() {
          speakerStub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
@@ -142,21 +142,21 @@ describe('WebReader', () => {
             .returns(Promise.resolve('search main content'));
       });
 
-      beforeEach(() => {
+      beforeEach(function() {
          webReader.receiveCommand();
       });
 
-      afterEach(() => {
+      afterEach(function() {
          speakerStub.reset();
          recognizerStub.reset();
       });
 
-      after(() => {
+      after(function() {
          speakerStub.restore();
          recognizerStub.restore();
       });
 
-      it('should stop an interaction', () => {
+      it('should stop an interaction', function() {
          let speakerSpy = sinon.spy(webReader.speaker, 'cancel');
          let recognizerSpy = sinon.spy(webReader.recognizer, 'abort');
 
@@ -173,25 +173,25 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readHeaders()', () => {
+   describe('readHeaders()', function() {
       let stub;
 
-      before(() => {
+      before(function() {
          stub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
       });
 
-      afterEach(() => {
+      afterEach(function() {
          stub.reset();
       });
 
-      after(() => {
+      after(function() {
          stub.restore();
       });
 
-      context('with no parameters provided', () => {
-         it('should read all the headers', () => {
+      context('with no parameters provided', function() {
+         it('should read all the headers', function() {
             let promise = webReader.readHeaders();
 
             return Promise.all([
@@ -211,8 +211,8 @@ describe('WebReader', () => {
          });
       });
 
-      context('with parameters provided', () => {
-         it('should read all the headers of the specified level', () => {
+      context('with parameters provided', function() {
+         it('should read all the headers of the specified level', function() {
             let promise = webReader.readHeaders({
                level: 2
             });
@@ -235,41 +235,41 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readCurrentElement()', () => {
-      context('without a previous interaction', () => {
+   describe('readCurrentElement()', function() {
+      context('without a previous interaction', function() {
          let webReader;
 
-         before(() => {
+         before(function() {
             webReader = new WebReader();
          });
 
-         it('should return a rejected promise', () => {
+         it('should return a rejected promise', function() {
             return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
          });
       });
 
-      context('with a previously recognized command of a set of elements', () => {
+      context('with a previously recognized command of a set of elements', function() {
          let stub;
 
-         before(() => {
+         before(function() {
             stub = sinon
                .stub(webReader.speaker, 'speak')
                .returns(Promise.resolve());
          });
 
-         beforeEach(() => {
+         beforeEach(function() {
             return webReader.readLinks();
          });
 
-         afterEach(() => {
+         afterEach(function() {
             stub.reset();
          });
 
-         after(() => {
+         after(function() {
             stub.restore();
          });
 
-         it('should read again the last spoken element', () => {
+         it('should read again the last spoken element', function() {
             let promise = webReader.readCurrentElement();
 
             return Promise.all([
@@ -286,28 +286,28 @@ describe('WebReader', () => {
          });
       });
 
-      context('with a previously recognized command of a single of element', () => {
+      context('with a previously recognized command of a single of element', function() {
          let stub;
 
-         before(() => {
+         before(function() {
             stub = sinon
                .stub(webReader.speaker, 'speak')
                .returns(Promise.resolve());
          });
 
-         beforeEach(() => {
+         beforeEach(function() {
             return webReader.readMain();
          });
 
-         afterEach(() => {
+         afterEach(function() {
             stub.reset();
          });
 
-         after(() => {
+         after(function() {
             stub.restore();
          });
 
-         it('should read again the element', () => {
+         it('should read again the element', function() {
             let promise = webReader.readCurrentElement();
 
             return Promise.all([
@@ -322,20 +322,20 @@ describe('WebReader', () => {
          });
       });
 
-      context('with a previously recognized command that does not involve a spoken prompt', () => {
-         beforeEach(() => {
+      context('with a previously recognized command that does not involve a spoken prompt', function() {
+         beforeEach(function() {
             webReader.searchMain();
          });
 
-         it('should return a rejected promise', () => {
+         it('should return a rejected promise', function() {
             return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
          });
       });
 
-      context('with a previously unrecognized command', () => {
+      context('with a previously unrecognized command', function() {
          let speakerStub, recognizerStub;
 
-         before(() => {
+         before(function() {
             speakerStub = sinon
                .stub(webReader.speaker, 'speak')
                .returns(Promise.resolve());
@@ -346,67 +346,67 @@ describe('WebReader', () => {
                }));
          });
 
-         beforeEach(() => {
+         beforeEach(function() {
             return webReader.receiveCommand();
          });
 
-         afterEach(() => {
+         afterEach(function() {
             speakerStub.reset();
             recognizerStub.reset();
          });
 
-         after(() => {
+         after(function() {
             speakerStub.restore();
             recognizerStub.restore();
          });
 
-         it('should return a rejected promise', () => {
+         it('should return a rejected promise', function() {
             return assert.isRejected(webReader.readCurrentElement(), WebReaderError, 'Promise is rejected');
          });
       });
    });
 
-   describe('goToLink()', () => {
-      context('without a previously spoken element', () => {
+   describe('goToLink()', function() {
+      context('without a previously spoken element', function() {
          let webReader;
 
-         before(() => {
+         before(function() {
             webReader = new WebReader();
          });
 
-         it('should thrown an expection', () => {
+         it('should thrown an expection', function() {
             assert.throws(() => {
                webReader.goToLink();
             }, WebReaderError);
          });
       });
 
-      context('with the last spoken element being a link', () => {
+      context('with the last spoken element being a link', function() {
          it('should navigate to the page specified by the href attribute of the link');
       });
 
-      context('with the last spoken element different from a link', () => {
+      context('with the last spoken element different from a link', function() {
          let stub;
 
-         before(() => {
+         before(function() {
             stub = sinon
                .stub(webReader.speaker, 'speak')
                .returns(Promise.resolve());
          });
 
-         beforeEach(() => {
+         beforeEach(function() {
             return webReader.readMain();
          });
 
-         afterEach(() => {
+         afterEach(function() {
             stub.reset();
          });
 
-         after(() => {
+         after(function() {
             stub.restore();
          });
 
-         it('should thrown an exception', () => {
+         it('should thrown an exception', function() {
             assert.throws(() => {
                webReader.goToLink();
             }, WebReaderError);
@@ -414,25 +414,25 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readLinks()', () => {
+   describe('readLinks()', function() {
       let stub;
 
-      before(() => {
+      before(function() {
          stub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
       });
 
-      afterEach(() => {
+      afterEach(function() {
          stub.reset();
       });
 
-      after(() => {
+      after(function() {
          stub.restore();
       });
 
-      context('with no parameters provided', () => {
-         it('should read all the links', () => {
+      context('with no parameters provided', function() {
+         it('should read all the links', function() {
             let promise = webReader.readLinks();
 
             return Promise.all([
@@ -452,8 +452,8 @@ describe('WebReader', () => {
          });
       });
 
-      context('with parameters provided', () => {
-         it('should read all the headers with the specified ancestor', () => {
+      context('with parameters provided', function() {
+         it('should read all the headers with the specified ancestor', function() {
             let promise = webReader.readLinks({
                ancestor: document.querySelector('footer')
             });
@@ -476,8 +476,8 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readMain()', () => {
-      it('should read the content of the main element', () => {
+   describe('readMain()', function() {
+      it('should read the content of the main element', function() {
          let stub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
@@ -499,8 +499,8 @@ describe('WebReader', () => {
       });
    });
 
-   describe('searchMain()', () => {
-      it('should focus the main element', () => {
+   describe('searchMain()', function() {
+      it('should focus the main element', function() {
          let main = document.querySelector('main');
 
          webReader.searchMain();
@@ -510,8 +510,8 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readPageTitle()', () => {
-      it('should read the title of the document', () => {
+   describe('readPageTitle()', function() {
+      it('should read the title of the document', function() {
          let stub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
@@ -532,8 +532,8 @@ describe('WebReader', () => {
       });
    });
 
-   describe('readPageSummary()', () => {
-      it('should prompt the amount of headers and links', () => {
+   describe('readPageSummary()', function() {
+      it('should prompt the amount of headers and links', function() {
          let stub = sinon
             .stub(webReader.speaker, 'speak')
             .returns(Promise.resolve());
@@ -555,7 +555,7 @@ describe('WebReader', () => {
       });
    });
 
-   describe('goToPreviousPage()', () => {
+   describe('goToPreviousPage()', function() {
       before(done => {
          function onPopState() {
             window.removeEventListener('popstate', onPopState);
@@ -568,11 +568,11 @@ describe('WebReader', () => {
          window.history.go((window.history.length - 1) * -1);
       });
 
-      it('should fail if the current page is the first in the history', () => {
+      it('should fail if the current page is the first in the history', function() {
          return assert.isRejected(webReader.goToPreviousPage(), WebReaderError, 'Promise is rejected');
       });
 
-      it('should change URL if there is a previous page', () => {
+      it('should change URL if there is a previous page', function() {
          let initialUrl = window.location.toString();
 
          window.history.pushState({}, 'test', '#prev-page');
@@ -583,17 +583,17 @@ describe('WebReader', () => {
       });
    });
 
-   describe('goToNextPage()', () => {
-      before(() => {
+   describe('goToNextPage()', function() {
+      before(function() {
          // Resets the history ahead of the current page
          window.history.pushState({}, 'test', '#next-page');
       });
 
-      it('should fail if the current page is the last in the history', () => {
+      it('should fail if the current page is the last in the history', function() {
          return assert.isRejected(webReader.goToNextPage(), WebReaderError, 'Promise is rejected');
       });
 
-      it('should change URL if there is a next page', () => {
+      it('should change URL if there is a next page', function() {
          window.history.pushState({}, 'test', '#another-page');
 
          let nextUrl = window.location.toString();
@@ -613,19 +613,19 @@ describe('WebReader', () => {
       });
    });
 
-   describe('shortcuts', () => {
-      before(() => {
+   describe('shortcuts', function() {
+      before(function() {
          webReader.enableShortcuts();
       });
 
-      after(() => {
+      after(function() {
          webReader.disableShortcuts();
       });
 
-      describe('Toggle interaction', () => {
+      describe('Toggle interaction', function() {
          let speakerStub, recognizerStub;
 
-         before(() => {
+         before(function() {
             speakerStub = sinon
                .stub(webReader.speaker, 'speak')
                .returns(Promise.resolve());
@@ -636,21 +636,21 @@ describe('WebReader', () => {
                }));
          });
 
-         beforeEach(() => {
+         beforeEach(function() {
             webReader.stopCommand();
          });
 
-         afterEach(() => {
+         afterEach(function() {
             speakerStub.reset();
             recognizerStub.reset();
          });
 
-         after(() => {
+         after(function() {
             speakerStub.restore();
             recognizerStub.restore();
          });
 
-         it('should start the interaction if none was in progress', () => {
+         it('should start the interaction if none was in progress', function() {
             let spy = sinon.spy(webReader, 'receiveCommand');
 
             assert.isFalse(webReader.isInteracting(), 'No interaction is in progress');
@@ -667,7 +667,7 @@ describe('WebReader', () => {
             return promise;
          });
 
-         it('should stop the interaction if one was in progress', () => {
+         it('should stop the interaction if one was in progress', function() {
             let spy = sinon.spy(webReader, 'stopCommand');
             let promise = webReader.receiveCommand();
 
