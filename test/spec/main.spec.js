@@ -20,7 +20,6 @@ function simulateToggleInteractionShortcut() {
 }
 
 describe('WebReader', () => {
-   const METHODS_DELAY = 5;
    const webReader = new WebReader({
       delay: 0
    });
@@ -66,14 +65,10 @@ describe('WebReader', () => {
       it('should return true if WebReader is interacting', () => {
          let speakerStub = sinon
             .stub(webReader.speaker, 'speak')
-            .returns(new Promise(resolve => {
-               setTimeout(resolve, METHODS_DELAY);
-            }));
+            .returns(Promise.resolve());
          let recognizerStub = sinon
             .stub(webReader.recognizer, 'recognize')
-            .returns(new Promise(resolve => {
-               setTimeout(() => resolve('search main content'), METHODS_DELAY);
-            }));
+            .returns(Promise.resolve('search main content'));
          let promise = webReader.receiveCommand();
 
          assert.isTrue(webReader.isInteracting(), 'The returned value is correct');
@@ -141,14 +136,10 @@ describe('WebReader', () => {
       before(() => {
          speakerStub = sinon
             .stub(webReader.speaker, 'speak')
-            .returns(new Promise(resolve => {
-               setTimeout(resolve, METHODS_DELAY);
-            }));
+            .returns(Promise.resolve());
          recognizerStub = sinon
             .stub(webReader.recognizer, 'recognize')
-            .returns(new Promise(resolve => {
-               setTimeout(() => resolve('search main content'), METHODS_DELAY);
-            }));
+            .returns(Promise.resolve('search main content'));
       });
 
       beforeEach(() => {
@@ -385,7 +376,7 @@ describe('WebReader', () => {
 
          it('should thrown an expection', () => {
             assert.throws(() => {
-               webReader.goToLink()
+               webReader.goToLink();
             }, WebReaderError);
          });
       });
@@ -417,7 +408,7 @@ describe('WebReader', () => {
 
          it('should thrown an exception', () => {
             assert.throws(() => {
-               webReader.goToLink()
+               webReader.goToLink();
             }, WebReaderError);
          });
       });
@@ -637,9 +628,7 @@ describe('WebReader', () => {
          before(() => {
             speakerStub = sinon
                .stub(webReader.speaker, 'speak')
-               .returns(new Promise(resolve => {
-                  setTimeout(resolve, METHODS_DELAY);
-               }));
+               .returns(Promise.resolve());
             recognizerStub = sinon
                .stub(webReader.recognizer, 'recognize')
                .returns(Promise.reject({
