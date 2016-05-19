@@ -2,7 +2,7 @@ import WebReader from '../../src/main';
 import WebReaderError from '../../src/webreader-error';
 import EventEmitter from '../../src/helpers/event-emitter';
 
-let shortCuts = {
+let shortcuts = {
    toggleInteraction: [
       {
          ctrlKey: true,
@@ -16,7 +16,7 @@ let shortCuts = {
 };
 
 function simulateToggleInteractionShortcut() {
-   EventEmitter.fireEvent('keydown', document.documentElement, shortCuts.toggleInteraction.reverse()[0]);
+   EventEmitter.fireEvent('keydown', document.documentElement, shortcuts.toggleInteraction.reverse()[0]);
 }
 
 describe('WebReader', () => {
