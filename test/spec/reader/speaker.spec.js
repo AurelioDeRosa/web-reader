@@ -76,6 +76,12 @@ describe('Speaker', function() {
    });
 
    describe('getVoices()', function() {
+      before(function() {
+         if (isCI) {
+            this.skip();
+         }
+      });
+
       it('should return all the voices available', function() {
          let promise = speaker.getVoices();
 
