@@ -18,6 +18,7 @@ module.exports = function(config) {
       browserNoActivityTimeout: 1500,
       captureTimeout: 3000,
       client: {
+         args: [],
          mocha: {
             timeout: 1500,
             ui: 'bdd'
@@ -70,8 +71,8 @@ module.exports = function(config) {
       singleRun: true
    };
 
-   if (process.env.TRAVIS) {
-      settings.exclude = ['test/spec/reader/*.js'];
+   if (process.env.CI) {
+      settings.client.args.push('ci');
       settings.browsers = ['Chrome_travis_ci'];
    }
 

@@ -1,5 +1,7 @@
 import Speaker from '../../../src/reader/speaker';
 
+const isCI = window.__karma__.config.args.indexOf('ci') >= 0; // jscs:disable disallowDanglingUnderscores
+
 /**
  * @test {Speaker}
  */
@@ -39,6 +41,12 @@ describe('Speaker', function() {
    });
 
    describe('isSpeaking()', function() {
+      before(function() {
+         if (isCI) {
+            this.skip();
+         }
+      });
+
       beforeEach(function() {
          speaker.cancel();
       });
@@ -87,6 +95,12 @@ describe('Speaker', function() {
    });
 
    describe('speak()', function() {
+      before(function() {
+         if (isCI) {
+            this.skip();
+         }
+      });
+
       context('with the default settings', function() {
          it('should prompt the text provided', function() {
             let text = 'hello';
@@ -172,6 +186,12 @@ describe('Speaker', function() {
    });
 
    describe('events', function() {
+      before(function() {
+         if (isCI) {
+            this.skip();
+         }
+      });
+
       it('should trigger a webreader.synthesisstart event when a text starts being prompted', function() {
          let text, synthesisStartSpy, speakSpy;
 
