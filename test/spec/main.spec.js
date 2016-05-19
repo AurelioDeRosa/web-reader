@@ -716,7 +716,7 @@ describe('WebReader', function() {
    });
 
    describe('goToPreviousPage()', function() {
-      before(done => {
+      before(function(done) {
          function onPopState() {
             window.removeEventListener('popstate', onPopState);
             done();
