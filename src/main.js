@@ -60,7 +60,13 @@ let translations = new Map([[defaultLanguage, defaultTranslation]]);
 function downloadTranslation(translationsPath, language) {
    return window
       .fetch(`${translationsPath}/${language}.json`)
-      .then(response => response.json())
+      .then(response => {
+         if (response.status >= 200 && response.status < 300) {
+            return response.json();
+         } else {
+            return Promise.reject(response);
+         }
+      })
       .then(response => {
          translations.set(language, response);
 
@@ -142,7 +148,11 @@ export
                   });
                },
                err => {
-                  console.debug(err.message);
+                  if (err instanceof window.Response) {
+                     console.debug(`The request failed with status code ${err.status}: ${err.statusText}`);
+                  } else {
+                     console.debug(err.message);
+                  }
 
                   EventEmitter.fireEvent(`${EventEmitter.namespace}.languageerror`, document, {
                      data: {

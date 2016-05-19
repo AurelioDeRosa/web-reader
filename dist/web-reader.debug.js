@@ -7952,7 +7952,11 @@ process.umask = function() { return 0; };
     */
    function downloadTranslation(translationsPath, language) {
       return window.fetch(translationsPath + '/' + language + '.json').then(function (response) {
-         return response.json();
+         if (response.status >= 200 && response.status < 300) {
+            return response.json();
+         } else {
+            return Promise.reject(response);
+         }
       }).then(function (response) {
          translations.set(language, response);
 
@@ -8033,7 +8037,11 @@ process.umask = function() { return 0; };
                   }
                });
             }, function (err) {
-               console.debug(err.message);
+               if (err instanceof window.Response) {
+                  console.debug('The request failed with status code ' + err.status + ': ' + err.statusText);
+               } else {
+                  console.debug(err.message);
+               }
 
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languageerror', document, {
                   data: {

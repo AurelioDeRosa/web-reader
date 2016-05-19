@@ -1,6 +1,7 @@
 import WebReader from '../../src/main';
 import WebReaderError from '../../src/webreader-error';
 import EventEmitter from '../../src/helpers/event-emitter';
+import italianTranslation from '../../lang/it-IT.json';
 
 let shortcuts = {
    toggleInteraction: [
@@ -14,6 +15,37 @@ let shortcuts = {
       }
    ]
 };
+
+/**
+ * Mocks a successful Ajax response
+ *
+ * @param {number} status The status code of the request
+ * @param {*} body The body of the request
+ *
+ * @return {Promise}
+ */
+function fetchJSONSuccess(status = 200, body = '') {
+   let mockResponse = new window.Response(JSON.stringify(body), {
+      status: status,
+      statusText: status === 200 ? 'OK' : '',
+      headers: {
+         'Content-type': 'application/json'
+      }
+   });
+
+   return Promise.resolve(mockResponse);
+}
+
+/**
+ * Mocks an unsuccessful Ajax response
+ *
+ * @param {string} message The error message
+ *
+ * @return {Promise}
+ */
+function fetchJSONError(message) {
+   return Promise.reject(new TypeError(message));
+}
 
 function simulateToggleInteractionShortcut() {
    EventEmitter.fireEvent('keydown', document.documentElement, shortcuts.toggleInteraction.reverse()[0]);
@@ -58,6 +90,134 @@ describe('WebReader', function() {
                voice: 'Google UK English Female'
             }
          }, 'The default settings are set');
+      });
+
+      context('with the value of the lang property set to a language different from the default one', function() {
+         context('if the language is available', function() {
+            const lang = 'it-IT';
+            const settings = {
+               recognizer: {
+                  lang
+               }
+            };
+
+            beforeEach(function() {
+               sinon
+                  .stub(window, 'fetch')
+                  .returns(fetchJSONSuccess(200, italianTranslation));
+            });
+
+            afterEach(function() {
+               window.fetch.restore();
+            });
+
+            it('should trigger a webreader.languagedownload event when the download is complete', function(done) {
+               function languageDownload(event) {
+                  document.removeEventListener('webreader.languagedownload', languageDownload);
+
+                  assert.isOk(true, 'The event is triggered');
+                  assert.instanceOf(event, Event, 'The event listener receives an event');
+                  assert.property(event, 'data', 'The event exposes a data property');
+                  assert.deepEqual(
+                     event.data,
+                     {
+                        lang
+                     },
+                     'The data property of the event possesses the language provided'
+                  );
+
+                  done();
+               }
+
+               document.addEventListener('webreader.languagedownload', languageDownload);
+
+               let webReader = new WebReader(settings); // jshint ignore:line
+            });
+         });
+
+         context('if the language is not available', function() {
+            let lang = 'xx-XX';
+            const settings = {
+               recognizer: {
+                  lang
+               }
+            };
+
+            beforeEach(function() {
+               sinon
+                  .stub(window, 'fetch')
+                  .returns(fetchJSONSuccess(404, ''));
+            });
+
+            afterEach(function() {
+               window.fetch.restore();
+            });
+
+            it('should trigger a webreader.languageerror event', function(done) {
+               function languageError(event) {
+                  document.removeEventListener('webreader.languageerror', languageError);
+
+                  assert.isOk(true, 'The event is triggered');
+                  assert.instanceOf(event, Event, 'The event listener receives an event');
+                  assert.property(event, 'data', 'The event exposes a data property');
+                  assert.deepEqual(
+                     event.data,
+                     {
+                        lang
+                     },
+                     'The data property of the event possesses the language provided'
+                  );
+
+                  done();
+               }
+
+               document.addEventListener('webreader.languageerror', languageError);
+
+               let webReader = new WebReader(settings); // jshint ignore:line
+            });
+         });
+
+         context('if there is a problem with the network', function() {
+            let lang = 'xx-XX';
+            const settings = {
+               recognizer: {
+                  lang
+               }
+            };
+
+            beforeEach(function() {
+               sinon
+                  .stub(window, 'fetch')
+                  .returns(fetchJSONError('Failed to fetch'));
+            });
+
+            afterEach(function() {
+               window.fetch.restore();
+            });
+
+            it('should trigger a webreader.languageerror event', function(done) {
+               function languageError(event) {
+                  document.removeEventListener('webreader.languageerror', languageError);
+
+                  assert.isOk(true, 'The event is triggered');
+                  assert.instanceOf(event, Event, 'The event listener receives an event');
+                  assert.property(event, 'data', 'The event exposes a data property');
+                  assert.deepEqual(
+                     event.data,
+                     {
+                        lang
+                     },
+                     'The data property of the event possesses the language provided'
+                  );
+
+                  done();
+               }
+
+               document.addEventListener('webreader.languageerror', languageError);
+
+               let webReader = new WebReader(settings); // jshint ignore:line
+            });
+         });
       });
    });
 
