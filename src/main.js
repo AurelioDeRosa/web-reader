@@ -133,17 +133,13 @@ export
          downloadTranslation(this.settings.translationsPath, language)
             .then(
                () => {
-                  let message = `Language "${language}" successfully loaded`;
-
-                  console.debug(message);
+                  console.debug(`Language "${language}" successfully loaded`);
 
                   EventEmitter.fireEvent(`${EventEmitter.namespace}.languagedownload`, document, {
                      data: {
                         lang: language
                      }
                   });
-
-                  return this.speaker.speak(message);
                },
                err => {
                   console.debug(err.message);
@@ -153,8 +149,6 @@ export
                         lang: language
                      }
                   });
-
-                  return this.speaker.speak(`An error occurred: the language "${language}" was not loaded`);
                }
             );
       }

@@ -7999,8 +7999,6 @@ process.umask = function() { return 0; };
        */
 
       function WebReader() {
-         var _this = this;
-
          var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
          _classCallCheck(this, WebReader);
@@ -8027,17 +8025,13 @@ process.umask = function() { return 0; };
 
          if (language && !translations.has(language)) {
             downloadTranslation(this.settings.translationsPath, language).then(function () {
-               var message = 'Language "' + language + '" successfully loaded';
-
-               console.debug(message);
+               console.debug('Language "' + language + '" successfully loaded');
 
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.languagedownload', document, {
                   data: {
                      lang: language
                   }
                });
-
-               return _this.speaker.speak(message);
             }, function (err) {
                console.debug(err.message);
 
@@ -8046,8 +8040,6 @@ process.umask = function() { return 0; };
                      lang: language
                   }
                });
-
-               return _this.speaker.speak('An error occurred: the language "' + language + '" was not loaded');
             });
          }
       }
@@ -8088,7 +8080,7 @@ process.umask = function() { return 0; };
       }, {
          key: 'receiveCommand',
          value: function receiveCommand() {
-            var _this2 = this;
+            var _this = this;
 
             statusMap.get(this).isInteracting = true;
             console.debug('Interaction started');
@@ -8104,26 +8096,26 @@ process.umask = function() { return 0; };
                return recognize();
             }).then(function (recognizedText) {
                var commands = new _commands2.default(_damerauLevenshteinComparer2.default);
-               var translation = translations.get(_this2.settings.recognizer.lang);
+               var translation = translations.get(_this.settings.recognizer.lang);
 
                return commands.recognizeCommand(recognizedText, translation);
             }).then(function (recognizedCommand) {
-               return _router2.default.route(_this2, recognizedCommand);
+               return _router2.default.route(_this, recognizedCommand);
             }).catch(function (error) {
                if (error instanceof _webreaderError2.default) {
-                  return _this2.speaker.speak(error.message);
+                  return _this.speaker.speak(error.message);
                }
 
                if (error.error !== 'aborted' && error.error !== 'interrupted') {
                   console.debug('An error occurred', error);
 
-                  statusMap.set(_this2, Object.assign({}, defaultState));
+                  statusMap.set(_this, Object.assign({}, defaultState));
 
-                  return _this2.speaker.speak('Sorry, I could not recognize the command');
+                  return _this.speaker.speak('Sorry, I could not recognize the command');
                }
             }).then( // Simulate an always() method
             function () {}, function () {}).then(function () {
-               statusMap.get(_this2).isInteracting = false;
+               statusMap.get(_this).isInteracting = false;
                console.debug('Interaction completed');
 
                _eventEmitter2.default.fireEvent(_eventEmitter2.default.namespace + '.interactionend', document);
@@ -8140,7 +8132,7 @@ process.umask = function() { return 0; };
       }, {
          key: 'readHeaders',
          value: function readHeaders() {
-            var _this3 = this;
+            var _this2 = this;
 
             var filters = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
@@ -8151,10 +8143,10 @@ process.umask = function() { return 0; };
 
             return headers.reduce(function (promise, header, index) {
                promise = promise.then(function () {
-                  statusMap.get(_this3).currentIndex = index;
+                  statusMap.get(_this2).currentIndex = index;
                   _dom2.default.highlightElement(header);
 
-                  return _this3.speaker.speak(header.textContent + (level !== -1 ? '' : ' ' + header.nodeName)).then(function () {
+                  return _this2.speaker.speak(header.textContent + (level !== -1 ? '' : ' ' + header.nodeName)).then(function () {
                      return _dom2.default.unhighlightElement(header);
                   }).catch(function (error) {
                      _dom2.default.unhighlightElement(header);
@@ -8163,9 +8155,9 @@ process.umask = function() { return 0; };
                   });
                });
 
-               if (_this3.settings.delay > 0) {
+               if (_this2.settings.delay > 0) {
                   promise = promise.then(function () {
-                     return _timer2.default.wait(_this3.settings.delay);
+                     return _timer2.default.wait(_this2.settings.delay);
                   });
                }
 
@@ -8233,7 +8225,7 @@ process.umask = function() { return 0; };
       }, {
          key: 'readLinks',
          value: function readLinks(filters) {
-            var _this4 = this;
+            var _this3 = this;
 
             var links = _dom2.default.getLinks(filters);
 
@@ -8241,14 +8233,14 @@ process.umask = function() { return 0; };
 
             return links.reduce(function (promise, link, index) {
                promise = promise.then(function () {
-                  statusMap.get(_this4).currentIndex = index;
+                  statusMap.get(_this3).currentIndex = index;
 
-                  return _this4.readCurrentElement();
+                  return _this3.readCurrentElement();
                });
 
-               if (_this4.settings.delay > 0) {
+               if (_this3.settings.delay > 0) {
                   promise = promise.then(function () {
-                     return _timer2.default.wait(_this4.settings.delay);
+                     return _timer2.default.wait(_this3.settings.delay);
                   });
                }
 
